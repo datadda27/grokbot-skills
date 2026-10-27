@@ -1,0 +1,635 @@
+{
+ "$schema": "./schema.json",
+ "_example": "EXAMPLE DATA. Every name, number, and link in this file is made up for testing the template.",
+ "team": "Example State Eagles",
+ "teamShort": "Eagles",
+ "coach": "Pat Example",
+ "classYear": 2027,
+ "asOf": "2026-10-26",
+ "asOfLabel": "Oct 26, 2026, 7:00 PM CT",
+ "tz": "America/Chicago",
+ "notes": [
+  "EXAMPLE DATA: every name, number, and link here is made up."
+ ],
+ "page": {
+  "title": "EXAMPLE DATA: Example State Eagles Recruiting & Portal Dashboard",
+  "summary": "Example data only, for testing the template. 2027 class, transfer portal and rankings. Head coach Pat Example (fictional)."
+ },
+ "sourceLinks": {
+  "c247": "https://example.com/rankings/247",
+  "on3": "https://example.com/rankings/on3"
+ },
+ "ratingsNote": "Example note: ratings come from each service's public page.",
+ "compositionNote": "Example note about class composition.",
+ "rankingsNote": "Example note: ESPN ranks only cover players found in its list.",
+ "calendarNote": "Example calendar note.",
+ "visitReportsNote": "Example visit report note.",
+ "changes": {
+  "since": "2026-10-23",
+  "items": [
+   {
+    "date": "2026-10-25",
+    "title": "Example: Blake Placeholder moved up in the 247 rankings",
+    "source": "https://example.com/news/1",
+    "premium": false
+   },
+   {
+    "date": "2026-10-24",
+    "title": "Example: staff take on Drew Testcase",
+    "source": "https://example.com/news/2",
+    "premium": true,
+    "premiumSite": "247"
+   }
+  ]
+ },
+ "teamRankings": [
+  {
+   "service": "247",
+   "rank": 22,
+   "detail": "6 commits",
+   "asOf": "2026-10-25",
+   "source": "https://example.com/rankings/247"
+  },
+  {
+   "service": "On3/Rivals",
+   "rank": 28,
+   "detail": "6 commits",
+   "asOf": "2026-10-24",
+   "source": "https://example.com/rankings/on3"
+  },
+  {
+   "service": "ESPN",
+   "rank": null,
+   "detail": "Not ranked",
+   "asOf": null,
+   "source": "https://example.com/rankings/espn"
+  }
+ ],
+ "rankHistory": [
+  {
+   "service": "247",
+   "date": "2026-06-01",
+   "rank": 41,
+   "source": "https://example.com/rankings/247"
+  },
+  {
+   "service": "247",
+   "date": "2026-07-15",
+   "rank": 33,
+   "source": "https://example.com/rankings/247"
+  },
+  {
+   "service": "247",
+   "date": "2026-09-01",
+   "rank": 27,
+   "source": "https://example.com/rankings/247"
+  },
+  {
+   "service": "247",
+   "date": "2026-10-25",
+   "rank": 22,
+   "source": "https://example.com/rankings/247"
+  },
+  {
+   "service": "On3/Rivals",
+   "date": "2026-06-01",
+   "rank": 45,
+   "source": "https://example.com/rankings/on3",
+   "premium": false,
+   "premiumSite": null
+  },
+  {
+   "service": "On3/Rivals",
+   "date": "2026-08-15",
+   "rank": 35,
+   "source": "https://example.com/rankings/on3",
+   "premium": false,
+   "premiumSite": null
+  },
+  {
+   "service": "On3/Rivals",
+   "date": "2026-10-24",
+   "rank": 28,
+   "source": "https://example.com/rankings/on3",
+   "premium": true,
+   "premiumSite": "On3/Rivals"
+  }
+ ],
+ "commits": [
+  {
+   "id": "c1",
+   "name": "Alex Sample",
+   "pos": "QB",
+   "group": "QB",
+   "height": "6-3",
+   "weight": 205,
+   "highSchool": "Example North",
+   "hometown": "Springfield, OH",
+   "state": "OH",
+   "commitDate": "2026-06-10",
+   "r247": {
+    "stars": 4,
+    "rating": 0.94,
+    "natl": 88,
+    "pos": 6,
+    "state": 3
+   },
+   "industry": {
+    "stars": 4,
+    "rating": 0.93,
+    "natl": 95,
+    "pos": 7,
+    "state": 4
+   },
+   "composite247": {
+    "rating": 0.935,
+    "natl": 90,
+    "pos": 6,
+    "state": 3
+   },
+   "espn": {
+    "rank": 120,
+    "grade": 82
+   },
+   "offers": "Example offers list (example data)",
+   "visits": "Official visit Jun 5 (example data)",
+   "status": "Committed",
+   "note": "Example data, not a real player.",
+   "sources": [
+    "https://example.com/commit/1"
+   ],
+   "rpm": {
+    "lines": [
+     [
+      "Example State",
+      92
+     ],
+     [
+      "Other U",
+      8
+     ]
+    ],
+    "source": "https://example.com/rpm/1",
+    "premium": true,
+    "premiumSite": "On3/Rivals"
+   },
+   "picks": null,
+   "hsGames": [
+    {
+     "date": "2026-10-23",
+     "opponent": "at Example Central",
+     "line": "21 of 28, 312 yards, 4 TD",
+     "sourceName": "Example Gazette",
+     "url": "https://example.com/game/1"
+    },
+    {
+     "date": "2026-10-16",
+     "opponent": "vs. Example West",
+     "line": "Write-up only: led a fourth-quarter comeback.",
+     "sourceName": "Example TV",
+     "url": "https://example.com/game/2"
+    },
+    {
+     "date": "2026-10-09",
+     "opponent": "vs. Example East",
+     "line": null,
+     "sourceName": "MaxPreps (example)",
+     "url": "https://example.com/game/3"
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "name": "Blake Placeholder",
+   "pos": "WR",
+   "group": "WR",
+   "height": "6-1",
+   "weight": 180,
+   "highSchool": "Example Prep",
+   "hometown": "Riverton, TX",
+   "state": "TX",
+   "commitDate": "2026-07-02",
+   "r247": {
+    "stars": 4,
+    "rating": 0.91,
+    "natl": 150,
+    "pos": 20,
+    "state": 12
+   },
+   "industry": {
+    "stars": 3,
+    "rating": 0.89,
+    "natl": null,
+    "pos": 25,
+    "state": null
+   },
+   "composite247": null,
+   "espn": null,
+   "offers": "Example offers list (example data)",
+   "visits": "Official visit Jun 5 (example data)",
+   "status": "Committed",
+   "note": "Example data.",
+   "sources": [
+    "https://example.com/commit/2"
+   ],
+   "rpm": null,
+   "picks": null,
+   "hsGames": [
+    {
+     "date": "2026-10-24",
+     "opponent": "vs. Example Valley",
+     "line": "7 catches, 164 yards, 2 TD",
+     "sourceName": "Example Herald",
+     "url": "https://example.com/game/4"
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "name": "Casey Demo",
+   "pos": "TE",
+   "group": "TE",
+   "height": "6-5",
+   "weight": 235,
+   "highSchool": "Example Christian",
+   "hometown": "Lakeside, GA",
+   "state": "GA",
+   "commitDate": "2026-08-01",
+   "r247": {
+    "stars": 3,
+    "rating": 0.88,
+    "natl": null,
+    "pos": 15,
+    "state": null
+   },
+   "industry": {
+    "stars": 3,
+    "rating": 0.87,
+    "natl": null,
+    "pos": 18,
+    "state": null
+   },
+   "composite247": null,
+   "espn": null,
+   "offers": "Example offers list (example data)",
+   "visits": "Official visit Jun 5 (example data)",
+   "status": "Committed",
+   "note": "Example data.",
+   "sources": [
+    "https://example.com/commit/3"
+   ],
+   "rpm": null,
+   "picks": null,
+   "hsGames": []
+  },
+  {
+   "id": "c4",
+   "name": "Drew Testcase",
+   "pos": "DL",
+   "group": "DL",
+   "height": "6-4",
+   "weight": 280,
+   "highSchool": "Example Central",
+   "hometown": "Hillview, FL",
+   "state": "FL",
+   "commitDate": "2026-05-20",
+   "r247": {
+    "stars": 4,
+    "rating": 0.92,
+    "natl": 110,
+    "pos": 12,
+    "state": 20
+   },
+   "industry": {
+    "stars": 4,
+    "rating": 0.92,
+    "natl": 105,
+    "pos": 11,
+    "state": null
+   },
+   "composite247": null,
+   "espn": {
+    "rank": null,
+    "grade": null
+   },
+   "offers": "Example offers list (example data)",
+   "visits": "Official visit Jun 5 (example data)",
+   "status": "Watch list",
+   "note": "Example data. Taking visits elsewhere (example).",
+   "sources": [
+    "https://example.com/commit/4"
+   ],
+   "rpm": null,
+   "picks": {
+    "items": [
+     [
+      "Example Reporter",
+      80,
+      "2026-10-01"
+     ]
+    ],
+    "team": "Example State",
+    "source": "https://example.com/picks/4",
+    "premium": true,
+    "premiumSite": "247"
+   },
+   "hsGames": []
+  },
+  {
+   "id": "c5",
+   "name": "Eli Mockup",
+   "pos": "OL",
+   "group": "OL",
+   "height": "6-6",
+   "weight": 300,
+   "highSchool": "Example South",
+   "hometown": "Brookfield, LA",
+   "state": "LA",
+   "commitDate": "2026-09-12",
+   "r247": {
+    "stars": 3,
+    "rating": 0.86,
+    "natl": null,
+    "pos": 40,
+    "state": null
+   },
+   "industry": {
+    "stars": null,
+    "rating": null,
+    "natl": null,
+    "pos": null,
+    "state": null
+   },
+   "composite247": null,
+   "espn": null,
+   "offers": "Example offers list (example data)",
+   "visits": "Official visit Jun 5 (example data)",
+   "status": "Committed",
+   "note": null,
+   "sources": [
+    "https://example.com/commit/5"
+   ],
+   "rpm": null,
+   "picks": null,
+   "hsGames": []
+  },
+  {
+   "id": "c6",
+   "name": "Finn Fixture",
+   "pos": "CB",
+   "group": "DB",
+   "height": "6-0",
+   "weight": 175,
+   "highSchool": "Example Academy",
+   "hometown": "London, ENG",
+   "state": "INTL",
+   "commitDate": "2026-04-01",
+   "r247": {
+    "stars": 3,
+    "rating": 0.85,
+    "natl": null,
+    "pos": 60,
+    "state": null
+   },
+   "industry": {
+    "stars": 3,
+    "rating": 0.85,
+    "natl": null,
+    "pos": 58,
+    "state": null
+   },
+   "composite247": null,
+   "espn": null,
+   "offers": "Example offers list (example data)",
+   "visits": "Official visit Jun 5 (example data)",
+   "status": "Committed",
+   "note": "Example data, international prospect.",
+   "sources": [
+    "https://example.com/commit/6"
+   ],
+   "rpm": null,
+   "picks": null,
+   "hsGames": []
+  }
+ ],
+ "decommits": [
+  {
+   "name": "Gale Former",
+   "pos": "LB",
+   "hs": "Example High",
+   "date": "2026-09-01",
+   "outcome": "Committed to Other U",
+   "rating247": 0.87,
+   "source": "https://example.com/decommit/1"
+  }
+ ],
+ "nextClassCommits": [
+  {
+   "name": "Harper Future",
+   "pos": "RB",
+   "ht": "5-11",
+   "wt": 190,
+   "hs": "Example Junior High",
+   "commitDate": "2026-08-20",
+   "rating247": null,
+   "natl247": null,
+   "pos247": null,
+   "state247": null,
+   "composite": null,
+   "status": "Committed",
+   "source": "https://example.com/2028/1"
+  }
+ ],
+ "nextClassRank247": null,
+ "news": [
+  {
+   "date": "2026-10-25",
+   "type": "Ranking",
+   "title": "Example: Blake Placeholder moves up",
+   "detail": "Example detail.",
+   "reporter": "Example Reporter",
+   "source": "https://example.com/news/1",
+   "premium": false,
+   "label": null
+  },
+  {
+   "date": "2026-10-24",
+   "type": "Rumor",
+   "title": "Example: staff take on Drew Testcase",
+   "detail": "Example premium summary.",
+   "reporter": "Example Insider",
+   "source": "https://example.com/news/2",
+   "premium": true,
+   "premiumSite": "247",
+   "label": "Rumor"
+  },
+  {
+   "date": "2026-10-20",
+   "type": "Offer",
+   "title": "Example: offer to Ivy Prospect",
+   "detail": "Example detail.",
+   "reporter": null,
+   "source": "https://example.com/news/3",
+   "premium": false,
+   "label": null
+  }
+ ],
+ "upcomingVisits": "Example: no confirmed visitors yet.",
+ "portal": {
+  "window": {
+   "opens": "2027-01-04",
+   "closes": "2027-01-13",
+   "status": "Closed until Jan 4",
+   "source": "https://example.com/ncaa/calendar"
+  },
+  "current": {
+   "entries": 0,
+   "commits": 0,
+   "note": "Example: window not open yet."
+  },
+  "lastCycle": {
+   "rankOn3": 30,
+   "rank247": 34,
+   "inOn3": 10,
+   "outOn3": 12,
+   "inTP": 9,
+   "outTP": 11,
+   "avgOn3": 85.5,
+   "topOn3": 91,
+   "netValueTP": "-2",
+   "sourceOn3": "https://example.com/portal/on3",
+   "source247": "https://example.com/portal/247",
+   "sourceTP": "https://example.com/portal/tp"
+  },
+  "incoming": [
+   {
+    "name": "Jordan Transfer",
+    "pos": "LB",
+    "fromSchool": "Other U",
+    "on3TR": 88,
+    "rating247T": 0.88,
+    "note": null,
+    "tag": null
+   }
+  ],
+  "outgoing": [
+   {
+    "name": "Kai Leaving",
+    "pos": "WR",
+    "toSchool": "Another State",
+    "starsTP": 3,
+    "source": "https://example.com/portal/out/1"
+   }
+  ],
+  "impact": [
+   {
+    "pos": "LB",
+    "out": 0,
+    "inn": 1,
+    "net": "+1"
+   },
+   {
+    "pos": "WR",
+    "out": 1,
+    "inn": 0,
+    "net": "-1"
+   }
+  ],
+  "rosterRisk": null,
+  "noLosses": []
+ },
+ "rosterCountsTP": {
+  "QB": 4,
+  "WR": 9
+ },
+ "departures": [],
+ "calendar": [
+  {
+   "start": "2026-11-30",
+   "end": "2027-01-11",
+   "type": "Dead",
+   "title": "Dead period (example)",
+   "detail": "Example detail.",
+   "source": "https://example.com/ncaa/calendar"
+  },
+  {
+   "start": "2026-12-02",
+   "end": "2026-12-04",
+   "type": "Signing",
+   "title": "Early signing period",
+   "detail": "Example detail.",
+   "source": "https://example.com/ncaa/calendar"
+  }
+ ],
+ "nextVisitWeekend": null,
+ "flipWatch": [
+  {
+   "name": "Drew Testcase",
+   "dir": "Defend",
+   "cls": "2027",
+   "pos": "DL",
+   "commitId": "c4",
+   "label": "Rumor",
+   "source": "https://example.com/flip/1",
+   "premium": false,
+   "detail": "Example: visiting Other U."
+  }
+ ],
+ "targets": [
+  {
+   "name": "Ivy Prospect",
+   "cls": "2028",
+   "pos": "S",
+   "label": "Offer",
+   "source": "https://example.com/target/1",
+   "premium": false,
+   "detail": "Example offer."
+  }
+ ],
+ "premiumNote": "Example: Premium items are summarized and linked, never copied.",
+ "forum": null,
+ "following": null,
+ "teamStatus": {
+  "asOf": "2026-10-26",
+  "record": {
+   "value": "5-2",
+   "source": "https://example.com/team/record"
+  },
+  "conference": {
+   "label": "Example Conference",
+   "value": "3-1, tied for 2nd",
+   "source": "https://example.com/team/standings"
+  },
+  "ap": {
+   "value": 18,
+   "prev": 21,
+   "source": "https://example.com/polls/ap"
+  },
+  "coaches": {
+   "value": null,
+   "note": "Not ranked",
+   "source": "https://example.com/polls/coaches"
+  },
+  "cfp": {
+   "value": null,
+   "note": "First rankings not out yet (example)",
+   "source": "https://example.com/cfp"
+  },
+  "lastGame": {
+   "value": "W 31-17 vs Example Tech, Oct 24",
+   "source": "https://example.com/boxscore/7"
+  },
+  "schedule": {
+   "source": "https://example.com/schedule",
+   "results": [
+    "W 24-10 Example A&M",
+    "L 14-21 at Example U",
+    "W 31-17 Example Tech"
+   ],
+   "upcoming": [
+    "Oct 31 vs Example State B, 2:30 p.m. CT",
+    "Nov 7 at Example College"
+   ]
+  }
+ }
+}

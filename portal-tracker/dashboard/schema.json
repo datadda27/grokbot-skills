@@ -1,0 +1,1115 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "Recruiting & Portal Dashboard data",
+ "description": "All team-specific text lives here. Missing values are null and show as UNKNOWN. Never estimate. Keep the file under about 80 KB.",
+ "type": "object",
+ "properties": {
+  "team": {
+   "type": "string"
+  },
+  "teamShort": {
+   "type": "string"
+  },
+  "coach": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "classYear": {
+   "type": "number"
+  },
+  "asOf": {
+   "type": "string",
+   "description": "ISO date YYYY-MM-DD"
+  },
+  "asOfLabel": {
+   "type": "string"
+  },
+  "tz": {
+   "type": "string"
+  },
+  "notes": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "page": {
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string"
+    },
+    "summary": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "title",
+    "summary"
+   ]
+  },
+  "teamRankings": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "service": {
+      "type": "string"
+     },
+     "rank": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "detail": {
+      "type": "string"
+     },
+     "asOf": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     }
+    },
+    "required": [
+     "service",
+     "rank",
+     "detail",
+     "asOf",
+     "source"
+    ]
+   }
+  },
+  "rankHistory": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "service": {
+      "type": "string"
+     },
+     "date": {
+      "type": "string",
+      "description": "ISO date YYYY-MM-DD"
+     },
+     "rank": {
+      "type": "number"
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     },
+     "premium": {
+      "type": "boolean"
+     },
+     "premiumSite": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Premium site label, for example \"247\", \"On3/Rivals\", \"ESPN+\", or the team site name. Badge reads \"Premium · <site>\". null when not premium or UNKNOWN."
+     }
+    },
+    "required": [
+     "service",
+     "date",
+     "rank",
+     "source"
+    ]
+   }
+  },
+  "commits": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "group": {
+      "type": "string",
+      "description": "Filter group: QB, RB, WR, TE, OL, DL, LB, DB, ATH, K/P"
+     },
+     "height": {
+      "type": "string"
+     },
+     "weight": {
+      "type": "number"
+     },
+     "highSchool": {
+      "type": "string"
+     },
+     "hometown": {
+      "type": "string",
+      "description": "\"City, ST\" or \"City, COUNTRY\""
+     },
+     "state": {
+      "type": "string"
+     },
+     "commitDate": {
+      "type": "string",
+      "description": "ISO date YYYY-MM-DD"
+     },
+     "r247": {
+      "type": "object",
+      "properties": {
+       "stars": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rating": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "natl": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "pos": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "state": {
+        "type": [
+         "number",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "stars",
+       "rating",
+       "natl",
+       "pos",
+       "state"
+      ]
+     },
+     "industry": {
+      "type": "object",
+      "properties": {
+       "stars": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rating": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "natl": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "pos": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "state": {
+        "type": [
+         "number",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "stars",
+       "rating",
+       "natl",
+       "pos",
+       "state"
+      ]
+     },
+     "composite247": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "espn": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "offers": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "visits": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "type": "string"
+     },
+     "note": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "sources": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "description": "Source URL"
+      }
+     },
+     "rpm": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "picks": {
+      "type": [
+       "object",
+       "null"
+      ]
+     },
+     "hsGames": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "date": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "opponent": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "line": {
+         "type": [
+          "string",
+          "null"
+         ],
+         "description": "Short stat line from the source, or a one-line summary of a write-up. Never estimated."
+        },
+        "sourceName": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "url": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "date",
+        "opponent",
+        "line",
+        "sourceName",
+        "url"
+       ],
+       "description": "One high school game. null means UNKNOWN."
+      },
+      "maxItems": 5,
+      "description": "This season's high school games, newest first. Empty hides the \"This season\" section."
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "pos",
+     "group",
+     "height",
+     "weight",
+     "highSchool",
+     "hometown",
+     "state",
+     "commitDate",
+     "r247",
+     "industry",
+     "composite247",
+     "espn",
+     "offers",
+     "visits",
+     "status",
+     "note",
+     "sources",
+     "rpm",
+     "picks"
+    ]
+   }
+  },
+  "decommits": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "hs": {
+      "type": "string"
+     },
+     "date": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "outcome": {
+      "type": "string"
+     },
+     "rating247": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     }
+    },
+    "required": [
+     "name",
+     "pos",
+     "hs",
+     "date",
+     "outcome",
+     "rating247",
+     "source"
+    ]
+   }
+  },
+  "nextClassCommits": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "ht": {
+      "type": "string"
+     },
+     "wt": {
+      "type": "number"
+     },
+     "hs": {
+      "type": "string"
+     },
+     "commitDate": {
+      "type": "string",
+      "description": "ISO date YYYY-MM-DD"
+     },
+     "rating247": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "natl247": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "pos247": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "state247": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "composite": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "status": {
+      "type": "string"
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     }
+    },
+    "required": [
+     "name",
+     "pos",
+     "ht",
+     "wt",
+     "hs",
+     "commitDate",
+     "rating247",
+     "natl247",
+     "pos247",
+     "state247",
+     "composite",
+     "status",
+     "source"
+    ]
+   }
+  },
+  "nextClassRank247": {
+   "type": [
+    "number",
+    "null"
+   ]
+  },
+  "news": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "date": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "type": {
+      "type": "string",
+      "description": "Visit, Offer, Commit, Ranking, Rumor"
+     },
+     "title": {
+      "type": "string"
+     },
+     "detail": {
+      "type": "string"
+     },
+     "reporter": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     },
+     "premium": {
+      "type": "boolean"
+     },
+     "label": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "premiumSite": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Premium site label, for example \"247\", \"On3/Rivals\", \"ESPN+\", or the team site name. Badge reads \"Premium · <site>\". null when not premium or UNKNOWN."
+     },
+     "extraSource": {
+      "type": "string",
+      "description": "Source URL"
+     }
+    },
+    "required": [
+     "date",
+     "type",
+     "title",
+     "detail",
+     "reporter",
+     "source",
+     "premium",
+     "label"
+    ]
+   },
+   "maxItems": 30
+  },
+  "upcomingVisits": {
+   "type": "string"
+  },
+  "portal": {
+   "type": "object",
+   "properties": {
+    "window": {
+     "type": "object",
+     "properties": {
+      "opens": {
+       "type": "string",
+       "description": "ISO date YYYY-MM-DD"
+      },
+      "closes": {
+       "type": "string",
+       "description": "ISO date YYYY-MM-DD"
+      },
+      "status": {
+       "type": "string"
+      },
+      "source": {
+       "type": "string",
+       "description": "Source URL"
+      }
+     },
+     "required": [
+      "opens",
+      "closes",
+      "status",
+      "source"
+     ]
+    },
+    "current": {
+     "type": "object",
+     "properties": {
+      "entries": {
+       "type": "number"
+      },
+      "commits": {
+       "type": "number"
+      },
+      "note": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "entries",
+      "commits",
+      "note"
+     ]
+    },
+    "lastCycle": {
+     "type": "object",
+     "properties": {
+      "rankOn3": {
+       "type": "number"
+      },
+      "rank247": {
+       "type": "number"
+      },
+      "inOn3": {
+       "type": "number"
+      },
+      "outOn3": {
+       "type": "number"
+      },
+      "inTP": {
+       "type": "number"
+      },
+      "outTP": {
+       "type": "number"
+      },
+      "avgOn3": {
+       "type": "number"
+      },
+      "topOn3": {
+       "type": "number"
+      },
+      "netValueTP": {
+       "type": "string"
+      },
+      "sourceOn3": {
+       "type": "string",
+       "description": "Source URL"
+      },
+      "source247": {
+       "type": "string",
+       "description": "Source URL"
+      },
+      "sourceTP": {
+       "type": "string",
+       "description": "Source URL"
+      }
+     },
+     "required": [
+      "rankOn3",
+      "rank247",
+      "inOn3",
+      "outOn3",
+      "inTP",
+      "outTP",
+      "avgOn3",
+      "topOn3",
+      "netValueTP",
+      "sourceOn3",
+      "source247",
+      "sourceTP"
+     ]
+    },
+    "incoming": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "pos": {
+        "type": "string"
+       },
+       "fromSchool": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "on3TR": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rating247T": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "tag": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "name",
+       "pos",
+       "fromSchool",
+       "on3TR",
+       "rating247T",
+       "note"
+      ]
+     }
+    },
+    "outgoing": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "pos": {
+        "type": "string"
+       },
+       "toSchool": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "starsTP": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "source": {
+        "type": "string",
+        "description": "Source URL"
+       }
+      },
+      "required": [
+       "name",
+       "pos",
+       "toSchool",
+       "starsTP",
+       "source"
+      ]
+     }
+    },
+    "impact": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "pos": {
+        "type": "string"
+       },
+       "out": {
+        "type": "number"
+       },
+       "inn": {
+        "type": "number"
+       },
+       "net": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "pos",
+       "out",
+       "inn",
+       "net"
+      ]
+     }
+    },
+    "rosterRisk": {
+     "type": [
+      "object",
+      "null"
+     ]
+    },
+    "noLosses": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "window",
+    "current",
+    "lastCycle",
+    "incoming",
+    "outgoing",
+    "impact"
+   ]
+  },
+  "rosterCountsTP": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "number"
+   }
+  },
+  "departures": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "date": {
+      "type": "string",
+      "description": "ISO date YYYY-MM-DD"
+     },
+     "note": {
+      "type": "string"
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     }
+    },
+    "required": [
+     "name",
+     "pos",
+     "date",
+     "note",
+     "source"
+    ]
+   }
+  },
+  "calendar": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "start": {
+      "type": "string",
+      "description": "ISO date YYYY-MM-DD"
+     },
+     "end": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "type": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "detail": {
+      "type": "string"
+     },
+     "source": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "when": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "start",
+     "end",
+     "type",
+     "title",
+     "detail",
+     "source"
+    ]
+   }
+  },
+  "nextVisitWeekend": {
+   "type": [
+    "object",
+    "null"
+   ]
+  },
+  "flipWatch": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "dir": {
+      "enum": [
+       "Defend",
+       "Target"
+      ]
+     },
+     "cls": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "commitId": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "label": {
+      "type": "string"
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     },
+     "premium": {
+      "type": "boolean"
+     },
+     "detail": {
+      "type": "string"
+     },
+     "premiumSite": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Premium site label, for example \"247\", \"On3/Rivals\", \"ESPN+\", or the team site name. Badge reads \"Premium · <site>\". null when not premium or UNKNOWN."
+     }
+    },
+    "required": [
+     "name",
+     "dir",
+     "cls",
+     "pos",
+     "commitId",
+     "label",
+     "source",
+     "premium",
+     "detail"
+    ]
+   }
+  },
+  "targets": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "cls": {
+      "type": "string"
+     },
+     "pos": {
+      "type": "string"
+     },
+     "label": {
+      "type": "string"
+     },
+     "source": {
+      "type": "string",
+      "description": "Source URL"
+     },
+     "premium": {
+      "type": "boolean"
+     },
+     "detail": {
+      "type": "string"
+     },
+     "premiumSite": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Premium site label, for example \"247\", \"On3/Rivals\", \"ESPN+\", or the team site name. Badge reads \"Premium · <site>\". null when not premium or UNKNOWN."
+     }
+    },
+    "required": [
+     "name",
+     "cls",
+     "pos",
+     "label",
+     "source",
+     "premium",
+     "detail"
+    ]
+   }
+  },
+  "premiumNote": {
+   "type": "string"
+  },
+  "$schema": {
+   "type": "string"
+  },
+  "_example": {
+   "type": "string",
+   "description": "Present only in example data."
+  },
+  "sourceLinks": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "string",
+    "description": "Source URL"
+   },
+   "description": "Named URLs reused across the data"
+  },
+  "ratingsNote": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "compositionNote": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "rankingsNote": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "calendarNote": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "visitReportsNote": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "changes": {
+   "type": [
+    "object",
+    "null"
+   ]
+  },
+  "forum": {
+   "type": [
+    "object",
+    "null"
+   ]
+  },
+  "following": {
+   "type": [
+    "object",
+    "null"
+   ]
+  },
+  "teamStatus": {
+   "type": [
+    "object",
+    "null"
+   ]
+  }
+ },
+ "required": [
+  "team",
+  "teamShort",
+  "coach",
+  "classYear",
+  "asOf",
+  "asOfLabel",
+  "tz",
+  "notes",
+  "page",
+  "teamRankings",
+  "rankHistory",
+  "commits",
+  "decommits",
+  "nextClassCommits",
+  "nextClassRank247",
+  "news",
+  "upcomingVisits",
+  "portal",
+  "rosterCountsTP",
+  "departures",
+  "calendar",
+  "nextVisitWeekend",
+  "flipWatch",
+  "targets",
+  "premiumNote"
+ ]
+}

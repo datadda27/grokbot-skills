@@ -6,5 +6,6 @@ Live skills for public Grok Bot templates. Each template's bot downloads its ski
 
 - `ticket-watch/`
 - `portal-tracker/`
+- `portal-tracker/dashboard/`
 
 Nothing personal belongs in this repo.
