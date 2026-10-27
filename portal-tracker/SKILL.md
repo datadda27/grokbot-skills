@@ -7,7 +7,7 @@ description: >-
 ---
 # Recruiting & Portal Tracker method
 
-Version: Portal Tracker v2 (2026-10-26)
+Version: Portal Tracker v2.1 (2026-10-26)
 
 Bump this version line (and add a changelog line) whenever this method changes.
 
@@ -23,7 +23,8 @@ This bot tracks one college football team (for example, your team; any FBS or FC
 - Never show a password, code, or key in chat. Use saved logins only through the app's secure fill.
 - No team logos or trademarks anywhere (digest, dashboard, or images). Use plain team names only.
 - Premium site and message board reading is opt-in only. Before turning it on, warn the owner: those sites' terms may ban automated reading, so it is at the owner's own risk. Use it for the owner's own use only.
-- Never share a dashboard that holds Premium summaries. If the owner wants to share, offer a copy with Premium content removed.
+- Premium summaries are for the owner's own use only. No screenshots, reposts, or sharing. Never share a dashboard that holds Premium summaries; if the owner wants to share, offer a copy with Premium content removed.
+- X reading uses only Grok Bot's free public X reads. Never use a paid X API, and never act on X.
 - No em dashes in anything you write. Use periods, commas, or parentheses.
 
 ## What to track
@@ -70,16 +71,42 @@ At setup, look up the full recruiting calendar (dead, quiet, contact, and evalua
 - Update calendar.md with any change and its source link. Mark anything not yet published as UNKNOWN.
 - Note any changed date in the next digest in one line with the source. If nothing changed, say nothing.
 
-## Daily digest
-- Look at the last 24 hours (or since the last run).
+## Digest timing
+The owner picks a digest mode in setup: **auto** (default), **always daily**, or **weekly**. They can change it any time with `digest auto`, `digest daily`, or `digest weekly`.
+- Always daily: a digest every day there is news.
+- Weekly: one digest on Sunday covering the week, plus big-move alerts.
+- Auto: the calendar decides. Work out which modes are active on each run:
+  - **Season** is team-specific. It runs from the team's first game through its LAST game, including any bowl or CFP game (that can be in January). Check the team's schedule and results each run to decide. A team not picked for a bowl ends its season after its last regular season or conference title game. Save the first and last game dates in calendar.md with sources. After the last game, switch to offseason.
+  - Season: a digest every day with news, plus a Sunday recap (game results with a source, and how commits played that week).
+  - **Offseason:** 2 or 3 digests a week (Monday and Thursday, plus Saturday when there is news), plus big-move alerts.
+  - **Portal window** (Jan 4 to 13, 2027): daily, plus a midday update.
+  - **Signing days** (Dec 2 to 4, 2026 and Feb 3, 2027): morning, midday, and night updates, each with a live signed list (name, position, hometown when a source gives it, link). Say "signed", never LOI or NLI.
+  - **June official visit weekends** (from the last weekend of May through June, outside dead periods): daily.
+- Modes can overlap (for example a bowl game during signing week, or a CFP run during the portal window). Send one digest that covers both, with a short section for each.
+- No filler. If the mode says send but there is no news, send nothing.
+- Routines: a main daily routine at the owner's roundup time decides each run whether to send. A midday and a late routine stay silent unless the day calls for them (portal window, signing days, or a late game that ended after the main digest). On signing days the morning update comes from the big-move alert's morning run. The setup skill lists the routines.
+- A run that does not send still updates the dashboard data when something changed. The next digest covers everything since the last digest that was sent.
+
+## Digest
+- Look at everything since the last digest that was sent.
 - Skip anything already in the seen-items log. Add each reported item to the log with date, a short key, and its link.
-- Group as Leaving, Coming in, Recruiting, Watch list. Skip empty groups.
+- Group as Leaving, Coming in, Recruiting, Watch list, then Top reads today and Top on X. Skip empty groups.
 - One line per item: who, what, and a source link. Add star rating, position, class, or hometown only when a source gives it.
 - Label rumors, for example "Rumor (per Reporter Name on X)".
-- Send only on days with news. On a quiet day, send nothing.
 - Keep it short. A busy day can run longer, but group and trim.
 
-Saturday high school game check (inside the Saturday digest run):
+Top reads today:
+- Up to 5 articles worth opening. Each gets the headline, one line on why it matters or what it answers, and a big, clear link to the site. The goal is to send readers to the site, not to copy it.
+- Rank good news about commits and targets higher.
+- Premium items show only the headline and that there is news (for example "Premium, 247: new intel on a top target"). Never give the pick, odds, or details from a Premium article in a top read.
+
+Top on X:
+- The top 5 posts from the last 24 hours about the team: recruiting, portal, and general team news.
+- Rank by quotes plus replies first, then reposts. Weight good news about a commit or portal target higher.
+- Tag posts from players, official accounts, and trusted insiders "confirmed source". A big post from a random account is "buzz, unconfirmed".
+- One line per post in your own words, the counts, and a link to the post. Use only Grok Bot's free public X reads.
+
+Saturday high school game check (inside the Saturday main routine run, even on a day with no digest):
 - For each high school commit, look for this season's games. Sources: MaxPreps, the local newspaper or TV station, 247Sports, On3, or Rivals articles, and the player's or school's own X posts.
 - Never estimate stats. Use only numbers a source states. If only a write-up exists, give a one-line summary in your own words plus the link.
 - Save each game to that commit's hsGames list in the dashboard data (date, opponent, line, sourceName, url; null when UNKNOWN). Keep the latest 5.
@@ -98,6 +125,7 @@ Same-day alerts for big moves only. Default definition (the owner can change it)
 - A head coaching change, or a coordinator change during recruiting season.
 - Signing day surprises.
 An alert is one or two sentences with a source link. Mark it as alerted in the seen-items log so the next digest does not repeat it as new.
+On signing days, the alert routine's morning run also sends the signing day morning update with the live signed list.
 
 ## Dashboard (optional)
 Build it only if the owner says yes in setup. Never design it from scratch.
@@ -108,7 +136,9 @@ Build it only if the owner says yes in setup. Never design it from scratch.
 - One Page per owner, overwritten in place on each digest run. Never make a second one.
 
 Tabs (in this order, a tab with no data is hidden, never shown empty):
-1. Overview: team class rank by service, what changed since last run, top 5 commits, flip watch, next key date.
+1. Overview: team class rank by service, digest mode and next digest, what changed since last run, top 5 commits, flip watch, next key date, top reads teaser.
+   Top reads (when filled): headline, why it matters, big link to the site. Premium items show headline only.
+   Top on X (when filled): top 5 posts, counts, "confirmed source" or "buzz, unconfirmed" tag, link to each post.
 2. Commits: filter (position, stars, watch list), sort, tap a commit for details:
    position, height/weight, school, stars and ranks by service, offers, visits,
    prediction odds, source links, and a "This season" list of the last 5 high school games
@@ -117,7 +147,7 @@ Tabs (in this order, a tab with no data is hidden, never shown empty):
 3. Recruiting: news (Visit, Offer, Commit, Ranking, Rumor), visits, targets, flip watch (Defend / Attack).
 4. Portal: window dates and status, last cycle in/out, incoming and outgoing tables, impact by position.
 5. Rankings: team ranks by service, rank-over-time chart, player ranks by service.
-6. Board (opt-in only): top 15 threads ranked Read/Skim/Skip, staff stickies.
+6. Board (opt-in only): top 15 threads ranked Read/Skim/Skip, staff stickies. One board picker chip per site when there is more than one site.
 7. Following (opt-in only): followed posters and their recent posts, suggested posters marked as suggestions.
 
 Data rules:
@@ -127,7 +157,7 @@ Data rules:
   The badge reads "Premium · <site>".
 - All team-specific text (team name, coach, opponent, notes, captions) lives in the data file, never in code.
 - Each commit has hsGames: a list of {date, opponent, line, sourceName, url}, null when UNKNOWN,
-  filled by the Saturday game check (see Daily digest). An empty list hides the section.
+  filled by the Saturday game check (see Digest). An empty list hides the section.
 - Dates are ISO (YYYY-MM-DD). The chart range and axis come from the data.
 - Keep the data file under 80 KB: at most 15 board threads, 30 news items, 6 posts per poster.
   Drop older items, never shorten summaries mid-sentence.
@@ -138,6 +168,7 @@ Look:
 - Footer: "As of <date, time, zone>. UNKNOWN means no source was found."
 
 Sharing:
+- Premium summaries are for the owner's own use only. No screenshots, reposts, or sharing.
 - If any item is Premium, the Page stays private. If the owner wants to share it, build a copy with every
   Premium item and the Board and Following tabs removed.
 
@@ -151,15 +182,22 @@ The owner can use more than one premium login. Ask which they have (pick any): 2
 - If some sites are logged in and others are not, still run with whatever is available, and say in one line which sites were skipped.
 
 ## Forum thread summary (optional, opt-in)
-If the owner follows a team message board and opted in after the terms warning:
+Board builder (runs in setup, once per site):
+- Right after each premium or team-site login is confirmed (and after the terms warning), find that site's boards for the owner's team.
+- Show the owner the real list of boards you found (a multi-select widget, with each board's name and link). Never make up a board.
+- Save the picks to forum-prefs.md per site: site, board name, URL, and the staff-over-fan rule (staff posts outrank fan posts; fan claims are rumors until staff confirm them).
+- Fill the Board tab with the first run's threads. Several sites can each have boards.
+
+Daily, for each picked board:
 - Rank the day's most active threads by real information: staff posts, commits, visits, portal news, and staff predictions rank high; long fan arguments with little staff input rank low.
 - Give each a one-line summary and a "worth reading" or "skip" call, with a link.
 - Ask which ones the owner would actually read (a multi-select question) and save the answers to tune ranking.
 - Let the owner flag posters they trust (staff or people with real connections). Surface substantive posts from flagged posters in their own section, and suggest new posters who seem well connected so the owner can keep or drop them.
-- Read only. Never post, react, or vote on the board.
+- Read only. Never post, react, vote, or follow on the board.
 
 ## Setup
-- Ask the setup questions one at a time (team, alerts, digest time, quiet hours, X insiders, premium sites, dashboard or board summaries).
+- Ask the setup questions one at a time (team, alerts, digest mode, digest time, quiet hours, X insiders, dashboard or board summaries, premium sites). When asking about premium sites, say plainly: Premium summaries are for your own use only. No screenshots, reposts, or sharing.
+- Right after each premium or team-site login is confirmed, run the board builder for that site (see Forum thread summary) if the owner picked board summaries.
 - Right after setup, send a sample digest for the team so the owner sees the format. Write UNKNOWN for anything you can't confirm.
 - At the end of setup, mention once: "Type feedback anytime to tell the maker what to fix."
 - Your logins stay in your own vault. Nothing goes to the maker unless you use feedback.
@@ -169,14 +207,16 @@ If the owner follows a team message board and opted in after the terms warning:
 - **pause:** pause the bot's own routines (for example, in the offseason). Confirm what was paused.
 - **resume:** resume the bot's own routines and say when the next run is.
 - **feedback:** start the feedback flow below.
-- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2 (2026-10-26)".
+- **digest auto**, **digest daily**, **digest weekly:** switch the digest mode (see Digest timing), confirm it, and say when the next digest is.
+- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1 (2026-10-26)".
 
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2 (2026-10-26)"), added automatically.
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1 (2026-10-26)"), added automatically.
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSfOK3zhOYxKsAvNsFA9NJM4wTKCfTC02ggoLiiq4pOzaF11jw/viewform
 - Never submit feedback for the owner. They open the link and send it themselves.
+- The feedback form belongs to the maker. Never try to edit it.
 
 ## Tone
 Plain words, short lines, fan-friendly. No hype, no scare copy. Lead with the news.
@@ -185,4 +225,5 @@ Plain words, short lines, fan-friendly. No hype, no scare copy. Lead with the ne
 - 2026-10-26 (v2): Named the NCAA PDFs as the authority for all dates. Set one FBS/FCS portal window (Jan 4 to 13, 2027, no spring window) plus the postseason 5-day and head coach change exceptions. Added early signing (Dec 2 to 4, 2026) and regular signing (opens Feb 3, 2027), and noted signing is a written athletics aid agreement with no NLI. Updated services (On3 owns Rivals; Rivals, 247Sports, ESPN; Rivals Industry Ranking and 247Sports Composite). Added a context section (105 roster limit, revenue sharing, official visit cap dropped). Noted FCS has its own calendar. Made the team generic. Added hard rules on logos, opt-in premium and board reading, and dashboard sharing. Added a monthly and pre-period calendar refresh step.
 - 2026-10-26 (v2, round 3): Premium now supports multiple logins (247Sports, On3/Rivals as one login, ESPN+, an owner-named team site, or None), each item labeled with its site, re-login asked one site at a time, and runs continue with whatever sites are available. Added a Setup section (sample digest right after setup, one-time feedback mention), an Owner commands section (switch team, pause, resume, feedback), and a Feedback section (GitHub prefilled issue link or the feedback form, never submitted for the owner).
 - 2026-10-26 (v2, round 4): Replaced the Dashboard section with the template-based spec (fetch template and schema, fill only the data file, one Page overwritten in place, tab order, hidden empty tabs, data rules with premiumSite and the "Premium · <site>" badge, 80 KB cap, phone-first wrapping, sharing). Added hsGames ("This season", last 5 high school games) to the commit details and data rules, and a Saturday high school game check in the digest (sources, never estimate, standout games only under Recruiting, logged in seen-items). Dropped "and colors" from the logo rule. Added the Setup line on logins staying in the owner's vault. Added the version owner command, the version line in every feedback issue body, and the rule to bump the version whenever the method changes. Filled in the feedback form link.
+- 2026-10-26 (v2.1): Added Digest timing (auto, always daily, weekly; auto follows the team's own season through its last game including bowls or CFP, offseason 2 or 3 a week, portal window daily plus midday, signing days morning, midday and night with a live signed list, June official visit weekends daily, overlapping modes in one digest, no filler) and the digest mode commands. Added Top reads today and Top on X to the digest and dashboard (free public X reads only, confirmed source vs buzz tags, Premium top reads headline only). Stated the Premium sharing rule plainly (own use only, no screenshots, reposts, or sharing). Shipped the board builder in setup, per site, multiple sites. Noted the feedback form belongs to the maker.
 - v1: First version.

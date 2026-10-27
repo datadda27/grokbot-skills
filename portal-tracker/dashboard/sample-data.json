@@ -587,7 +587,6 @@
   }
  ],
  "premiumNote": "Example: Premium items are summarized and linked, never copied.",
- "forum": null,
  "following": null,
  "teamStatus": {
   "asOf": "2026-10-26",
@@ -631,5 +630,251 @@
     "Nov 7 at Example College"
    ]
   }
- }
+ },
+ "digest": {
+  "mode": "auto",
+  "activeModes": [
+   "season"
+  ],
+  "schedule": "Example: daily at 7 PM CT with news, plus a Sunday recap. Midday and late updates only on portal window and signing days.",
+  "seasonStart": "2026-08-29",
+  "seasonEnd": null,
+  "lastSent": "2026-10-25T19:00:00-05:00",
+  "nextDigest": "2026-10-26T19:00:00-05:00",
+  "note": "Example: season runs through the last game, bowl or CFP included. Last game date UNKNOWN until bowl picks."
+ },
+ "topReads": {
+  "asOf": "2026-10-26T18:30:00-05:00",
+  "asOfLabel": "Oct 26, 2026, 6:30 PM CT",
+  "items": [
+   {
+    "rank": 1,
+    "headline": "Example: Blake Placeholder sets his official visit date",
+    "why": "Answers when the top target is coming back to campus.",
+    "url": "https://example.com/reads/1",
+    "site": "Example Sports Daily",
+    "premium": false,
+    "premiumSite": null,
+    "topic": "Recruiting",
+    "goodNews": true,
+    "date": "2026-10-26"
+   },
+   {
+    "rank": 2,
+    "headline": "Example: new intel on a top portal target",
+    "why": null,
+    "url": "https://example.com/reads/2",
+    "site": "247Sports",
+    "premium": true,
+    "premiumSite": "247",
+    "topic": "Portal",
+    "goodNews": true,
+    "date": "2026-10-26"
+   },
+   {
+    "rank": 3,
+    "headline": "Example: how the Eagles' 2027 class stacks up in the conference",
+    "why": "Explains the class rank jump this week.",
+    "url": "https://example.com/reads/3",
+    "site": "Example Recruiting News",
+    "premium": false,
+    "premiumSite": null,
+    "topic": "Recruiting",
+    "goodNews": false,
+    "date": "2026-10-25"
+   },
+   {
+    "rank": 4,
+    "headline": "Example: depth chart notes before the road game",
+    "why": "Who starts at corner after the injury.",
+    "url": "https://example.com/reads/4",
+    "site": "Example Gazette",
+    "premium": false,
+    "premiumSite": null,
+    "topic": "Team",
+    "goodNews": false,
+    "date": "2026-10-26"
+   }
+  ]
+ },
+ "topOnX": {
+  "asOf": "2026-10-26T18:30:00-05:00",
+  "asOfLabel": "Oct 26, 2026, 6:30 PM CT",
+  "windowHours": 24,
+  "method": "Example: ranked by quotes plus replies, then reposts. Good news about a commit or portal target ranks higher.",
+  "posts": [
+   {
+    "rank": 1,
+    "url": "https://example.com/x/status/1",
+    "author": "Blake Placeholder",
+    "handle": "@example_player",
+    "authorType": "player",
+    "tag": "confirmed source",
+    "topic": "Recruiting",
+    "summary": "Example: commit posts his official visit date with the Eagles.",
+    "quotes": 120,
+    "replies": 340,
+    "reposts": 900,
+    "goodNews": true,
+    "postedAt": "2026-10-26T15:10:00-05:00"
+   },
+   {
+    "rank": 2,
+    "url": "https://example.com/x/status/2",
+    "author": "Example Insider",
+    "handle": "@example_insider",
+    "authorType": "insider",
+    "tag": "confirmed source",
+    "topic": "Portal",
+    "summary": "Example: a top portal target lists the Eagles in his final three.",
+    "quotes": 80,
+    "replies": 260,
+    "reposts": 610,
+    "goodNews": true,
+    "postedAt": "2026-10-26T11:42:00-05:00"
+   },
+   {
+    "rank": 3,
+    "url": "https://example.com/x/status/3",
+    "author": "Example State Football",
+    "handle": "@example_official",
+    "authorType": "official",
+    "tag": "confirmed source",
+    "topic": "Team",
+    "summary": "Example: kickoff time set for next week's home game.",
+    "quotes": 40,
+    "replies": 150,
+    "reposts": 300,
+    "goodNews": false,
+    "postedAt": "2026-10-26T09:05:00-05:00"
+   },
+   {
+    "rank": 4,
+    "url": "https://example.com/x/status/4",
+    "author": "Random Fan",
+    "handle": "@example_fan",
+    "authorType": "fan",
+    "tag": "buzz, unconfirmed",
+    "topic": "Recruiting",
+    "summary": "Example: claims a flip is coming. No source given.",
+    "quotes": 55,
+    "replies": 95,
+    "reposts": 120,
+    "goodNews": false,
+    "postedAt": "2026-10-26T13:20:00-05:00"
+   }
+  ]
+ },
+ "forums": [
+  {
+   "board": "Example Premium Board",
+   "site": "Example Premium Site",
+   "url": "https://example.com/board",
+   "premium": true,
+   "premiumSite": "Example",
+   "asOf": "2026-10-26T18:00:00-05:00",
+   "asOfLabel": "Oct 26, 2026, 6:00 PM CT",
+   "windowHours": 24,
+   "prefs": "Example: staff posts outrank fan posts; fan claims are rumors until staff confirm them.",
+   "method": "Example: staff posts, replies, and views decide the rank.",
+   "totalThreads": 3,
+   "threads": [
+    {
+     "id": "t1",
+     "url": "https://example.com/board/t1",
+     "title": "Example thread 1",
+     "replies": 120,
+     "views": 2700,
+     "latest": "2026-10-26T17:45:00-05:00",
+     "staffPosts": 2,
+     "cat": "Recruiting",
+     "label": null,
+     "summary": "Example summary of the thread in a line.",
+     "verdict": "Read",
+     "why": "Example: staff posted twice with new detail.",
+     "rank": 1,
+     "readIn": false
+    },
+    {
+     "id": "t2",
+     "url": "https://example.com/board/t2",
+     "title": "Example thread 2",
+     "replies": 80,
+     "views": 1800,
+     "latest": "2026-10-26T17:45:00-05:00",
+     "staffPosts": 0,
+     "cat": "Portal",
+     "label": "Rumor",
+     "summary": "Example summary of the thread in a line.",
+     "verdict": "Skim",
+     "why": "Example: staff posted twice with new detail.",
+     "rank": 2,
+     "readIn": false
+    },
+    {
+     "id": "t3",
+     "url": "https://example.com/board/t3",
+     "title": "Example thread 3",
+     "replies": 40,
+     "views": 900,
+     "latest": "2026-10-26T17:45:00-05:00",
+     "staffPosts": 0,
+     "cat": "Team",
+     "label": "Opinion",
+     "summary": "Example summary of the thread in a line.",
+     "verdict": "Skip",
+     "why": "Example: staff posted twice with new detail.",
+     "rank": 3,
+     "readIn": false
+    }
+   ],
+   "stickies": [
+    {
+     "id": "s1",
+     "url": "https://example.com/board/s1",
+     "title": "Example staff live thread",
+     "author": "Example Staff",
+     "replies": 210,
+     "views": 5400,
+     "started": "2026-10-26T08:00:00-05:00",
+     "staffPosts": 6,
+     "summary": "Example: running staff updates for the week.",
+     "verdict": "Read",
+     "readIn": false
+    }
+   ]
+  },
+  {
+   "board": "Example Team Site Board",
+   "site": "Example Team Site",
+   "url": "https://example.org/board",
+   "premium": false,
+   "premiumSite": null,
+   "asOf": "2026-10-26T18:00:00-05:00",
+   "asOfLabel": "Oct 26, 2026, 6:00 PM CT",
+   "windowHours": 24,
+   "prefs": "Example: staff over fans.",
+   "method": "Example: same ranking as above.",
+   "totalThreads": 1,
+   "threads": [
+    {
+     "id": "b1",
+     "url": "https://example.org/board/t1",
+     "title": "Example thread 1",
+     "replies": 40,
+     "views": 900,
+     "latest": "2026-10-26T17:45:00-05:00",
+     "staffPosts": 1,
+     "cat": "Recruiting",
+     "label": null,
+     "summary": "Example summary of the thread in a line.",
+     "verdict": "Read",
+     "why": "Example: staff posted twice with new detail.",
+     "rank": 1,
+     "readIn": false
+    }
+   ],
+   "stickies": []
+  }
+ ]
 }

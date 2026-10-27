@@ -1,11 +1,30 @@
-"""Build the dashboard Page source from dashboard-data.json.
-Usage: python3 gen.py [data.json] [template.tsx] [out.tsx]
-Defaults: dashboard-data.json (or $DASH_DATA), dashboard.template.tsx and dashboard.canvas.tsx next to this file.
+"""Build the dashboard Page source from a dashboard data file.
+Usage: python3 gen.py DATA.json [TEMPLATE.tsx] [OUT.tsx]
+DATA.json is required (or set $DASH_DATA). TEMPLATE and OUT default to dashboard.template.tsx and dashboard.canvas.tsx next to this file.
 Only the data file changes between teams. The template holds no team text."""
 import json,re,os,sys,collections
 HERE=os.path.dirname(os.path.abspath(__file__))
-DATA_PATH=os.environ.get("DASH_DATA") or os.path.join(HERE,"dashboard-data.json")
-P=sys.argv[1] if len(sys.argv)>1 else DATA_PATH
+USAGE="usage: python3 gen.py DATA.json [TEMPLATE.tsx] [OUT.tsx]   (or set DASH_DATA instead of DATA.json; -h for help)"
+HELP=USAGE+"""
+
+Builds the dashboard Page source from a data file that matches schema.json.
+  DATA.json      the team's data file (required unless DASH_DATA is set)
+  TEMPLATE.tsx   default: dashboard.template.tsx next to this file
+  OUT.tsx        default: dashboard.canvas.tsx next to this file
+Prints "ok OUT size" on success. Nothing is published."""
+args=sys.argv[1:]
+if any(a in ("-h","--help") for a in args):
+    print(HELP); sys.exit(0)
+if any(a.startswith("-") for a in args):
+    print("gen.py: unknown option "+[a for a in args if a.startswith("-")][0],file=sys.stderr); print(USAGE,file=sys.stderr); sys.exit(2)
+if len(args)>3:
+    print("gen.py: too many arguments",file=sys.stderr); print(USAGE,file=sys.stderr); sys.exit(2)
+P=args[0] if args else os.environ.get("DASH_DATA")
+if not P:
+    print("gen.py: missing DATA.json",file=sys.stderr); print(USAGE,file=sys.stderr); sys.exit(2)
+if not os.path.isfile(P):
+    print("gen.py: data file not found: "+P,file=sys.stderr); print(USAGE,file=sys.stderr); sys.exit(2)
+sys.argv=[sys.argv[0]]+args
 TPL=sys.argv[2] if len(sys.argv)>2 else os.path.join(HERE,"dashboard.template.tsx")
 OUT=sys.argv[3] if len(sys.argv)>3 else os.path.join(HERE,"dashboard.canvas.tsx")
 d=json.load(open(P))
@@ -25,10 +44,23 @@ if ts and "big12" in ts and "conference" not in ts: ts["conference"]=dict(ts.pop
 d.setdefault("page",{"title":f"{d['team']} Recruiting & Portal Dashboard","summary":f"{d.get('classYear','')} class, transfer portal and rankings."})
 for c in d["commits"]: c.setdefault("hsGames",[])
 FORUM_CAP=15
-f=d.get("forum")
-if f:
+# one board per site; several sites allowed. "forum" (single) is still accepted.
+fs=[x for x in (d.get("forums") or ([d["forum"]] if d.get("forum") else [])) if x]
+for f in fs:
     f.setdefault("totalThreads",len(f["threads"]))
     f["threads"]=sorted(f["threads"],key=lambda x:x.get("rank",999))[:FORUM_CAP]
+d["forums"]=fs; d.pop("forum",None)  # the page sets forum = forums[0]
+# --- Top on X (5 posts) and Top reads (5 items). Premium reads keep the headline only.
+X_CAP=5; READS_CAP=5
+tx=d.get("topOnX")
+if tx: tx["posts"]=sorted(tx.get("posts") or [],key=lambda x:x.get("rank",999))[:X_CAP]
+tr=d.get("topReads")
+if tr:
+    tr["items"]=sorted(tr.get("items") or [],key=lambda x:x.get("rank",999))[:READS_CAP]
+    for x in tr["items"]:
+        x.setdefault("premium",False); x.setdefault("premiumSite",None)
+        if x["premium"]: x["why"]=None
+d.setdefault("topOnX",None); d.setdefault("topReads",None); d.setdefault("digest",None)
 # --- flatten ratings to tuples (smaller page source)
 rt=lambda r:[r.get(k) for k in ("stars","rating","natl","pos","state")]
 for c in d["commits"]:
@@ -38,7 +70,7 @@ for p in pt["incoming"]: p.pop("sources",None)
 KT=("id","url","title","replies","views","latest","staffPosts","cat","label","summary","verdict","why","rank","readIn")
 KS=("id","url","title","author","replies","views","started","staffPosts","summary","verdict","readIn")
 KP=("thread","url","date","summary")
-if f:
+for f in fs:
     f["threads"]=[{k:x.get(k) for k in KT} for x in f["threads"]]; f["stickies"]=[{k:x.get(k) for k in KS} for x in f["stickies"]]
 if d.get("following"):
     for p in d["following"]["posters"]+d["following"]["suggested"]: p["posts"]=[{k:x.get(k) for k in KP} for x in p["posts"]]
@@ -73,11 +105,12 @@ for k,u in sorted(S.items(),key=lambda kv:-len(kv[1])): raw=raw.replace(json.dum
 TAIL='''// Ratings tuples: [stars, rating, natl, pos, state]
 type RT = [number | null, number | null, number | null, number | null, number | null];
 type RawCommit = Omit<Commit, "r247" | "industry"> & { r247: RT; industry: RT };
-type RawData = Omit<Dashboard, "commits" | "portal"> & { commits: RawCommit[]; portal: Omit<Dashboard["portal"], "incoming"> & { incoming: Omit<Incoming, "sources">[] } };
+type RawData = Omit<Dashboard, "commits" | "portal" | "forum"> & { commits: RawCommit[]; portal: Omit<Dashboard["portal"], "incoming"> & { incoming: Omit<Incoming, "sources">[] } };
 const tup = (r: RT): Rating => ({ stars: r[0], rating: r[1], natl: r[2], pos: r[3], state: r[4] });
 const RAW: RawData = @RAW@;
 export const DATA: Dashboard = {
   ...RAW,
+  forum: RAW.forums?.[0] ?? null,
   commits: RAW.commits.map((c) => ({ ...c, r247: tup(c.r247), industry: tup(c.industry) })),
   portal: { ...RAW.portal, incoming: RAW.portal.incoming.map((p) => ({ ...p, sources: [RAW.portal.lastCycle.sourceOn3, RAW.portal.lastCycle.source247, RAW.portal.lastCycle.sourceTP] })) },
 };

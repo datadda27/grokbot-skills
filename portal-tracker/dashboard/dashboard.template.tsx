@@ -41,6 +41,10 @@ type TeamStatus = {
   schedule?: { source: string | null; results: string[]; upcoming: string[] } | null;
 };
 type Change = { date: string | null; title: string; source: string; premium: boolean; premiumSite?: string | null };
+type XPost = { rank: number; url: string; author: string; handle: string; authorType?: "player" | "official" | "insider" | "media" | "fan" | "other"; tag: "confirmed source" | "buzz, unconfirmed"; topic?: "Recruiting" | "Portal" | "Team"; summary: string; quotes: number | null; replies: number | null; reposts: number | null; goodNews?: boolean; postedAt: string };
+type TopRead = { rank: number; headline: string; why?: string | null; url: string; site: string; premium: boolean; premiumSite?: string | null; topic?: "Recruiting" | "Portal" | "Team"; goodNews?: boolean; date?: string | null };
+type DigestInfo = { mode: "auto" | "daily" | "weekly"; activeModes?: string[]; schedule?: string; seasonStart?: string | null; seasonEnd?: string | null; lastSent?: string | null; nextDigest?: string | null; note?: string | null };
+type Forum = { board: string; site: string; url: string; premium: boolean; premiumSite?: string | null; asOf: string; asOfLabel: string; windowHours: number; prefs: string; method: string; totalThreads?: number; threads: ForumThread[]; stickies: Sticky[] };
 type Dashboard = {
   team: string; teamShort: string; coach: string | null; classYear: number; asOf: string; asOfLabel: string; tz: string; notes: string[];
   page: { title: string; summary: string };
@@ -71,7 +75,11 @@ type Dashboard = {
   flipWatch: FlipItem[];
   targets: Target[];
   premiumNote: string;
-  forum?: { board: string; site: string; url: string; premium: boolean; premiumSite?: string | null; asOf: string; asOfLabel: string; windowHours: number; prefs: string; method: string; totalThreads?: number; threads: ForumThread[]; stickies: Sticky[] } | null;
+  forum?: Forum | null;
+  forums?: Forum[];
+  topOnX?: { asOf: string; asOfLabel?: string; windowHours?: number; method?: string; posts: XPost[] } | null;
+  topReads?: { asOf: string; asOfLabel?: string; items: TopRead[] } | null;
+  digest?: DigestInfo | null;
   following?: { note: string; scanned: string; posters: Poster[]; suggested: Suggested[] } | null;
   teamStatus?: TeamStatus | null;
 };
@@ -79,7 +87,10 @@ type Dashboard = {
 export const DATA: Dashboard = __DATA__;
 
 export const TODAY = DATA.asOf;
-const FORUM = DATA.forum && DATA.forum.threads.length ? DATA.forum : null;
+const FORUMS: Forum[] = (DATA.forums ?? (DATA.forum ? [DATA.forum] : [])).filter((f) => f.threads.length > 0);
+const FORUM = FORUMS[0] ?? null;
+const XTOP = DATA.topOnX && DATA.topOnX.posts.length ? DATA.topOnX : null;
+const READS = DATA.topReads && DATA.topReads.items.length ? DATA.topReads : null;
 const FOLLOWING = DATA.following && DATA.following.posters.length ? DATA.following : null;
 const YEAR = String(DATA.classYear);
 const TEAM = DATA.teamStatus ?? null;
@@ -461,6 +472,7 @@ function OverviewTab({ go }: { go: (tab: Tab, commitId?: string, view?: RecView)
   const ch = DATA.changes && DATA.changes.items.length ? DATA.changes : null;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <DigestLine />
       <Metrics metrics={[
         ...ranked.map((r) => {
           const p = prevRank(r.service);
@@ -520,6 +532,7 @@ function OverviewTab({ go }: { go: (tab: Tab, commitId?: string, view?: RecView)
           <div style={{ marginTop: 10 }}><Button label="Full calendar" onClick={() => go("portal")} /></div>
         </Section>
       </Grid>
+      {READS ? <ReadsToday go={(x) => go(x)} /> : null}
       {FORUM ? <BoardToday go={(x) => go(x)} /> : null}
     </div>
   );
@@ -884,8 +897,8 @@ function clock(iso: string): string {
   const h = Number(m[1]); const ap = h >= 12 ? "PM" : "AM"; const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${h12}:${m[2]} ${ap}`;
 }
-function ago(iso: string): string {
-  const asOf = DATA.forum?.asOf ?? TODAY;
+function ago(iso: string, base?: string): string {
+  const asOf = base ?? DATA.forum?.asOf ?? TODAY;
   const diff = (Date.parse(asOf) - Date.parse(iso)) / 60000;
   if (!isFinite(diff)) return UNK;
   if (diff < 1) return "just now";
@@ -986,6 +999,158 @@ function ForumTab({ F }: { F: NonNullable<Dashboard["forum"]> }) {
         </div>
       </Section> : null}
       <div style={{ color: t.text.tertiary, ...typo(t.font.caption) }}>How ranking works: {F.method}</div>
+    </div>
+  );
+}
+
+function BoardTab() {
+  const [i, setI] = useState<string>("0");
+  const F = FORUMS[Number(i)] ?? FORUMS[0];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {FORUMS.length > 1 ? (
+        <Chips<string> label="Pick a board" value={i} onChange={setI}
+          options={FORUMS.map((f, k) => ({ value: String(k), label: `${f.site}: ${f.board}`, count: f.threads.filter((x) => x.verdict === "Read").length }))} />
+      ) : null}
+      <ForumTab key={i} F={F} />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// top reads and top on X
+// ---------------------------------------------------------------------------
+function BigLink({ url, label }: { url: string; label: string }) {
+  const t = useGrokTheme();
+  return (
+    <a href={url} target="_blank" rel="noreferrer"
+      style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 44, padding: "10px 16px", borderRadius: t.radius.full,
+        background: t.fill.primary, color: t.text.onPrimary, fontWeight: t.weight.semibold, textDecoration: "none", textAlign: "center", ...typo(t.font.body2) }}>
+      {label}
+    </a>
+  );
+}
+function RankDot({ n, on }: { n: number; on: boolean }) {
+  const t = useGrokTheme();
+  return (
+    <div aria-label={`Rank ${n}`} style={{ width: 32, height: 32, flexShrink: 0, borderRadius: t.radius.full, display: "flex", alignItems: "center", justifyContent: "center",
+      background: on ? t.fill.primary : t.fill.secondary, color: on ? t.text.onPrimary : t.text.secondary, fontWeight: t.weight.semibold, ...typo(t.font.body2) }}>{n}</div>
+  );
+}
+function ReadCard({ r }: { r: TopRead }) {
+  const t = useGrokTheme();
+  return (
+    <div style={{ display: "flex", gap: 12, padding: 12, border: `1px solid ${t.border.subtle}`, borderRadius: t.radius.lg, background: t.bg.base }}>
+      <RankDot n={r.rank} on={!!r.goodNews} />
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+          {r.goodNews ? <Status tone="success">Good news</Status> : null}
+          {r.premium ? <Premium site={r.premiumSite ?? r.site} /> : null}
+          {r.topic ? <Chip>{r.topic}</Chip> : null}
+          <span style={{ color: t.text.tertiary, ...typo(t.font.label) }}>{r.site}{r.date ? ` · ${fmtShort(r.date)}` : ""}</span>
+        </div>
+        <div style={{ color: t.text.primary, fontWeight: t.weight.semibold, ...typo(t.font.body1) }}>{r.headline}</div>
+        <div style={{ color: t.text.secondary, ...typo(t.font.body2) }}>
+          {r.premium ? `There's Premium news at ${r.site}. Open it there for the details.` : (r.why ?? "")}
+        </div>
+        <BigLink url={r.url} label={`Read it at ${r.site}`} />
+      </div>
+    </div>
+  );
+}
+type ReadFilter = "All" | "Good" | "Recruiting" | "Portal" | "Team";
+function TopReadsTab({ R }: { R: NonNullable<Dashboard["topReads"]> }) {
+  const t = useGrokTheme();
+  const [f, setF] = useState<ReadFilter>("All");
+  const shown = R.items.filter((x) => f === "All" || (f === "Good" ? x.goodNews : x.topic === f));
+  const n = (fn: (x: TopRead) => boolean) => R.items.filter(fn).length;
+  return (
+    <Section heading="Top reads today" caption={`Worth opening, as of ${R.asOfLabel ?? R.asOf}. Tap through to read on the site. Premium items show the headline only.`}>
+      <div style={{ marginBottom: 12 }}>
+        <Chips<ReadFilter> label="Filter reads" value={f} onChange={setF} options={[
+          { value: "All", label: "All", count: R.items.length },
+          { value: "Good", label: "Good news", count: n((x) => !!x.goodNews) },
+          { value: "Recruiting", label: "Recruiting", count: n((x) => x.topic === "Recruiting") },
+          { value: "Portal", label: "Portal", count: n((x) => x.topic === "Portal") },
+          { value: "Team", label: "Team", count: n((x) => x.topic === "Team") },
+        ]} />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {shown.map((r) => <ReadCard key={r.rank} r={r} />)}
+        {shown.length === 0 ? <div style={{ color: t.text.tertiary, ...typo(t.font.body2) }}>No reads match this filter.</div> : null}
+      </div>
+      {R.items.some((x) => x.premium) ? <div style={{ marginTop: 12, color: t.text.tertiary, ...typo(t.font.caption) }}>Premium summaries are for your own use only. No screenshots, reposts, or sharing.</div> : null}
+    </Section>
+  );
+}
+function XCard({ p, base }: { p: XPost; base: string }) {
+  const t = useGrokTheme();
+  const ok = p.tag === "confirmed source";
+  return (
+    <div style={{ display: "flex", gap: 12, padding: 12, border: `1px solid ${t.border.subtle}`, borderRadius: t.radius.lg, background: t.bg.base }}>
+      <RankDot n={p.rank} on={ok} />
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 5 }}>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+          <Status tone={ok ? "success" : "warning"}>{ok ? "Confirmed source" : "Buzz, unconfirmed"}</Status>
+          {p.goodNews ? <Status tone="success">Good news</Status> : null}
+          {p.topic ? <Chip>{p.topic}</Chip> : null}
+        </div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "baseline" }}>
+          <span style={{ color: t.text.primary, fontWeight: t.weight.semibold, ...typo(t.font.body1) }}>{p.author}</span>
+          <span style={{ color: t.text.tertiary, ...typo(t.font.label) }}>{p.handle}</span>
+        </div>
+        <div style={{ color: t.text.secondary, ...typo(t.font.body2) }}>{p.summary}</div>
+        <MetaLine items={[`${count(p.quotes)} quotes`, `${count(p.replies)} replies`, `${count(p.reposts)} reposts`, ago(p.postedAt, base)]} />
+        <BigLink url={p.url} label="Open the post on X" />
+      </div>
+    </div>
+  );
+}
+function TopOnXTab({ X }: { X: NonNullable<Dashboard["topOnX"]> }) {
+  const t = useGrokTheme();
+  return (
+    <Section heading="Top on X" caption={`Top ${X.posts.length} posts about the team in the last ${X.windowHours ?? 24} hours, as of ${X.asOfLabel ?? X.asOf}. Confirmed source means a player, official account, or trusted insider; anything else is buzz.`}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {X.posts.map((p) => <XCard key={p.url} p={p} base={X.asOf} />)}
+      </div>
+      {X.method ? <div style={{ marginTop: 12, color: t.text.tertiary, ...typo(t.font.caption) }}>How ranking works: {X.method}</div> : null}
+    </Section>
+  );
+}
+function ReadsToday({ go }: { go: (tab: Tab) => void }) {
+  const t = useGrokTheme();
+  if (!READS) return null;
+  const top = READS.items.slice(0, 3);
+  return (
+    <Section heading="Top reads today" caption={`As of ${READS.asOfLabel ?? READS.asOf}`}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {top.map((r, i) => (
+          <div key={r.rank} style={{ display: "flex", gap: 10, padding: "8px 0", borderTop: i ? `1px solid ${t.border.subtle}` : "none", alignItems: "baseline" }}>
+            <span style={{ width: 20, color: t.text.tertiary, ...typo(t.font.label) }}>{r.rank}</span>
+            <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+              <TitleLink url={r.url}>{r.headline}</TitleLink>
+              <MetaLine items={[r.site, ...(r.premium ? [`Premium · ${r.premiumSite ?? r.site}`] : []), ...(r.goodNews ? ["Good news"] : [])]} />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Button label="All top reads" onClick={() => go("reads")} />
+        {XTOP ? <Button label="Top on X" onClick={() => go("x")} /> : null}
+      </div>
+    </Section>
+  );
+}
+const MODE_LABEL: Record<string, string> = { auto: "Auto (follows the calendar)", daily: "Always daily", weekly: "Weekly" };
+function DigestLine() {
+  const t = useGrokTheme();
+  const g = DATA.digest;
+  if (!g) return null;
+  const bits = [`Digest: ${MODE_LABEL[g.mode] ?? g.mode}`, ...(g.activeModes && g.activeModes.length ? [`Now: ${g.activeModes.join(" + ")}`] : []), ...(g.nextDigest ? [`Next: ${fmtShort(g.nextDigest.slice(0, 10))}, ${clock(g.nextDigest)}`] : [])];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <MetaLine items={bits} />
+      {g.schedule ? <div style={{ color: t.text.tertiary, ...typo(t.font.caption) }}>{g.schedule}</div> : null}
     </div>
   );
 }
@@ -1094,7 +1259,7 @@ function BoardToday({ go }: { go: (tab: Tab) => void }) {
       </div>
       <div style={{ marginTop: 8, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         {FORUM.premium ? <Premium site={FORUM.premiumSite ?? FORUM.site} /> : null}
-        <Button label="Open Forum" onClick={() => go("forum")} />
+        <Button label="Open Board" onClick={() => go("forum")} />
       </div>
     </Section>
   );
@@ -1141,7 +1306,7 @@ function TeamTab({ T }: { T: TeamStatus }) {
 // ---------------------------------------------------------------------------
 // page
 // ---------------------------------------------------------------------------
-type Tab = "overview" | "team" | "commits" | "news" | "portal" | "rankings" | "forum" | "following";
+type Tab = "overview" | "team" | "reads" | "x" | "commits" | "news" | "portal" | "rankings" | "forum" | "following";
 export default function Dashboard() {
   const t = useGrokTheme();
   const [tab, setTab] = useState<Tab>("overview");
@@ -1158,11 +1323,13 @@ export default function Dashboard() {
         <Chips<Tab> label="Dashboard sections" options={[
           { value: "overview", label: "Overview" },
           ...(TEAM ? [{ value: "team" as const, label: "Team" }] : []),
+          ...(READS ? [{ value: "reads" as const, label: "Top reads", count: READS.items.length }] : []),
+          ...(XTOP ? [{ value: "x" as const, label: "Top on X", count: XTOP.posts.length }] : []),
           { value: "commits", label: "Commits", count: DATA.commits.length },
           { value: "news", label: "Recruiting", count: DATA.news.length },
           { value: "portal", label: "Portal" },
           { value: "rankings", label: "Rankings" },
-          ...(FORUM ? [{ value: "forum" as const, label: "Forum", count: FORUM.threads.filter((x) => x.verdict === "Read").length }] : []),
+          ...(FORUM ? [{ value: "forum" as const, label: "Board", count: FORUMS.reduce((n, f) => n + f.threads.filter((x) => x.verdict === "Read").length, 0) }] : []),
           ...(FOLLOWING ? [{ value: "following" as const, label: "Following", count: FOLLOWING.posters.length }] : []),
         ]} value={tab} onChange={setTab} />
         {tab === "overview" ? <OverviewTab go={go} /> : null}
@@ -1171,7 +1338,9 @@ export default function Dashboard() {
         {tab === "news" ? <NewsTab go={go} view={view} setView={setView} /> : null}
         {tab === "portal" ? <PortalTab /> : null}
         {tab === "rankings" ? <RankingsTab go={go} /> : null}
-        {tab === "forum" && FORUM ? <ForumTab F={FORUM} /> : null}
+        {tab === "reads" && READS ? <TopReadsTab R={READS} /> : null}
+        {tab === "x" && XTOP ? <TopOnXTab X={XTOP} /> : null}
+        {tab === "forum" && FORUM ? <BoardTab /> : null}
         {tab === "following" && FOLLOWING ? <FollowingTab FL={FOLLOWING} board={FORUM?.board ?? DATA.forum?.board ?? "the board"} /> : null}
         <div style={{ color: t.text.tertiary, borderTop: `1px solid ${t.border.subtle}`, paddingTop: 12, ...typo(t.font.caption) }}>
           As of {DATA.forum?.asOfLabel ?? `${DATA.asOfLabel} (${DATA.tz})`}. UNKNOWN means no source was found; nothing is estimated. {DATA.notes.join(" ")}

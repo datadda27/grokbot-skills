@@ -1070,7 +1070,8 @@
    "type": [
     "object",
     "null"
-   ]
+   ],
+   "description": "Legacy single board. Prefer forums. gen.py moves it into forums."
   },
   "following": {
    "type": [
@@ -1083,6 +1084,331 @@
     "object",
     "null"
    ]
+  },
+  "forums": {
+   "type": "array",
+   "description": "Board tab, one entry per picked board, per site (several sites allowed). Filled by the setup board builder from forum-prefs.md. Read only: never post, react, vote, or follow.",
+   "items": {
+    "type": "object",
+    "required": [
+     "board",
+     "site",
+     "url",
+     "premium",
+     "threads",
+     "stickies"
+    ],
+    "properties": {
+     "board": {
+      "type": "string"
+     },
+     "site": {
+      "type": "string"
+     },
+     "url": {
+      "type": "string",
+      "pattern": "^https?://"
+     },
+     "premium": {
+      "type": "boolean"
+     },
+     "premiumSite": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "asOf": {
+      "type": "string"
+     },
+     "asOfLabel": {
+      "type": "string"
+     },
+     "windowHours": {
+      "type": "number"
+     },
+     "prefs": {
+      "type": "string"
+     },
+     "method": {
+      "type": "string"
+     },
+     "totalThreads": {
+      "type": "integer"
+     },
+     "threads": {
+      "type": "array"
+     },
+     "stickies": {
+      "type": "array"
+     }
+    }
+   }
+  },
+  "topOnX": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "Top on X tab and digest section: top 5 posts about the team from the last 24 hours (recruiting, portal, general team news). Ranked by quotes plus replies, then reposts; good news about a commit or portal target weighs more. Grok Bot's free public X reads only.",
+   "required": [
+    "asOf",
+    "posts"
+   ],
+   "properties": {
+    "asOf": {
+     "type": "string"
+    },
+    "asOfLabel": {
+     "type": "string"
+    },
+    "windowHours": {
+     "type": "number",
+     "default": 24
+    },
+    "method": {
+     "type": "string"
+    },
+    "posts": {
+     "type": "array",
+     "maxItems": 5,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "rank",
+       "url",
+       "author",
+       "handle",
+       "tag",
+       "summary",
+       "quotes",
+       "replies",
+       "reposts",
+       "postedAt"
+      ],
+      "properties": {
+       "rank": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "url": {
+        "type": "string",
+        "pattern": "^https?://"
+       },
+       "author": {
+        "type": "string"
+       },
+       "handle": {
+        "type": "string",
+        "pattern": "^@"
+       },
+       "authorType": {
+        "enum": [
+         "player",
+         "official",
+         "insider",
+         "media",
+         "fan",
+         "other"
+        ]
+       },
+       "tag": {
+        "enum": [
+         "confirmed source",
+         "buzz, unconfirmed"
+        ],
+        "description": "confirmed source: a player, official account, or trusted insider. buzz, unconfirmed: anyone else."
+       },
+       "topic": {
+        "enum": [
+         "Recruiting",
+         "Portal",
+         "Team"
+        ]
+       },
+       "summary": {
+        "type": "string",
+        "description": "One line in your own words."
+       },
+       "quotes": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 0
+       },
+       "replies": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 0
+       },
+       "reposts": {
+        "type": [
+         "integer",
+         "null"
+        ],
+        "minimum": 0
+       },
+       "goodNews": {
+        "type": "boolean"
+       },
+       "postedAt": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "topReads": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "Top reads today tab and digest section. Headline, one line on why it matters, and a big link to the site (send traffic, don't copy). Good news about commits and targets ranks higher. Premium items show only the headline and that there is news: never the pick, odds, or details (gen.py drops why for Premium items). Premium summaries are for the owner's own use only. No screenshots, reposts, or sharing.",
+   "required": [
+    "asOf",
+    "items"
+   ],
+   "properties": {
+    "asOf": {
+     "type": "string"
+    },
+    "asOfLabel": {
+     "type": "string"
+    },
+    "items": {
+     "type": "array",
+     "maxItems": 5,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "rank",
+       "headline",
+       "url",
+       "site",
+       "premium"
+      ],
+      "properties": {
+       "rank": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "headline": {
+        "type": "string"
+       },
+       "why": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "url": {
+        "type": "string",
+        "pattern": "^https?://"
+       },
+       "site": {
+        "type": "string"
+       },
+       "premium": {
+        "type": "boolean"
+       },
+       "premiumSite": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "topic": {
+        "enum": [
+         "Recruiting",
+         "Portal",
+         "Team"
+        ]
+       },
+       "goodNews": {
+        "type": "boolean"
+       },
+       "date": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  "digest": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "Digest mode and schedule, shown on Overview.",
+   "additionalProperties": false,
+   "required": [
+    "mode"
+   ],
+   "properties": {
+    "mode": {
+     "enum": [
+      "auto",
+      "daily",
+      "weekly"
+     ]
+    },
+    "activeModes": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "season",
+       "offseason",
+       "portal window",
+       "signing days",
+       "official visit weekends"
+      ]
+     }
+    },
+    "schedule": {
+     "type": "string",
+     "description": "Plain words, for example: Daily at 7 PM CT plus a Sunday recap."
+    },
+    "seasonStart": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "seasonEnd": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "lastSent": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "nextDigest": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
   }
  },
  "required": [
