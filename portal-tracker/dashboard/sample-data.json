@@ -113,6 +113,12 @@
    "source": "https://example.com/rankings/on3",
    "premium": true,
    "premiumSite": "On3/Rivals"
+  },
+  {
+   "service": "On3",
+   "date": "2026-08-01",
+   "rank": null,
+   "source": "https://example.com/rankings/on3"
   }
  ],
  "commits": [
@@ -167,6 +173,10 @@
      [
       "Other U",
       8
+     ],
+     [
+      "Third U",
+      null
      ]
     ],
     "source": "https://example.com/rpm/1",
@@ -255,22 +265,48 @@
    "hometown": "Lakeside, GA",
    "state": "GA",
    "commitDate": "2026-08-01",
-   "r247": {
-    "stars": 3,
-    "rating": 0.88,
-    "natl": null,
-    "pos": 15,
-    "state": null
-   },
-   "industry": {
-    "stars": 3,
-    "rating": 0.87,
-    "natl": null,
-    "pos": 18,
-    "state": null
-   },
-   "composite247": null,
-   "espn": null,
+   "ratings": [
+    {
+     "service": "247Sports",
+     "value": 88,
+     "scale": "0-100",
+     "stars": 3,
+     "natl": null,
+     "pos": 15,
+     "state": null,
+     "source": "https://example.com/commit/3"
+    },
+    {
+     "service": "On3",
+     "value": 87.5,
+     "scale": "0-100",
+     "stars": 3,
+     "natl": "NR",
+     "pos": 18,
+     "state": null,
+     "source": "https://example.com/commit/3"
+    },
+    {
+     "service": "247Sports Composite",
+     "value": 0.8801,
+     "scale": "0-1",
+     "stars": 3,
+     "natl": null,
+     "pos": null,
+     "state": null,
+     "source": "https://example.com/commit/3"
+    },
+    {
+     "service": "ESPN",
+     "value": null,
+     "scale": "0-100",
+     "stars": null,
+     "natl": null,
+     "pos": null,
+     "state": null,
+     "source": null
+    }
+   ],
    "offers": "Example offers list (example data)",
    "visits": "Official visit Jun 5 (example data)",
    "status": "Committed",
@@ -340,16 +376,16 @@
    "name": "Eli Mockup",
    "pos": "OL",
    "group": "OL",
-   "height": "6-6",
-   "weight": 300,
+   "height": null,
+   "weight": null,
    "highSchool": "Example South",
    "hometown": "Brookfield, LA",
    "state": "LA",
-   "commitDate": "2026-09-12",
+   "commitDate": null,
    "r247": {
     "stars": 3,
     "rating": 0.86,
-    "natl": null,
+    "natl": "NR",
     "pos": 40,
     "state": null
    },
@@ -427,12 +463,12 @@
   {
    "name": "Harper Future",
    "pos": "RB",
-   "ht": "5-11",
-   "wt": 190,
+   "ht": null,
+   "wt": null,
    "hs": "Example Junior High",
-   "commitDate": "2026-08-20",
+   "commitDate": null,
    "rating247": null,
-   "natl247": null,
+   "natl247": "NR",
    "pos247": null,
    "state247": null,
    "composite": null,
@@ -483,18 +519,18 @@
    "source": "https://example.com/ncaa/calendar"
   },
   "current": {
-   "entries": 0,
+   "entries": null,
    "commits": 0,
    "note": "Example: window not open yet."
   },
   "lastCycle": {
    "rankOn3": 30,
-   "rank247": 34,
+   "rank247": null,
    "inOn3": 10,
    "outOn3": 12,
-   "inTP": 9,
-   "outTP": 11,
-   "avgOn3": 85.5,
+   "inTP": null,
+   "outTP": null,
+   "avgOn3": null,
    "topOn3": 91,
    "netValueTP": "-2",
    "sourceOn3": "https://example.com/portal/on3",
@@ -530,7 +566,7 @@
    },
    {
     "pos": "WR",
-    "out": 1,
+    "out": null,
     "inn": 0,
     "net": "-1"
    }
@@ -540,7 +576,8 @@
  },
  "rosterCountsTP": {
   "QB": 4,
-  "WR": 9
+  "WR": 9,
+  "OL": null
  },
  "departures": [],
  "calendar": [
@@ -601,13 +638,14 @@
   },
   "ap": {
    "value": 18,
-   "prev": 21,
+   "prev": null,
    "source": "https://example.com/polls/ap"
   },
   "coaches": {
-   "value": null,
+   "value": "NR",
    "note": "Not ranked",
-   "source": "https://example.com/polls/coaches"
+   "source": "https://example.com/polls/coaches",
+   "prev": 25
   },
   "cfp": {
    "value": null,
@@ -684,7 +722,7 @@
     "date": "2026-10-25"
    },
    {
-    "rank": 4,
+    "rank": null,
     "headline": "Example: depth chart notes before the road game",
     "why": "Who starts at corner after the injury.",
     "url": "https://example.com/reads/4",
@@ -700,11 +738,41 @@
  "topOnX": {
   "asOf": "2026-10-26T18:30:00-05:00",
   "asOfLabel": "Oct 26, 2026, 6:30 PM CT",
-  "windowHours": 24,
-  "method": "Example: ranked by quotes plus replies, then reposts. Good news about a commit or portal target ranks higher.",
+  "windowHours": null,
+  "method": "Example: ranked by quotes plus replies, then reposts. Good news about a commit or portal target ranks higher. At least 3 of the 5 are confirmed source when confirmed posts exist.",
   "posts": [
    {
     "rank": 1,
+    "url": "https://example.com/x/status/10",
+    "author": "Example Fan 2",
+    "handle": "@example_fan2",
+    "authorType": "fan",
+    "tag": "buzz, unconfirmed",
+    "topic": "Recruiting",
+    "summary": "Example: unconfirmed buzz post 1.",
+    "quotes": 900,
+    "replies": 50,
+    "reposts": 120,
+    "goodNews": false,
+    "postedAt": "2026-10-26T13:20:00-05:00"
+   },
+   {
+    "rank": 2,
+    "url": "https://example.com/x/status/11",
+    "author": "Example Fan 3",
+    "handle": "@example_fan3",
+    "authorType": "fan",
+    "tag": "buzz, unconfirmed",
+    "topic": "Recruiting",
+    "summary": "Example: unconfirmed buzz post 2.",
+    "quotes": 700,
+    "replies": 50,
+    "reposts": 120,
+    "goodNews": false,
+    "postedAt": "2026-10-26T13:20:00-05:00"
+   },
+   {
+    "rank": 3,
     "url": "https://example.com/x/status/1",
     "author": "Blake Placeholder",
     "handle": "@example_player",
@@ -719,7 +787,7 @@
     "postedAt": "2026-10-26T15:10:00-05:00"
    },
    {
-    "rank": 2,
+    "rank": 4,
     "url": "https://example.com/x/status/2",
     "author": "Example Insider",
     "handle": "@example_insider",
@@ -734,7 +802,7 @@
     "postedAt": "2026-10-26T11:42:00-05:00"
    },
    {
-    "rank": 3,
+    "rank": null,
     "url": "https://example.com/x/status/3",
     "author": "Example State Football",
     "handle": "@example_official",
@@ -747,21 +815,6 @@
     "reposts": 300,
     "goodNews": false,
     "postedAt": "2026-10-26T09:05:00-05:00"
-   },
-   {
-    "rank": 4,
-    "url": "https://example.com/x/status/4",
-    "author": "Random Fan",
-    "handle": "@example_fan",
-    "authorType": "fan",
-    "tag": "buzz, unconfirmed",
-    "topic": "Recruiting",
-    "summary": "Example: claims a flip is coming. No source given.",
-    "quotes": 55,
-    "replies": 95,
-    "reposts": 120,
-    "goodNews": false,
-    "postedAt": "2026-10-26T13:20:00-05:00"
    }
   ]
  },
@@ -777,7 +830,7 @@
    "windowHours": 24,
    "prefs": "Example: staff posts outrank fan posts; fan claims are rumors until staff confirm them.",
    "method": "Example: staff posts, replies, and views decide the rank.",
-   "totalThreads": 3,
+   "totalThreads": null,
    "threads": [
     {
      "id": "t1",
@@ -799,10 +852,10 @@
      "id": "t2",
      "url": "https://example.com/board/t2",
      "title": "Example thread 2",
-     "replies": 80,
+     "replies": null,
      "views": 1800,
      "latest": "2026-10-26T17:45:00-05:00",
-     "staffPosts": 0,
+     "staffPosts": null,
      "cat": "Portal",
      "label": "Rumor",
      "summary": "Example summary of the thread in a line.",
@@ -824,7 +877,7 @@
      "summary": "Example summary of the thread in a line.",
      "verdict": "Skip",
      "why": "Example: staff posted twice with new detail.",
-     "rank": 3,
+     "rank": null,
      "readIn": false
     }
    ],
@@ -852,7 +905,7 @@
    "premiumSite": null,
    "asOf": "2026-10-26T18:00:00-05:00",
    "asOfLabel": "Oct 26, 2026, 6:00 PM CT",
-   "windowHours": 24,
+   "windowHours": null,
    "prefs": "Example: staff over fans.",
    "method": "Example: same ranking as above.",
    "totalThreads": 1,

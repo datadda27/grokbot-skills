@@ -7,7 +7,7 @@ description: >-
 ---
 # Recruiting & Portal Tracker method
 
-Version: Portal Tracker v2.1 (2026-10-26)
+Version: Portal Tracker v2.1.1 (2026-10-26)
 
 Bump this version line (and add a changelog line) whenever this method changes.
 
@@ -37,6 +37,8 @@ This bot tracks one college football team (for example, your team; any FBS or FC
 1. The team's official athletics site and verified official X accounts (team, head coach, recruiting staff).
 2. The player's own verified X or Instagram post (commit and portal announcements usually land here first).
 3. National services: Rivals, 247Sports, ESPN. On3 owns Rivals, so treat On3 and Rivals as one service. Note which service a rating or rank comes from. The two composites are the Rivals Industry Ranking and the 247Sports Composite; say which one you cite.
+   - Store each rating exactly as the service publishes it, with the service name and its scale, for example On3 or 247Sports on 0-100 and the 247Sports Composite on 0-1. Never convert one scale to another or compare raw numbers across services. In the dashboard data this is a rating object {service, value, scale}.
+   - 247Sports and ESPN pages often block automated reads. If the page did not load (for example the owner is not logged in), those values are UNKNOWN (null in the data). Never estimate or back-fill them from another service.
 4. Named beat reporters and recruiting insiders on X that the owner trusts. X is a strong primary source for this beat; check the account is the real one and not a parody (parody accounts often say "parody" or "fan account" in the bio or have look-alike handles).
 5. Team message boards and premium sites, only if the owner opted in (see hard rules). Staff posts outrank fan posts. Treat fan posts as rumors unless a staff member confirms them.
 
@@ -104,6 +106,7 @@ Top on X:
 - The top 5 posts from the last 24 hours about the team: recruiting, portal, and general team news.
 - Rank by quotes plus replies first, then reposts. Weight good news about a commit or portal target higher.
 - Tag posts from players, official accounts, and trusted insiders "confirmed source". A big post from a random account is "buzz, unconfirmed".
+- When any confirmed-source posts exist, at least 3 of the 5 must be confirmed source (all of them if there are fewer than 3). Buzz fills the rest. gen.py enforces this when it orders and caps the list.
 - One line per post in your own words, the counts, and a link to the post. Use only Grok Bot's free public X reads.
 
 Saturday high school game check (inside the Saturday main routine run, even on a day with no digest):
@@ -144,7 +147,7 @@ Tabs (in this order, a tab with no data is hidden, never shown empty):
    prediction odds, source links, and a "This season" list of the last 5 high school games
    (newest first: date, opponent, short stat line or note, source link; hidden when empty).
    Decommits and next-class commits below.
-3. Recruiting: news (Visit, Offer, Commit, Ranking, Rumor), visits, targets, flip watch (Defend / Attack).
+3. Recruiting: news (Visit, Offer, Commit, Ranking, Rumor), visits, targets, flip watch (Defend / Target).
 4. Portal: window dates and status, last cycle in/out, incoming and outgoing tables, impact by position.
 5. Rankings: team ranks by service, rank-over-time chart, player ranks by service.
 6. Board (opt-in only): top 15 threads ranked Read/Skim/Skip, staff stickies. One board picker chip per site when there is more than one site.
@@ -152,6 +155,10 @@ Tabs (in this order, a tab with no data is hidden, never shown empty):
 
 Data rules:
 - Every item has a source URL. Missing values are null and show as UNKNOWN. Never estimate.
+- Every number field accepts null (ranks, counts, ratings, height, weight, dates). The page shows UNKNOWN for null, never "null", "No. null" or NaN.
+- Ratings: each commit can carry ratings, a list of {service, value, scale, stars, natl, pos, state, source}, one per service, as published. The older r247 and industry fields still work.
+- Conference: teamStatus.conference is generic. Put the conference name from the source in its label; never assume a conference. Older data files that kept the standing under teamStatus.big12 still work: gen.py moves it to teamStatus.conference.
+- Ranks (national, position, state, ESPN, polls): a number when the source ranks the player or team; "NR" when the source lists them as unranked (shows NR); null when there is no source or value (shows UNKNOWN). Only write "NR" when a source you read says unranked. Never write or show NA.
 - Every rumor, speculation, or opinion item has a label matching how the reporter framed it.
 - Premium items set premium: true and premiumSite ("247", "On3/Rivals", "ESPN+", or the team site name).
   The badge reads "Premium · <site>".
@@ -208,12 +215,12 @@ Daily, for each picked board:
 - **resume:** resume the bot's own routines and say when the next run is.
 - **feedback:** start the feedback flow below.
 - **digest auto**, **digest daily**, **digest weekly:** switch the digest mode (see Digest timing), confirm it, and say when the next digest is.
-- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1 (2026-10-26)".
+- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1.1 (2026-10-26)".
 
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1 (2026-10-26)"), added automatically.
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1.1 (2026-10-26)"), added automatically.
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSfOK3zhOYxKsAvNsFA9NJM4wTKCfTC02ggoLiiq4pOzaF11jw/viewform
 - Never submit feedback for the owner. They open the link and send it themselves.
 - The feedback form belongs to the maker. Never try to edit it.
@@ -226,4 +233,5 @@ Plain words, short lines, fan-friendly. No hype, no scare copy. Lead with the ne
 - 2026-10-26 (v2, round 3): Premium now supports multiple logins (247Sports, On3/Rivals as one login, ESPN+, an owner-named team site, or None), each item labeled with its site, re-login asked one site at a time, and runs continue with whatever sites are available. Added a Setup section (sample digest right after setup, one-time feedback mention), an Owner commands section (switch team, pause, resume, feedback), and a Feedback section (GitHub prefilled issue link or the feedback form, never submitted for the owner).
 - 2026-10-26 (v2, round 4): Replaced the Dashboard section with the template-based spec (fetch template and schema, fill only the data file, one Page overwritten in place, tab order, hidden empty tabs, data rules with premiumSite and the "Premium · <site>" badge, 80 KB cap, phone-first wrapping, sharing). Added hsGames ("This season", last 5 high school games) to the commit details and data rules, and a Saturday high school game check in the digest (sources, never estimate, standout games only under Recruiting, logged in seen-items). Dropped "and colors" from the logo rule. Added the Setup line on logins staying in the owner's vault. Added the version owner command, the version line in every feedback issue body, and the rule to bump the version whenever the method changes. Filled in the feedback form link.
 - 2026-10-26 (v2.1): Added Digest timing (auto, always daily, weekly; auto follows the team's own season through its last game including bowls or CFP, offseason 2 or 3 a week, portal window daily plus midday, signing days morning, midday and night with a live signed list, June official visit weekends daily, overlapping modes in one digest, no filler) and the digest mode commands. Added Top reads today and Top on X to the digest and dashboard (free public X reads only, confirmed source vs buzz tags, Premium top reads headline only). Stated the Premium sharing rule plainly (own use only, no screenshots, reposts, or sharing). Shipped the board builder in setup, per site, multiple sites. Noted the feedback form belongs to the maker.
+- 2026-10-26 (v2.1.1): Every number field in the schema and template now accepts null and renders UNKNOWN (fixes the 3 TS2322 errors a stranger test hit on lastCycle rank247, inTP and outTP). Flip watch uses Defend / Target everywhere. Removed the leftover conference assumption from gen.py; teamStatus.conference is generic. Ratings are stored as published with service and scale ({service, value, scale}); gen.py still accepts the older shape. Top on X keeps at least 3 confirmed-source posts out of 5 when any exist. 247Sports and ESPN values are UNKNOWN when their pages block automated reads; never estimated. Ranks show NR when a source lists the player as unranked and UNKNOWN when there is no source or value; NA is gone from the page. gen.py maps the legacy teamStatus.big12 key to teamStatus.conference so older data keeps its standing.
 - v1: First version.

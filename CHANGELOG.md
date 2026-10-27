@@ -13,3 +13,6 @@
 
 ## 2026-10-26
 - portal-tracker v2.1. Calendar-based digest timing (auto, daily, weekly; team-specific season through bowl/CFP; portal window and signing day surges), Top on X and Top reads today sections, premium sharing rule, board builder in setup, new dashboard tabs and gen.py --help.
+
+## 2026-10-26
+- portal-tracker v2.1.1. Dashboard accepts unknown (null) numbers and shows UNKNOWN, NR for unranked, Defend / Target wording, a generic conference standing (legacy big12 mapped), ratings stored per service with their scale, at least 3 confirmed sources in Top on X, and a note that 247 and ESPN values stay UNKNOWN without a login.

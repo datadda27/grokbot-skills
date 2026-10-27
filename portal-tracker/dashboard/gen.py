@@ -35,28 +35,110 @@ else: d.pop("commits2028",None)
 if "nextClassRank247" not in d: d["nextClassRank247"]=d.pop("class2028Rank247",None)
 else: d.pop("class2028Rank247",None)
 pt=d["portal"]
-if "current" not in pt: pt["current"]=pt.pop("current2027",{"entries":0,"commits":0,"note":"UNKNOWN"})
+if "current" not in pt: pt["current"]=pt.pop("current2027",{"entries":None,"commits":None,"note":"UNKNOWN"})
 else: pt.pop("current2027",None)
 d.setdefault("teamShort",d.get("team"))
 d.setdefault("coach",None)
+# conference standing lives in teamStatus.conference (generic; label is the conference name from the data, never assumed here)
+# legacy: older data files kept the standing under teamStatus.big12; map it so old data keeps its standing
 ts=d.get("teamStatus")
-if ts and "big12" in ts and "conference" not in ts: ts["conference"]=dict(ts.pop("big12"),label="Big 12")  # legacy key from the digest
+if isinstance(ts,dict) and "big12" in ts:
+    old=ts.pop("big12")
+    if not ts.get("conference") and isinstance(old,dict):
+        ts["conference"]=dict(old); ts["conference"].setdefault("label","Big 12")
 d.setdefault("page",{"title":f"{d['team']} Recruiting & Portal Dashboard","summary":f"{d.get('classYear','')} class, transfer portal and rankings."})
 for c in d["commits"]: c.setdefault("hsGames",[])
+# --- ratings, stored as each service publishes them: [{service, value, scale, stars, natl, pos, state, source}]
+# New shape: commit.ratings. Old shape (r247 / industry / composite247 / espn) is still accepted; each fills the other.
+NULLR={"stars":None,"rating":None,"natl":None,"pos":None,"state":None}
+def kind(s):
+    s=(s or "").lower()
+    if "composite" in s: return "composite"
+    if "espn" in s: return "espn"
+    if "industry" in s or "rivals" in s: return "industry"
+    if "247" in s: return "r247"
+    return None
+# --- player ranks: a number, "NR" (the source lists the player as unranked), or null (no source or value, shows UNKNOWN)
+NR_WORDS={"nr","n/r","unranked","not ranked","no rank"}
+def nr(v):
+    if isinstance(v,str):
+        s=v.strip()
+        if s.lower() in NR_WORDS: return "NR"
+        s=s.lstrip("#").replace(",","")
+        if s.isdigit(): return int(s)
+        return None
+    if isinstance(v,bool): return None
+    return v if isinstance(v,(int,float)) else None
+RANK_KEYS=("natl","pos","state")
+def fix_ranks(o,keys=RANK_KEYS):
+    if isinstance(o,dict):
+        for k in keys:
+            if k in o: o[k]=nr(o[k])
+for c in d["commits"]:
+    for k in ("r247","industry","composite247"): fix_ranks(c.get(k))
+    fix_ranks(c.get("espn"),("rank",))
+    for r in c.get("ratings") or []: fix_ranks(r)
+for c in d.get("nextClassCommits") or []: fix_ranks(c,("natl247","pos247","state247"))
+if isinstance(ts,dict):
+    for k in ("ap","coaches","cfp"): fix_ranks(ts.get(k),("value","prev"))
+def robj(service,value,scale,stars=None,natl=None,pos=None,state=None,source=None):
+    return {"service":service,"value":value,"scale":scale,"stars":stars,"natl":natl,"pos":pos,"state":state,"source":source}
+for c in d["commits"]:
+    rs=c.get("ratings")
+    if rs:
+        rs=[robj(r.get("service") or "UNKNOWN",r.get("value"),r.get("scale"),r.get("stars"),r.get("natl"),r.get("pos"),r.get("state"),r.get("source")) for r in rs]
+        for r in rs:
+            k=kind(r["service"])
+            if k in ("r247","industry") and not c.get(k): c[k]={"stars":r["stars"],"rating":r["value"],"natl":r["natl"],"pos":r["pos"],"state":r["state"]}
+            if k=="composite" and c.get("composite247") is None: c["composite247"]={"rating":r["value"],"natl":r["natl"],"pos":r["pos"],"state":r["state"]}
+            if k=="espn" and c.get("espn") is None: c["espn"]={"rank":r["natl"],"grade":r["value"]}
+    else:
+        # old shape carries no scale; a value of 1 or less can only be on a 0-1 scale
+        sc=lambda v:None if v is None else ("0-1" if v<=1 else "0-100")
+        rs=[]
+        a=c.get("r247") or {}
+        if any(v is not None for v in a.values()): rs.append(robj("247Sports",a.get("rating"),sc(a.get("rating")),a.get("stars"),a.get("natl"),a.get("pos"),a.get("state")))
+        cp=c.get("composite247")
+        if cp and any(v is not None for v in cp.values()):
+            v=cp.get("rating"); st=None if v is None else (5 if v>=0.9834 else 4 if v>=0.89 else 3)
+            rs.append(robj("247Sports Composite",v,"0-1",st,cp.get("natl"),cp.get("pos"),cp.get("state")))
+        a=c.get("industry") or {}
+        if any(v is not None for v in a.values()): rs.append(robj("Rivals Industry",a.get("rating"),sc(a.get("rating")),a.get("stars"),a.get("natl"),a.get("pos"),a.get("state")))
+        e=c.get("espn")
+        if e and any(v is not None for v in e.values()): rs.append(robj("ESPN",e.get("grade"),sc(e.get("grade")),None,e.get("rank")))
+    c["ratings"]=rs
+    for k in ("r247","industry"): c[k]=dict(NULLR,**(c.get(k) or {}))
+    c.setdefault("composite247",None); c.setdefault("espn",None)
+    c.setdefault("height",None); c.setdefault("weight",None); c.setdefault("commitDate",None)
+def rk(x): return x.get("rank") if isinstance(x.get("rank"),(int,float)) else 10**6  # null ranks sort last
+def renumber(xs):
+    for i,x in enumerate(xs,1):
+        if not isinstance(x.get("rank"),(int,float)): x["rank"]=i
+    return xs
 FORUM_CAP=15
 # one board per site; several sites allowed. "forum" (single) is still accepted.
 fs=[x for x in (d.get("forums") or ([d["forum"]] if d.get("forum") else [])) if x]
 for f in fs:
     f.setdefault("totalThreads",len(f["threads"]))
-    f["threads"]=sorted(f["threads"],key=lambda x:x.get("rank",999))[:FORUM_CAP]
+    f["threads"]=renumber(sorted(f["threads"],key=rk)[:FORUM_CAP])
 d["forums"]=fs; d.pop("forum",None)  # the page sets forum = forums[0]
 # --- Top on X (5 posts) and Top reads (5 items). Premium reads keep the headline only.
-X_CAP=5; READS_CAP=5
+# Top on X: when confirmed-source posts exist, at least 3 of the 5 (or all of them, if fewer) are confirmed source; buzz fills the rest.
+X_CAP=5; READS_CAP=5; X_MIN_CONFIRMED=3
+def is_confirmed(x): return str(x.get("tag","")).startswith("confirmed")
+def pick_x(posts):
+    posts=sorted(posts,key=rk)
+    conf=[x for x in posts if is_confirmed(x)]
+    keep=conf[:min(X_MIN_CONFIRMED,len(conf))]
+    rest=[x for x in posts if not any(x is k for k in keep)]
+    chosen=sorted(keep+rest[:X_CAP-len(keep)],key=rk)
+    for i,x in enumerate(chosen,1): x["rank"]=i
+    return chosen
 tx=d.get("topOnX")
-if tx: tx["posts"]=sorted(tx.get("posts") or [],key=lambda x:x.get("rank",999))[:X_CAP]
+if tx: tx["posts"]=pick_x(tx.get("posts") or [])
 tr=d.get("topReads")
 if tr:
-    tr["items"]=sorted(tr.get("items") or [],key=lambda x:x.get("rank",999))[:READS_CAP]
+    tr["items"]=renumber(sorted(tr.get("items") or [],key=rk)[:READS_CAP])
     for x in tr["items"]:
         x.setdefault("premium",False); x.setdefault("premiumSite",None)
         if x["premium"]: x["why"]=None
@@ -103,7 +185,7 @@ for u,n in cnt.most_common():
 raw=ser(d)
 for k,u in sorted(S.items(),key=lambda kv:-len(kv[1])): raw=raw.replace(json.dumps(u),"S."+k)
 TAIL='''// Ratings tuples: [stars, rating, natl, pos, state]
-type RT = [number | null, number | null, number | null, number | null, number | null];
+type RT = [number | null, number | null, Rank, Rank, Rank];
 type RawCommit = Omit<Commit, "r247" | "industry"> & { r247: RT; industry: RT };
 type RawData = Omit<Dashboard, "commits" | "portal" | "forum"> & { commits: RawCommit[]; portal: Omit<Dashboard["portal"], "incoming"> & { incoming: Omit<Incoming, "sources">[] } };
 const tup = (r: RT): Rating => ({ stars: r[0], rating: r[1], natl: r[2], pos: r[3], state: r[4] });

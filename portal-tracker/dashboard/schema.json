@@ -17,7 +17,10 @@
    ]
   },
   "classYear": {
-   "type": "number"
+   "type": [
+    "number",
+    "null"
+   ]
   },
   "asOf": {
    "type": "string",
@@ -100,7 +103,10 @@
       "description": "ISO date YYYY-MM-DD"
      },
      "rank": {
-      "type": "number"
+      "type": [
+       "number",
+       "null"
+      ]
      },
      "source": {
       "type": "string",
@@ -144,10 +150,18 @@
       "description": "Filter group: QB, RB, WR, TE, OL, DL, LB, DB, ATH, K/P"
      },
      "height": {
-      "type": "string"
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "As published, for example 6-2. null when not listed (renders UNKNOWN)."
      },
      "weight": {
-      "type": "number"
+      "type": [
+       "number",
+       "null"
+      ],
+      "description": "Pounds. null when not listed (renders UNKNOWN)."
      },
      "highSchool": {
       "type": "string"
@@ -160,8 +174,11 @@
       "type": "string"
      },
      "commitDate": {
-      "type": "string",
-      "description": "ISO date YYYY-MM-DD"
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "ISO date YYYY-MM-DD. null when not known (renders UNKNOWN)."
      },
      "r247": {
       "type": "object",
@@ -179,22 +196,13 @@
         ]
        },
        "natl": {
-        "type": [
-         "number",
-         "null"
-        ]
+        "$ref": "#/definitions/rank"
        },
        "pos": {
-        "type": [
-         "number",
-         "null"
-        ]
+        "$ref": "#/definitions/rank"
        },
        "state": {
-        "type": [
-         "number",
-         "null"
-        ]
+        "$ref": "#/definitions/rank"
        }
       },
       "required": [
@@ -203,7 +211,8 @@
        "natl",
        "pos",
        "state"
-      ]
+      ],
+      "description": "Older shape, still accepted. Optional when ratings is given."
      },
      "industry": {
       "type": "object",
@@ -221,22 +230,13 @@
         ]
        },
        "natl": {
-        "type": [
-         "number",
-         "null"
-        ]
+        "$ref": "#/definitions/rank"
        },
        "pos": {
-        "type": [
-         "number",
-         "null"
-        ]
+        "$ref": "#/definitions/rank"
        },
        "state": {
-        "type": [
-         "number",
-         "null"
-        ]
+        "$ref": "#/definitions/rank"
        }
       },
       "required": [
@@ -245,19 +245,22 @@
        "natl",
        "pos",
        "state"
-      ]
+      ],
+      "description": "Older shape, still accepted. Optional when ratings is given."
      },
      "composite247": {
       "type": [
        "object",
        "null"
-      ]
+      ],
+      "description": "Older shape, still accepted. Optional when ratings is given. Its natl, pos and state follow the rank rule (number, \"NR\", or null)."
      },
      "espn": {
       "type": [
        "object",
        "null"
-      ]
+      ],
+      "description": "Older shape, still accepted. Optional when ratings is given. Its rank follow the rank rule (number, \"NR\", or null)."
      },
      "offers": {
       "type": [
@@ -291,13 +294,81 @@
       "type": [
        "object",
        "null"
-      ]
+      ],
+      "properties": {
+       "lines": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": [
+          {
+           "type": "string"
+          },
+          {
+           "type": [
+            "number",
+            "null"
+           ]
+          }
+         ]
+        }
+       },
+       "source": {
+        "type": "string"
+       },
+       "premium": {
+        "type": "boolean"
+       },
+       "premiumSite": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
      },
      "picks": {
       "type": [
        "object",
        "null"
-      ]
+      ],
+      "properties": {
+       "items": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": [
+          {
+           "type": "string"
+          },
+          {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          {
+           "type": "string"
+          }
+         ]
+        }
+       },
+       "team": {
+        "type": "string"
+       },
+       "source": {
+        "type": "string"
+       },
+       "premium": {
+        "type": "boolean"
+       },
+       "premiumSite": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      }
      },
      "hsGames": {
       "type": "array",
@@ -347,6 +418,13 @@
       },
       "maxItems": 5,
       "description": "This season's high school games, newest first. Empty hides the \"This season\" section."
+     },
+     "ratings": {
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/rating"
+      },
+      "description": "Preferred shape: one entry per service, as published. The older r247 / industry / composite247 / espn fields are still accepted; gen.py fills each shape from the other."
      }
     },
     "required": [
@@ -360,10 +438,6 @@
      "hometown",
      "state",
      "commitDate",
-     "r247",
-     "industry",
-     "composite247",
-     "espn",
      "offers",
      "visits",
      "status",
@@ -431,17 +505,26 @@
       "type": "string"
      },
      "ht": {
-      "type": "string"
+      "type": [
+       "string",
+       "null"
+      ]
      },
      "wt": {
-      "type": "number"
+      "type": [
+       "number",
+       "null"
+      ]
      },
      "hs": {
       "type": "string"
      },
      "commitDate": {
-      "type": "string",
-      "description": "ISO date YYYY-MM-DD"
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "ISO date YYYY-MM-DD, or null"
      },
      "rating247": {
       "type": [
@@ -450,22 +533,13 @@
       ]
      },
      "natl247": {
-      "type": [
-       "number",
-       "null"
-      ]
+      "$ref": "#/definitions/rank"
      },
      "pos247": {
-      "type": [
-       "number",
-       "null"
-      ]
+      "$ref": "#/definitions/rank"
      },
      "state247": {
-      "type": [
-       "number",
-       "null"
-      ]
+      "$ref": "#/definitions/rank"
      },
      "composite": {
       "type": [
@@ -605,10 +679,16 @@
      "type": "object",
      "properties": {
       "entries": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "commits": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "note": {
        "type": "string"
@@ -624,28 +704,52 @@
      "type": "object",
      "properties": {
       "rankOn3": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "rank247": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "inOn3": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "outOn3": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "inTP": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "outTP": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "avgOn3": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "topOn3": {
-       "type": "number"
+       "type": [
+        "number",
+        "null"
+       ]
       },
       "netValueTP": {
        "type": "string"
@@ -676,7 +780,8 @@
       "sourceOn3",
       "source247",
       "sourceTP"
-     ]
+     ],
+     "description": "Last completed portal cycle. Any number may be null. 247Sports and ESPN pages often block automated reads: their values stay null (UNKNOWN) unless the owner is logged in and the page was read. Never estimate them."
     },
     "incoming": {
      "type": "array",
@@ -776,10 +881,16 @@
         "type": "string"
        },
        "out": {
-        "type": "number"
+        "type": [
+         "number",
+         "null"
+        ]
        },
        "inn": {
-        "type": "number"
+        "type": [
+         "number",
+         "null"
+        ]
        },
        "net": {
         "type": "string"
@@ -818,7 +929,10 @@
   "rosterCountsTP": {
    "type": "object",
    "additionalProperties": {
-    "type": "number"
+    "type": [
+     "number",
+     "null"
+    ]
    }
   },
   "departures": {
@@ -918,7 +1032,8 @@
       "enum": [
        "Defend",
        "Target"
-      ]
+      ],
+      "description": "Defend: our commit drawing flip interest. Target: another school's commit we are pursuing."
      },
      "cls": {
       "type": "string"
@@ -1083,7 +1198,205 @@
    "type": [
     "object",
     "null"
-   ]
+   ],
+   "description": "Team tab. Every number may be null (renders UNKNOWN).",
+   "properties": {
+    "asOf": {
+     "type": "string"
+    },
+    "record": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "value": {
+       "type": [
+        "string",
+        "number",
+        "null"
+       ]
+      },
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "conference": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "description": "Generic conference standing for whatever conference the team plays in. label is the conference name from the source; leave it null and the page says Conference standing.",
+     "properties": {
+      "value": {
+       "type": [
+        "string",
+        "number",
+        "null"
+       ]
+      },
+      "label": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "ap": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "value": {
+       "$ref": "#/definitions/rank"
+      },
+      "prev": {
+       "$ref": "#/definitions/rank"
+      },
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "coaches": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "value": {
+       "$ref": "#/definitions/rank"
+      },
+      "prev": {
+       "$ref": "#/definitions/rank"
+      },
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "cfp": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "value": {
+       "$ref": "#/definitions/rank"
+      },
+      "prev": {
+       "$ref": "#/definitions/rank"
+      },
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "lastGame": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "value": {
+       "type": [
+        "string",
+        "number",
+        "null"
+       ]
+      },
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    },
+    "schedule": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "properties": {
+      "source": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "results": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "upcoming": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
   },
   "forums": {
    "type": "array",
@@ -1125,7 +1438,10 @@
       "type": "string"
      },
      "windowHours": {
-      "type": "number"
+      "type": [
+       "number",
+       "null"
+      ]
      },
      "prefs": {
       "type": "string"
@@ -1134,13 +1450,68 @@
       "type": "string"
      },
      "totalThreads": {
-      "type": "integer"
+      "type": [
+       "integer",
+       "null"
+      ]
      },
      "threads": {
-      "type": "array"
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "replies": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "views": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "staffPosts": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "rank": {
+         "type": [
+          "integer",
+          "null"
+         ]
+        }
+       }
+      }
      },
      "stickies": {
-      "type": "array"
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "replies": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "views": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "staffPosts": {
+         "type": [
+          "number",
+          "null"
+         ]
+        }
+       }
+      }
      }
     }
    }
@@ -1150,7 +1521,7 @@
     "object",
     "null"
    ],
-   "description": "Top on X tab and digest section: top 5 posts about the team from the last 24 hours (recruiting, portal, general team news). Ranked by quotes plus replies, then reposts; good news about a commit or portal target weighs more. Grok Bot's free public X reads only.",
+   "description": "Top on X tab and digest section: top 5 posts about the team from the last 24 hours (recruiting, portal, general team news). Ranked by quotes plus replies, then reposts; good news about a commit or portal target weighs more. When confirmed-source posts exist, at least 3 of the 5 are confirmed source (all of them if fewer than 3) and buzz fills the rest; gen.py enforces this and renumbers. Grok Bot's free public X reads only.",
    "required": [
     "asOf",
     "posts"
@@ -1163,7 +1534,10 @@
      "type": "string"
     },
     "windowHours": {
-     "type": "number",
+     "type": [
+      "number",
+      "null"
+     ],
      "default": 24
     },
     "method": {
@@ -1189,7 +1563,10 @@
       ],
       "properties": {
        "rank": {
-        "type": "integer",
+        "type": [
+         "integer",
+         "null"
+        ],
         "minimum": 1
        },
        "url": {
@@ -1295,7 +1672,10 @@
       ],
       "properties": {
        "rank": {
-        "type": "integer",
+        "type": [
+         "integer",
+         "null"
+        ],
         "minimum": 1
        },
        "headline": {
@@ -1437,5 +1817,74 @@
   "flipWatch",
   "targets",
   "premiumNote"
- ]
+ ],
+ "definitions": {
+  "rating": {
+   "type": "object",
+   "required": [
+    "service",
+    "value",
+    "scale"
+   ],
+   "description": "One service's rating exactly as that service publishes it. Never convert between scales.",
+   "properties": {
+    "service": {
+     "type": "string",
+     "description": "Service name as published, for example 247Sports, 247Sports Composite, On3, On3 Industry, Rivals Industry, ESPN"
+    },
+    "value": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "The rating on the service's own scale, or null when not published or not readable (renders UNKNOWN)"
+    },
+    "scale": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "The service's published scale, for example 0-100 (On3, 247Sports, ESPN grade) or 0-1 (247Sports Composite)"
+    },
+    "stars": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "natl": {
+     "$ref": "#/definitions/rank"
+    },
+    "pos": {
+     "$ref": "#/definitions/rank"
+    },
+    "state": {
+     "$ref": "#/definitions/rank"
+    },
+    "source": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Source URL"
+    }
+   }
+  },
+  "rank": {
+   "description": "A player or poll rank. A number when the source ranks the player; the string \"NR\" when the source lists the player as unranked (renders NR); null when there is no source or value (renders UNKNOWN). gen.py also accepts \"unranked\", \"not ranked\" and \"N/R\" and turns them into \"NR\". Never write NA.",
+   "anyOf": [
+    {
+     "type": "number"
+    },
+    {
+     "type": "null"
+    },
+    {
+     "enum": [
+      "NR"
+     ]
+    }
+   ]
+  }
+ }
 }
