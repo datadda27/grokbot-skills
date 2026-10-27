@@ -823,6 +823,20 @@
          "string",
          "null"
         ]
+       },
+       "source": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "This transfer's source URL. null or missing shows 'No source'. gen.py uses the first of sources when source is missing."
+       },
+       "sources": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        },
+        "description": "Older shape, still accepted"
        }
       },
       "required": [
@@ -859,16 +873,18 @@
         ]
        },
        "source": {
-        "type": "string",
-        "description": "Source URL"
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "Source URL. null or missing shows 'No source'."
        }
       },
       "required": [
        "name",
        "pos",
        "toSchool",
-       "starsTP",
-       "source"
+       "starsTP"
       ]
      }
     },
@@ -954,16 +970,18 @@
       "type": "string"
      },
      "source": {
-      "type": "string",
-      "description": "Source URL"
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "Source URL. null or missing shows 'No source'."
      }
     },
     "required": [
      "name",
      "pos",
      "date",
-     "note",
-     "source"
+     "note"
     ]
    }
   },
@@ -1145,6 +1163,58 @@
    },
    "description": "Named URLs reused across the data"
   },
+  "serviceNames": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "Names of the services the captions cite, from the data. Captions never hard-code a service. A missing name shows 'Source: UNKNOWN' or the mention is left out. gen.py fills a missing name only where an older field name itself names the service and holds a value (r247 = 247Sports, industry = Rivals Industry, nextClassRank247 = 247Sports, On3 portal fields = On3, TransferPortl portal fields = TransferPortl). commitDates is never inferred.",
+   "properties": {
+    "ratings": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Service behind the main commit ratings, star counts and the Top commits list"
+    },
+    "industry": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Industry ranking named in the Star mix caption"
+    },
+    "commitDates": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Service the commit dates come from (Commits by month)"
+    },
+    "classRank": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Service behind the next class rank"
+    },
+    "portalRating": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Service behind the portal class transfer ratings and counts"
+    },
+    "portalValue": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Service behind portal net value, impact by position and outgoing stars"
+    }
+   },
+   "additionalProperties": false
+  },
   "ratingsNote": {
    "type": [
     "string",
@@ -1272,7 +1342,8 @@
      ],
      "properties": {
       "value": {
-       "$ref": "#/definitions/rank"
+       "$ref": "#/definitions/rank",
+       "description": "Team poll rank: a number; \"NR\" when the poll was read and the team is not in it (the page shows \"Unranked\"; gen.py also accepts \"Unranked\"); null only when no poll source could be read (shows UNKNOWN)."
       },
       "prev": {
        "$ref": "#/definitions/rank"
@@ -1281,15 +1352,78 @@
        "type": [
         "string",
         "null"
-       ]
+       ],
+       "description": "Link to the poll page that was read (for example the AP poll page or NCAA.com rankings)"
       },
       "note": {
        "type": [
         "string",
         "null"
        ]
+      },
+      "notReleased": {
+       "type": [
+        "boolean",
+        "null"
+       ],
+       "description": "true only when a source says the ranking is not out yet; needs source. The page then shows 'Not out yet'. Otherwise an empty value shows UNKNOWN."
+      },
+      "date": {
+       "type": [
+        "string",
+        "null"
+       ],
+       "description": "ISO date (YYYY-MM-DD) of the poll or rankings release that was read"
       }
-     }
+     },
+     "allOf": [
+      {
+       "if": {
+        "properties": {
+         "notReleased": {
+          "const": true
+         }
+        },
+        "required": [
+         "notReleased"
+        ]
+       },
+       "then": {
+        "properties": {
+         "source": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "required": [
+         "source"
+        ]
+       }
+      },
+      {
+       "if": {
+        "properties": {
+         "value": {
+          "const": "NR"
+         }
+        },
+        "required": [
+         "value"
+        ]
+       },
+       "then": {
+        "properties": {
+         "source": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "required": [
+         "source"
+        ]
+       }
+      }
+     ]
     },
     "coaches": {
      "type": [
@@ -1298,7 +1432,8 @@
      ],
      "properties": {
       "value": {
-       "$ref": "#/definitions/rank"
+       "$ref": "#/definitions/rank",
+       "description": "Team poll rank: a number; \"NR\" when the poll was read and the team is not in it (the page shows \"Unranked\"; gen.py also accepts \"Unranked\"); null only when no poll source could be read (shows UNKNOWN)."
       },
       "prev": {
        "$ref": "#/definitions/rank"
@@ -1307,15 +1442,78 @@
        "type": [
         "string",
         "null"
-       ]
+       ],
+       "description": "Link to the poll page that was read (for example the AP poll page or NCAA.com rankings)"
       },
       "note": {
        "type": [
         "string",
         "null"
        ]
+      },
+      "notReleased": {
+       "type": [
+        "boolean",
+        "null"
+       ],
+       "description": "true only when a source says the ranking is not out yet; needs source. The page then shows 'Not out yet'. Otherwise an empty value shows UNKNOWN."
+      },
+      "date": {
+       "type": [
+        "string",
+        "null"
+       ],
+       "description": "ISO date (YYYY-MM-DD) of the poll or rankings release that was read"
       }
-     }
+     },
+     "allOf": [
+      {
+       "if": {
+        "properties": {
+         "notReleased": {
+          "const": true
+         }
+        },
+        "required": [
+         "notReleased"
+        ]
+       },
+       "then": {
+        "properties": {
+         "source": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "required": [
+         "source"
+        ]
+       }
+      },
+      {
+       "if": {
+        "properties": {
+         "value": {
+          "const": "NR"
+         }
+        },
+        "required": [
+         "value"
+        ]
+       },
+       "then": {
+        "properties": {
+         "source": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "required": [
+         "source"
+        ]
+       }
+      }
+     ]
     },
     "cfp": {
      "type": [
@@ -1324,7 +1522,8 @@
      ],
      "properties": {
       "value": {
-       "$ref": "#/definitions/rank"
+       "$ref": "#/definitions/rank",
+       "description": "Team poll rank: a number; \"NR\" when the poll was read and the team is not in it (the page shows \"Unranked\"; gen.py also accepts \"Unranked\"); null only when no poll source could be read (shows UNKNOWN)."
       },
       "prev": {
        "$ref": "#/definitions/rank"
@@ -1333,15 +1532,78 @@
        "type": [
         "string",
         "null"
-       ]
+       ],
+       "description": "Link to the poll page that was read (for example the AP poll page or NCAA.com rankings)"
       },
       "note": {
        "type": [
         "string",
         "null"
        ]
+      },
+      "notReleased": {
+       "type": [
+        "boolean",
+        "null"
+       ],
+       "description": "true only when a source says the ranking is not out yet; needs source. The page then shows 'Not out yet'. Otherwise an empty value shows UNKNOWN."
+      },
+      "date": {
+       "type": [
+        "string",
+        "null"
+       ],
+       "description": "ISO date (YYYY-MM-DD) of the poll or rankings release that was read"
       }
-     }
+     },
+     "allOf": [
+      {
+       "if": {
+        "properties": {
+         "notReleased": {
+          "const": true
+         }
+        },
+        "required": [
+         "notReleased"
+        ]
+       },
+       "then": {
+        "properties": {
+         "source": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "required": [
+         "source"
+        ]
+       }
+      },
+      {
+       "if": {
+        "properties": {
+         "value": {
+          "const": "NR"
+         }
+        },
+        "required": [
+         "value"
+        ]
+       },
+       "then": {
+        "properties": {
+         "source": {
+          "type": "string",
+          "minLength": 1
+         }
+        },
+        "required": [
+         "source"
+        ]
+       }
+      }
+     ]
     },
     "lastGame": {
      "type": [

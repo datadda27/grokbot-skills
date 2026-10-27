@@ -19,6 +19,14 @@
   "c247": "https://example.com/rankings/247",
   "on3": "https://example.com/rankings/on3"
  },
+ "serviceNames": {
+  "ratings": "247Sports",
+  "industry": "Rivals Industry",
+  "commitDates": null,
+  "classRank": "247Sports",
+  "portalRating": "On3",
+  "portalValue": "TransferPortl"
+ },
  "ratingsNote": "Example note: ratings come from each service's public page.",
  "compositionNote": "Example note about class composition.",
  "rankingsNote": "Example note: ESPN ranks only cover players found in its list.",
@@ -119,6 +127,12 @@
    "date": "2026-08-01",
    "rank": null,
    "source": "https://example.com/rankings/on3"
+  },
+  {
+   "service": "ESPN",
+   "date": "2026-10-20",
+   "rank": 30,
+   "source": "https://example.com/rankings/espn"
   }
  ],
  "commits": [
@@ -545,7 +559,18 @@
     "on3TR": 88,
     "rating247T": 0.88,
     "note": null,
-    "tag": null
+    "tag": null,
+    "source": null
+   },
+   {
+    "name": "Sam Example",
+    "pos": "CB",
+    "fromSchool": "Sample College",
+    "on3TR": 85.5,
+    "rating247T": null,
+    "note": null,
+    "tag": null,
+    "source": "https://example.com/portal/in/2"
    }
   ],
   "outgoing": [
@@ -555,6 +580,13 @@
     "toSchool": "Another State",
     "starsTP": 3,
     "source": "https://example.com/portal/out/1"
+   },
+   {
+    "name": "Lee Departing",
+    "pos": "RB",
+    "toSchool": null,
+    "starsTP": null,
+    "source": null
    }
   ],
   "impact": [
@@ -639,18 +671,21 @@
   "ap": {
    "value": 18,
    "prev": null,
-   "source": "https://example.com/polls/ap"
+   "source": "https://example.com/polls/ap",
+   "date": "2026-10-25"
   },
   "coaches": {
    "value": "NR",
-   "note": "Not ranked",
    "source": "https://example.com/polls/coaches",
-   "prev": 25
+   "prev": 25,
+   "date": "2026-10-25"
   },
   "cfp": {
    "value": null,
    "note": "First rankings not out yet (example)",
-   "source": "https://example.com/cfp"
+   "source": "https://example.com/cfp",
+   "notReleased": true,
+   "date": null
   },
   "lastGame": {
    "value": "W 31-17 vs Example Tech, Oct 24",

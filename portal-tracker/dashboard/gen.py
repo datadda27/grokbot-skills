@@ -45,7 +45,7 @@ ts=d.get("teamStatus")
 if isinstance(ts,dict) and "big12" in ts:
     old=ts.pop("big12")
     if not ts.get("conference") and isinstance(old,dict):
-        ts["conference"]=dict(old); ts["conference"].setdefault("label","Big 12")
+        ts["conference"]=dict(old)  # no label is invented; with none the page says "Conference standing"
 d.setdefault("page",{"title":f"{d['team']} Recruiting & Portal Dashboard","summary":f"{d.get('classYear','')} class, transfer portal and rankings."})
 for c in d["commits"]: c.setdefault("hsGames",[])
 # --- ratings, stored as each service publishes them: [{service, value, scale, stars, natl, pos, state, source}]
@@ -80,7 +80,13 @@ for c in d["commits"]:
     for r in c.get("ratings") or []: fix_ranks(r)
 for c in d.get("nextClassCommits") or []: fix_ranks(c,("natl247","pos247","state247"))
 if isinstance(ts,dict):
-    for k in ("ap","coaches","cfp"): fix_ranks(ts.get(k),("value","prev"))
+    # team polls: "Unranked", "NR" and similar all store as "NR" (the page shows "Unranked");
+    # "NR" needs the poll's source link, otherwise nothing was read and the value is null (UNKNOWN)
+    for k in ("ap","coaches","cfp"):
+        po=ts.get(k); fix_ranks(po,("value","prev"))
+        if isinstance(po,dict):
+            if po.get("value")=="NR" and not po.get("source"): po["value"]=None
+            po.setdefault("date",None)
 def robj(service,value,scale,stars=None,natl=None,pos=None,state=None,source=None):
     return {"service":service,"value":value,"scale":scale,"stars":stars,"natl":natl,"pos":pos,"state":state,"source":source}
 for c in d["commits"]:
@@ -143,11 +149,32 @@ if tr:
         x.setdefault("premium",False); x.setdefault("premiumSite",None)
         if x["premium"]: x["why"]=None
 d.setdefault("topOnX",None); d.setdefault("topReads",None); d.setdefault("digest",None)
+# --- serviceNames: the service each caption names. Captions never hard-code a service.
+# Legacy fill: only where an older field name itself names the service and that field holds a value.
+# commitDates has no such field, so it stays null (the caption says "Source: UNKNOWN") unless the data names it.
+sn=dict(d.get("serviceNames") or {})
+has=lambda xs:any(v is not None for v in xs)
+lc=pt.get("lastCycle") or {}
+legacy={
+ "ratings":"247Sports" if has([x for c in d["commits"] for x in (c["r247"] or {}).values()]) else None,
+ "industry":"Rivals Industry" if has([x for c in d["commits"] for x in (c["industry"] or {}).values()]) else None,
+ "classRank":"247Sports" if d.get("nextClassRank247") is not None else None,
+ "portalRating":"On3" if has([lc.get(k) for k in ("rankOn3","inOn3","outOn3","avgOn3","topOn3")]) else None,
+ "portalValue":"TransferPortl" if has([lc.get(k) for k in ("inTP","outTP")]) or lc.get("netValueTP") not in (None,"","UNKNOWN") else None,
+ "commitDates":None}
+for k,v in legacy.items():
+    if not sn.get(k): sn[k]=v
+d["serviceNames"]=sn
 # --- flatten ratings to tuples (smaller page source)
 rt=lambda r:[r.get(k) for k in ("stars","rating","natl","pos","state")]
 for c in d["commits"]:
     c["r247"]=rt(c["r247"]); c["industry"]=rt(c["industry"])
-for p in pt["incoming"]: p.pop("sources",None)
+# --- transfers: each row's own source link, or null (the page shows "No source")
+for p in pt["incoming"]:
+    srcs=p.pop("sources",None) or []
+    if not p.get("source"): p["source"]=next((u for u in srcs if isinstance(u,str) and u),None)
+for p in pt["outgoing"]: p["source"]=p.get("source") or None
+for p in d.get("departures") or []: p["source"]=p.get("source") or None
 # --- forum/following: emit only the fields the page renders
 KT=("id","url","title","replies","views","latest","staffPosts","cat","label","summary","verdict","why","rank","readIn")
 KS=("id","url","title","author","replies","views","started","staffPosts","summary","verdict","readIn")

@@ -31,15 +31,16 @@ type FlipItem = Labelled & { name: string; dir: "Defend" | "Target"; cls: string
 type Target = Labelled & { name: string; cls: string; pos: string };
 type NewsItem = { date: string | null; type: string; title: string; detail: string; reporter: string | null; source: string; premium: boolean; premiumSite?: string | null; label: string | null; extraSource?: string };
 type CalItem = { start: string; end: string | null; type: string; title: string; detail: string; source: string | null; when?: string | null };
-type Incoming = { name: string; pos: string; fromSchool: string | null; on3TR: number | null; rating247T: number | null; note: string | null; tag?: string | null; sources: string[] };
-type Outgoing = { name: string; pos: string; toSchool: string | null; starsTP: number | null; source: string };
+type Incoming = { name: string; pos: string; fromSchool: string | null; on3TR: number | null; rating247T: number | null; note: string | null; tag?: string | null; source?: string | null; sources: string[] };
+type Outgoing = { name: string; pos: string; toSchool: string | null; starsTP: number | null; source?: string | null };
 type ForumThread = { id: string; url: string; title: string; replies: number | null; views: number | null; latest: string; staffPosts: number | null; cat: string; label: string | null; summary: string; verdict: "Read" | "Skim" | "Skip"; why: string; rank: number | null; readIn?: boolean };
 type Sticky = { id: string; url: string; title: string; author: string; replies: number | null; views: number | null; started: string; staffPosts: number | null; summary: string; verdict?: "Read" | "Skim" | "Skip" | null; readIn?: boolean };
 type FPost = { thread: string; url: string; date: string; summary: string };
 type Poster = { name: string; username: string | null; profile: string | null; why: string; staff: boolean; found: boolean; status: string; statusNote: string | null; posts: FPost[]; postsNote: string | null; noteUrl?: string | null; noteLabel?: string | null };
 type Suggested = { username: string; name: string; profile: string | null; why: string; label: string; posts: FPost[] };
 type Fact = { value: string | null; source: string | null; note?: string | null };
-type Poll = { value: Rank; prev?: Rank; source: string | null; note?: string | null };
+// Team polls: the data stores "NR" when the poll was read and the team is not in it; the page shows "Unranked". null shows UNKNOWN (no poll source read).
+type Poll = { value: Rank; prev?: Rank; date?: string | null; source: string | null; note?: string | null; notReleased?: boolean | null };
 type TeamStatus = {
   asOf: string; record?: Fact | null; conference?: (Fact & { label?: string | null }) | null;
   ap?: Poll | null; coaches?: Poll | null; cfp?: Poll | null; lastGame?: Fact | null;
@@ -50,10 +51,13 @@ type XPost = { rank: number | null; url: string; author: string; handle: string;
 type TopRead = { rank: number | null; headline: string; why?: string | null; url: string; site: string; premium: boolean; premiumSite?: string | null; topic?: "Recruiting" | "Portal" | "Team"; goodNews?: boolean; date?: string | null };
 type DigestInfo = { mode: "auto" | "daily" | "weekly"; activeModes?: string[]; schedule?: string; seasonStart?: string | null; seasonEnd?: string | null; lastSent?: string | null; nextDigest?: string | null; note?: string | null };
 type Forum = { board: string; site: string; url: string; premium: boolean; premiumSite?: string | null; asOf: string; asOfLabel: string; windowHours: number | null; prefs: string; method: string; totalThreads?: number | null; threads: ForumThread[]; stickies: Sticky[] };
+// Names of the services behind each caption, from the data. A missing name shows "Source: UNKNOWN" or is left out; captions never hard-code a service.
+type ServiceNames = { ratings?: string | null; industry?: string | null; commitDates?: string | null; classRank?: string | null; portalRating?: string | null; portalValue?: string | null };
 type Dashboard = {
   team: string; teamShort: string; coach: string | null; classYear: number | null; asOf: string; asOfLabel: string; tz: string; notes: string[];
   page: { title: string; summary: string };
   sourceLinks?: Record<string, string>;
+  serviceNames?: ServiceNames | null;
   ratingsNote?: string | null; compositionNote?: string | null; rankingsNote?: string | null; calendarNote?: string | null; visitReportsNote?: string | null;
   changes?: { since: string; items: Change[] } | null;
   teamRankings: { service: string; rank: number | null; detail: string; asOf: string | null; source: string }[];
@@ -74,7 +78,7 @@ type Dashboard = {
     noLosses?: string[];
   };
   rosterCountsTP: Record<string, number | null>;
-  departures: { name: string; pos: string; date: string; note: string; source: string }[];
+  departures: { name: string; pos: string; date: string; note: string; source?: string | null }[];
   calendar: CalItem[];
   nextVisitWeekend: { date: string; opponent: string; away: string | null; note?: string | null; items: { name: string; label: string; detail: string; source: string }[]; source: string; premium: boolean; premiumSite?: string | null } | null;
   flipWatch: FlipItem[];
@@ -104,6 +108,10 @@ const NEXT1 = CY == null ? null : String(CY + 1), NEXT2 = CY == null ? null : St
 type RankPt = Dashboard["rankHistory"][number] & { rank: number };
 const RANKED: RankPt[] = DATA.rankHistory.filter((h): h is RankPt => h.rank != null && Number.isFinite(h.rank));
 const TEAM = DATA.teamStatus ?? null;
+const SN: ServiceNames = DATA.serviceNames ?? {};
+const SRC_UNK = "Source: UNKNOWN";
+// The rank chart draws a service's line only with 2 or more dated points; with none left, the chart is hidden.
+const CHART: RankPt[] = RANKED.filter((h) => RANKED.filter((x) => x.service === h.service).length >= 2);
 
 // ---------------------------------------------------------------------------
 // helpers
@@ -376,7 +384,7 @@ function CommitsTab({ selectedId, setSelectedId }: { selectedId: string | null; 
 
   return (
     <div ref={ref} style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <Section heading={`${YEAR} commits`} caption={`Showing ${list.length} of ${DATA.commits.length}. Tap a commit for ratings, offers, visits and sources. Ratings per 247Sports unless noted.`}>
+      <Section heading={`${YEAR} commits`} caption={`Showing ${list.length} of ${DATA.commits.length}. Tap a commit for ratings, offers, visits and sources. ${SN.ratings ? `Ratings per ${SN.ratings} unless noted.` : `Ratings: ${SRC_UNK}.`}`}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-end", marginBottom: 12 }}>
           <Select label="Position" options={GROUPS.map((g) => ({ value: g, label: g === "All" ? "All positions" : g }))} value={group} onChange={setGroup} />
           <Select label="247 stars" options={[{ value: "All", label: "All stars" }, { value: "5", label: "5 star" }, { value: "4", label: "4 star" }, { value: "3", label: "3 star" }]} value={stars} onChange={setStars} />
@@ -398,7 +406,7 @@ function CommitsTab({ selectedId, setSelectedId }: { selectedId: string | null; 
             {Array.from(new Set(DATA.decommits.map((d) => d.source))).map((u) => <SrcLink key={u} url={u} />)}
           </div>
         </Section> : null}
-        {DATA.nextClassCommits.length ? <Section heading={NEXT1 ? `${NEXT1} commits` : "Next class commits"} caption={`247 class rank ${DATA.nextClassRank247 == null ? UNK : `No. ${DATA.nextClassRank247}`}`}>
+        {DATA.nextClassCommits.length ? <Section heading={NEXT1 ? `${NEXT1} commits` : "Next class commits"} caption={`Class rank ${noR(DATA.nextClassRank247)}. ${SN.classRank ? `Source: ${SN.classRank}` : SRC_UNK}`}>
           <Rows rows={DATA.nextClassCommits.map((c) => ({ lead: c.pos, title: c.name, detail: `${c.hs} · ${hw(c.ht, c.wt)} · committed ${fmtDate(c.commitDate)}${c.composite ? ` · Composite ${c.composite.toFixed(4)}` : ""}`, meta: `247: ${c.rating247 ?? UNK}`, status: c.status === "Committed" ? undefined : { label: c.status, tone: "warning" as const } }))} />
           <div style={{ marginTop: 8, display: "flex", gap: 10, flexWrap: "wrap" }}>{Array.from(new Set(DATA.nextClassCommits.map((c) => c.source))).map((u) => <SrcLink key={u} url={u} />)}</div>
         </Section> : null}
@@ -434,7 +442,7 @@ function Composition() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Grid columns={3}>
-        <Section heading="Star mix" caption={`By service. Rivals Industry rates ${n - (sInd["U"] ?? 0)} of ${n}.`}>
+        <Section heading="Star mix" caption={`By service.${SN.industry ? ` ${SN.industry} rates ${n - (sInd["U"] ?? 0)} of ${n}.` : ""}`}>
           <StackedBars series={["5-star", "4-star", "3-star", "Unrated"]} bars={[
             { label: "247Sports", values: [s247["5"] ?? 0, s247["4"] ?? 0, s247["3"] ?? 0, s247["U"] ?? 0] },
             { label: "Rivals Industry", values: [sInd["5"] ?? 0, sInd["4"] ?? 0, sInd["3"] ?? 0, sInd["U"] ?? 0] },
@@ -443,11 +451,11 @@ function Composition() {
         <Section heading="Where they're from" caption="High school state">
           <Bars bars={states.map(([k, v]) => ({ label: STATE_NAMES[k] ?? k, value: v, display: String(v), meta: `${Math.round((v / n) * 100)}%` }))} />
         </Section>
-        <Section heading="Commits by month" caption="Commit date, 247Sports">
+        <Section heading="Commits by month" caption={SN.commitDates ? `Commit date, ${SN.commitDates}` : `Commit date. ${SRC_UNK}`}>
           <Columns points={monthKeys.map((k) => ({ label: `${MONTHS[Number(k.slice(5, 7)) - 1]} ${k.slice(2, 4)}`, value: months[k] }))} />
         </Section>
       </Grid>
-      <Section heading="Position groups" caption={`${YEAR} commits by group (EDGE counted with DL). Needs are not published by the staff; roster and portal losses below are context from TransferPortl, not targets.`}>
+      <Section heading="Position groups" caption={`${YEAR} commits by group (EDGE counted with DL). Needs are not published by the staff; roster and portal losses below are context${SN.portalValue ? ` from ${SN.portalValue}` : ""}, not targets.`}>
         <Bars bars={groupOrder.map((g) => ({ label: g, value: grp[g] ?? 0, display: String(grp[g] ?? 0), meta: ctx && g !== "ATH" ? `roster ${num(DATA.rosterCountsTP[g])} · lost ${outBy[g] ?? ((DATA.portal.noLosses ?? []).includes(g) ? 0 : UNK)}` : undefined }))} emphasis="none" />
         <div style={{ marginTop: 10 }}><Toggle label={`Show roster size and ${Number(DATA.portal.window.opens.slice(0, 4)) - 1} portal losses`} value={ctx} onChange={setCtx} /></div>
         {ctx && DATA.compositionNote ? <div style={{ color: t.text.tertiary, marginTop: 6, ...typo(t.font.caption) }}>{DATA.compositionNote}</div> : null}
@@ -506,8 +514,9 @@ function OverviewTab({ go }: { go: (tab: Tab, commitId?: string, view?: RecView)
             tone: up ? "success" as const : undefined,
           };
         }),
-        { value: String(DATA.commits.length), label: `${YEAR} commits`, detail: `${s247["5"] ?? 0} five, ${s247["4"] ?? 0} four, ${s247["3"] ?? 0} three-star (247)` },
+        { value: String(DATA.commits.length), label: `${YEAR} commits`, detail: `${s247["5"] ?? 0} five, ${s247["4"] ?? 0} four, ${s247["3"] ?? 0} three-star${SN.ratings ? ` (${SN.ratings})` : ""}` },
       ]} />
+      <PollsSection />
       {ch ? (
         <Section heading="What changed since the last run" caption={`New since ${fmtDate(ch.since)}`}>
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -527,7 +536,7 @@ function OverviewTab({ go }: { go: (tab: Tab, commitId?: string, view?: RecView)
         </Section>
       ) : null}
       <Grid columns={3}>
-        <Section heading="Top commits" caption="By 247 rating">
+        <Section heading="Top commits" caption={SN.ratings ? `By ${SN.ratings} rating` : `By rating. ${SRC_UNK}`}>
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {top.map((c) => (
               <div key={c.id} role="button" tabIndex={0} onClick={() => go("commits", c.id)} onKeyDown={(e: KeyboardEvent) => { if (e.key === "Enter") go("commits", c.id); }}
@@ -746,25 +755,25 @@ function PortalTab() {
           <div style={{ marginTop: 8 }}><SrcLink url={DATA.departures[0]?.source ?? null} /></div>
         </Section> : null}
       </Grid>
-      <Section heading={`${ly} portal class`} caption={`On3 average transfer rating ${num(lc.avgOn3)}, top ${num(lc.topOn3)}. TransferPortl net value ${lc.netValueTP}.`}>
+      <Section heading={`${ly} portal class`} caption={`${SN.portalRating ? `${SN.portalRating} average` : `Average (${SRC_UNK})`} transfer rating ${num(lc.avgOn3)}, top ${num(lc.topOn3)}. ${SN.portalValue ? `${SN.portalValue} net value` : `Net value (${SRC_UNK})`} ${lc.netValueTP}.`}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-end", marginBottom: 12 }}>
           <Segmented<Dir> options={[{ value: "in", label: "Incoming", count: DATA.portal.incoming.length }, { value: "out", label: "Outgoing", count: DATA.portal.outgoing.length }]} value={dir} onChange={setDir} />
           {dir === "in" ? <Select<"on3" | "247"> label="Rating" options={[{ value: "on3", label: "On3 transfer rating" }, { value: "247", label: "247 transfer rating" }]} value={src} onChange={setSrc} /> : null}
         </div>
         {dir === "in" ? (
-          <Table columns={["Player", "Pos", "From", src === "on3" ? "On3 TR" : "247 (T)"]}
-            rows={inc.map((p) => [p.tag ? `${p.name} (${p.tag})` : p.name, p.pos, p.fromSchool ?? UNK, src === "on3" ? (p.on3TR != null ? p.on3TR.toFixed(2) : UNK) : (p.rating247T != null ? p.rating247T.toFixed(2) : UNK)])} />
+          <Table columns={["Player", "Pos", "From", src === "on3" ? "On3 TR" : "247 (T)", "Source"]}
+            rows={inc.map((p) => [p.tag ? `${p.name} (${p.tag})` : p.name, p.pos, p.fromSchool ?? UNK, src === "on3" ? (p.on3TR != null ? p.on3TR.toFixed(2) : UNK) : (p.rating247T != null ? p.rating247T.toFixed(2) : UNK), <SrcLink key="s" url={p.source ?? null} label="Link" />])} />
         ) : (
-          <Table columns={["Player", "Pos", "To", "Stars"]}
-            rows={DATA.portal.outgoing.map((p) => [p.name, p.pos, p.toSchool ?? UNK, p.starsTP != null ? `${p.starsTP}★` : UNK])} />
+          <Table columns={["Player", "Pos", "To", "Stars", "Source"]}
+            rows={DATA.portal.outgoing.map((p) => [p.name, p.pos, p.toSchool ?? UNK, p.starsTP != null ? `${p.starsTP}★` : UNK, <SrcLink key="s" url={p.source ?? null} label="Link" />])} />
         )}
         <div style={{ marginTop: 8, display: "flex", gap: 10, flexWrap: "wrap" }}>
           <SrcLink url={lc.sourceOn3} label="On3 transfers" /><SrcLink url={lc.source247} label="247 transfers" /><SrcLink url={lc.sourceTP} label="TransferPortl" />
         </div>
-        <div style={{ color: t.text.tertiary, marginTop: 6, ...typo(t.font.caption) }}>On3 counts {num(lc.inOn3)} in and {num(lc.outOn3)} out; TransferPortl counts {num(lc.inTP)} in and {num(lc.outTP)} out. Outgoing stars are TransferPortl's.</div>
+        <div style={{ color: t.text.tertiary, marginTop: 6, ...typo(t.font.caption) }}>{SN.portalRating ?? `One service (${SRC_UNK})`} counts {num(lc.inOn3)} in and {num(lc.outOn3)} out; {SN.portalValue ?? `another (${SRC_UNK})`} counts {num(lc.inTP)} in and {num(lc.outTP)} out.{SN.portalValue ? ` Outgoing stars are ${SN.portalValue}'s.` : ""}</div>
       </Section>
       <Grid columns={2}>
-        <Section heading="Impact by position" caption={`${ly} portal, TransferPortl`}>
+        <Section heading="Impact by position" caption={`${ly} portal. ${SN.portalValue ? `Source: ${SN.portalValue}` : SRC_UNK}`}>
           <Table columns={["Group", "Out", "In", "Net value"]} rows={DATA.portal.impact.map((i) => [i.pos, num(i.out), num(i.inn), i.net])} />
         </Section>
         {risk ? <Section heading="Roster risk" caption={risk.note}>
@@ -788,7 +797,7 @@ function PortalTab() {
 function RankTrend() {
   const t = useGrokTheme();
   const { ref, w } = useWidth<HTMLDivElement>();
-  const hist = RANKED;
+  const hist = CHART;
   const services = Array.from(new Set(hist.map((h) => h.service)));
   const W = Math.max(Math.round(w), 280), H = 220, pl = 46, pr = 16, pt = 14, pb = 28;
   const dates = hist.map((h) => h.date).sort();
@@ -856,14 +865,14 @@ function RankingsTab({ go }: { go: (tab: Tab, commitId?: string, view?: RecView)
           <Table columns={["Service", "Rank", "Detail", "As of"]} rows={DATA.teamRankings.map((r) => [r.service, r.rank == null ? UNK : `No. ${r.rank}`, r.detail, r.asOf ? fmtShort(r.asOf) : UNK])} />
           <div style={{ marginTop: 8, display: "flex", gap: 10, flexWrap: "wrap" }}>{DATA.teamRankings.map((r) => <SrcLink key={r.source} url={r.source} label={r.service} />)}</div>
         </Section>
-        <Section heading="Class rank over time" caption="Higher on the chart is better. Only dated, sourced points are drawn.">
-          <RankTrend />
+        <Section heading="Class rank over time" caption={CHART.length ? "Higher on the chart is better. Only dated, sourced points are drawn; a service needs 2 or more points for a line." : "Not enough dated points for a chart yet (a service needs 2 or more)."}>
+          {CHART.length ? <RankTrend /> : null}
           <div style={{ color: t.text.tertiary, marginTop: 6, ...typo(t.font.caption) }}>
             {hist.map((h) => `${h.service} ${no(h.rank)} (${fmtShort(h.date)}${h.premium ? `, Premium${h.premiumSite ? ` · ${h.premiumSite}` : ""}` : ""})`).join(" · ")}
           </div>
         </Section>
       </Grid>
-      <Section heading="Player rankings" caption="National rank by service. Where 247 has no national rank, its position rank shows. Tap a name for the full profile.">
+      <Section heading="Player rankings" caption={`National rank by service. Where ${SN.ratings ?? "the first service"} has no national rank, its position rank shows. Tap a name for the full profile.`}>
         <div style={{ marginBottom: 12 }}>
           <Segmented<PSort> options={[{ value: "247", label: "Sort by 247" }, { value: "ind", label: "Rivals Industry" }, { value: "espn", label: "ESPN" }]} value={ps} onChange={setPs} />
         </div>
@@ -1290,7 +1299,23 @@ function BoardToday({ go }: { go: (tab: Tab) => void }) {
 // ---------------------------------------------------------------------------
 // team (season status)
 // ---------------------------------------------------------------------------
-function pollTxt(p: Poll | null | undefined): string { return noR(p?.value); }
+function pollTxt(p: Poll | null | undefined): string {
+  if (!p) return UNK;
+  if (isNum(p.value)) return noR(p.value);
+  if (p.value === "NR") return p.source ? "Unranked" : UNK;
+  return p.notReleased && p.source ? "Not out yet" : UNK;
+}
+function pollDate(p: Poll | null | undefined): string { return p?.date ? fmtDate(p.date) : UNK; }
+const POLLS: { label: string; p: Poll | null | undefined }[] = TEAM ? [{ label: "AP poll", p: TEAM.ap }, { label: "Coaches poll", p: TEAM.coaches }, { label: "CFP ranking", p: TEAM.cfp }] : [];
+function PollsSection() {
+  if (!POLLS.length) return null;
+  return (
+    <Section heading="Polls" caption="Unranked means the poll was read and the team is not in it. UNKNOWN means no poll source could be read.">
+      <Table columns={["Poll", "Rank", "Poll date", "Source"]}
+        rows={POLLS.map((x) => [x.label, pollTxt(x.p), pollDate(x.p), <SrcLink key="s" url={x.p?.source ?? null} />])} />
+    </Section>
+  );
+}
 function TeamTab({ T }: { T: TeamStatus }) {
   const t = useGrokTheme();
   const sc = T.schedule ?? null;
@@ -1299,23 +1324,22 @@ function TeamTab({ T }: { T: TeamStatus }) {
     { label: "AP poll", f: T.ap }, { label: "Coaches poll", f: T.coaches }, { label: "CFP ranking", f: T.cfp }, { label: "Last game", f: T.lastGame },
   ];
   const srcs = Array.from(new Set([...facts.map((x) => x.f?.source ?? null), sc?.source ?? null].filter((s): s is string => !!s)));
-  const move = (p: Poll | null | undefined) => p && isNum(p.value) && isNum(p.prev) ? (p.prev > p.value ? `Up from No. ${p.prev}` : p.prev < p.value ? `Down from No. ${p.prev}` : `Same as No. ${p.prev}`) : p && p.prev === "NR" && isNum(p.value) ? "Up from NR" : p && p.value === "NR" && isNum(p.prev) ? `Was No. ${p.prev}` : p?.note ?? undefined;
+  const move = (p: Poll | null | undefined) => p && isNum(p.value) && isNum(p.prev) ? (p.prev > p.value ? `Up from No. ${p.prev}` : p.prev < p.value ? `Down from No. ${p.prev}` : `Same as No. ${p.prev}`) : p && p.prev === "NR" && isNum(p.value) ? "Up from Unranked" : p && p.value === "NR" && isNum(p.prev) ? `Was No. ${p.prev}` : p?.note ?? undefined;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <Metrics metrics={[
         { value: T.record?.value ?? UNK, label: "Record", detail: T.lastGame?.value ?? undefined },
-        { value: pollTxt(T.ap), label: "AP poll", detail: move(T.ap) },
-        { value: pollTxt(T.coaches), label: "Coaches poll", detail: move(T.coaches) },
-        { value: T.cfp && T.cfp.value != null ? noR(T.cfp.value) : "Not out", label: "CFP ranking", detail: T.cfp?.note ?? undefined },
+        ...POLLS.map((x) => ({ value: pollTxt(x.p), label: x.label, detail: [x.label === "CFP ranking" ? x.p?.note : move(x.p), x.p?.date ? `Poll of ${fmtShort(x.p.date)}` : null].filter((s): s is string => !!s).join(". ") || undefined })),
       ]} />
       <Grid columns={2}>
         <Section heading="Season" caption={`As of ${fmtDate(T.asOf)}`}>
-          <Properties items={facts.map((x) => ({ label: x.label, value: x.f ? (x.f.value == null ? (x.f.note ?? UNK) : typeof x.f.value === "number" ? `No. ${x.f.value}` : x.f.value) : UNK }))} />
+          <Properties items={facts.filter((x) => !POLLS.some((q) => q.label === x.label)).map((x) => ({ label: x.label, value: x.f ? (x.f.value == null ? (x.f.note ?? UNK) : typeof x.f.value === "number" ? `No. ${x.f.value}` : x.f.value) : UNK }))} />
         </Section>
         {sc && sc.upcoming.length ? <Section heading="Up next" caption="Remaining schedule">
           <Rows rows={sc.upcoming.map((g, i) => ({ lead: String(i + 1), title: g, status: i === 0 ? { label: "Next", tone: "success" as const } : undefined }))} />
         </Section> : null}
       </Grid>
+      <PollsSection />
       {sc && sc.results.length ? <Section heading="Results" caption={`${sc.results.length} games played`}>
         <Rows rows={sc.results.map((g, i) => ({ lead: `Gm ${i + 1}`, title: g, status: g.startsWith("W") ? { label: "W", tone: "success" as const } : g.startsWith("L") ? { label: "L", tone: "danger" as const } : undefined }))} />
       </Section> : null}

@@ -1,5 +1,9 @@
 # Changelog
 
+## Portal Tracker v2.1.2 (2026-10-26)
+
+- Data-driven source captions (serviceNames), rank chart hidden under 2 points, CFP shows UNKNOWN unless a sourced 'not released', removed 'Big 12' fallback label, per-transfer source column, getting-started reads device time zone and sets default alert/late times, new Polls check showing 'Unranked' when the team isn't in the AP/Coaches poll (UNKNOWN only when no poll could be read).
+
 ## 2026-10-23
 
 - Repo created.
