@@ -1,0 +1,951 @@
+{
+  "_example": "Everything on this page is made up for a fictional household (Example Household, Anytown, USA). Setup replaces every value; no real household details ship with the template.",
+  "version": "1.2.0",
+  "asOf": "2026-10-26",
+  "asOfLabel": "Oct 26, 2026, 4:00 PM CT",
+  "page": {
+    "title": "Prepper (sample household)",
+    "summary": "Sample data for a made-up household in Anytown, USA. This preview shows what the bot keeps updated: readiness, alerts, supplies, and the family plan."
+  },
+  "household": {
+    "name": "Example Household",
+    "place": "Anytown, USA",
+    "zip": "00000",
+    "county": "Example County",
+    "countyFips": "00000",
+    "timezone": "America/Chicago",
+    "adults": 3,
+    "kids": [
+      {
+        "ageBand": "9-13"
+      },
+      {
+        "ageBand": "4-8"
+      }
+    ],
+    "phones": 3,
+    "pets": [
+      {
+        "kind": "Dog",
+        "name": "Biscuit",
+        "waterGalPerDay": null,
+        "foodDays": 18
+      },
+      {
+        "kind": "Cat",
+        "name": "Pepper",
+        "waterGalPerDay": null,
+        "foodDays": 25
+      }
+    ],
+    "climateHot": false
+  },
+  "targets": {
+    "days": 14,
+    "goalTier": "2w",
+    "optionalTiers": [
+      "1m",
+      "3m"
+    ]
+  },
+  "alert": {
+    "lastCheck": "Oct 26, 4:00 PM CT",
+    "nextCheck": "Oct 27, 7:00 AM CT",
+    "cadence": "Twice a day (7 AM and 4 PM). Hourly while a watch or warning covers your area.",
+    "emergencyMode": {
+      "on": false,
+      "since": null,
+      "cadenceMin": 30
+    },
+    "active": [],
+    "fyi": [
+      "Air quality Good today (Open-Meteo).",
+      "No federal disaster declaration for Example County (OpenFEMA)."
+    ],
+    "watchedPlaces": [
+      "Home (Anytown)",
+      "Jordan's office (Exampleville)",
+      "College Town (family)"
+    ]
+  },
+  "lifeSafety": [
+    {
+      "id": "smoke",
+      "label": "Smoke alarms on every level, tested this month",
+      "status": "done",
+      "points": 5,
+      "detail": "Tested Oct 4 on every level. Test monthly.",
+      "source": "USFA"
+    },
+    {
+      "id": "co",
+      "label": "Carbon monoxide alarms",
+      "status": "done",
+      "points": 5,
+      "detail": "Battery backup, central spots on every level. Batteries replaced Oct 4.",
+      "source": "Ready.gov Power Outages"
+    },
+    {
+      "id": "alerts",
+      "label": "Phone emergency alerts (WEA) on",
+      "status": "done",
+      "points": 4,
+      "detail": "Checked on all three adult phones.",
+      "source": "Ready.gov Alerts"
+    },
+    {
+      "id": "radio",
+      "label": "NOAA Weather Radio",
+      "status": "open",
+      "points": 3,
+      "detail": "Not yet. Works when cell service and power are down.",
+      "source": "NWS"
+    },
+    {
+      "id": "county",
+      "label": "County alert signup",
+      "status": "unknown",
+      "points": 3,
+      "detail": "Not sure. The bot found the county signup page; confirm and it counts.",
+      "source": "Example County Emergency Management"
+    },
+    {
+      "id": "device",
+      "label": "Power-dependent device backup",
+      "status": "na",
+      "points": 5,
+      "detail": "No power-dependent medical devices at home.",
+      "source": "Ready.gov Power Outages"
+    }
+  ],
+  "categories": [
+    {
+      "id": "water",
+      "label": "Water",
+      "kind": "days",
+      "days": 6,
+      "itemsDone": null,
+      "itemsTotal": null,
+      "weight": 12,
+      "note": "30 gal stored. Need 5 gal a day.",
+      "source": "Ready.gov"
+    },
+    {
+      "id": "food",
+      "label": "Food",
+      "kind": "days",
+      "days": 9,
+      "countedDays": 6.5,
+      "itemsDone": null,
+      "itemsTotal": null,
+      "weight": 10,
+      "note": "About 82,000 kcal on hand.",
+      "source": "FDA"
+    },
+    {
+      "id": "meds",
+      "label": "Medicines",
+      "kind": "days",
+      "days": 21,
+      "itemsDone": null,
+      "itemsTotal": null,
+      "weight": 10,
+      "note": "Lowest supply across the household. Details private.",
+      "source": "Ready.gov"
+    },
+    {
+      "id": "sanitation",
+      "label": "Sanitation",
+      "kind": "days",
+      "days": 5,
+      "itemsDone": null,
+      "itemsTotal": null,
+      "weight": 5,
+      "note": "Bags, wipes, bleach. More bags would help.",
+      "source": "Ready.gov"
+    },
+    {
+      "id": "power",
+      "label": "Power",
+      "kind": "checklist",
+      "days": null,
+      "itemsDone": 2,
+      "itemsTotal": 5,
+      "weight": 5,
+      "note": "Power banks charged and extra batteries; no car charger, cooler plan, or generator rules yet.",
+      "source": "Ready.gov Power Outages"
+    },
+    {
+      "id": "light",
+      "label": "Light",
+      "kind": "checklist",
+      "days": null,
+      "itemsDone": 3,
+      "itemsTotal": 4,
+      "weight": 4,
+      "note": "Flashlights in 3 rooms; spare batteries low.",
+      "source": "Ready.gov Power Outages"
+    },
+    {
+      "id": "heat",
+      "label": "Heat and cooling",
+      "kind": "checklist",
+      "days": null,
+      "itemsDone": 2,
+      "itemsTotal": 4,
+      "weight": 5,
+      "note": "Blankets yes; one warm room plan not set.",
+      "source": "Ready.gov"
+    },
+    {
+      "id": "firstaid",
+      "label": "First aid",
+      "kind": "checklist",
+      "days": null,
+      "itemsDone": 14,
+      "itemsTotal": 18,
+      "weight": 4,
+      "note": "Red Cross family list, 14 of 18.",
+      "source": "American Red Cross"
+    },
+    {
+      "id": "comms",
+      "label": "Comms",
+      "kind": "checklist",
+      "days": null,
+      "itemsDone": 2,
+      "itemsTotal": 3,
+      "weight": 3,
+      "note": "Contact list printed; radio missing.",
+      "source": "Ready.gov"
+    },
+    {
+      "id": "documents",
+      "label": "Documents",
+      "kind": "checklist",
+      "days": null,
+      "itemsDone": null,
+      "itemsTotal": 5,
+      "weight": 2,
+      "note": "Not counted yet. Say \"check the binder\" for a 2 minute run-through.",
+      "source": "Ready.gov"
+    }
+  ],
+  "planItems": [
+    {
+      "id": "plan",
+      "label": "Family plan written",
+      "status": "done",
+      "points": 4,
+      "detail": "Updated Oct 12."
+    },
+    {
+      "id": "printed",
+      "label": "Printed plan and wallet cards",
+      "status": "open",
+      "points": 3,
+      "detail": "Ready to print. Say \"print the plan\"."
+    },
+    {
+      "id": "meet",
+      "label": "Meeting places and out-of-area contact",
+      "status": "done",
+      "points": 3,
+      "detail": "Near home, out of neighborhood, and one contact out of state."
+    },
+    {
+      "id": "shutoffs",
+      "label": "Utility shutoffs located",
+      "status": "unknown",
+      "points": 2,
+      "detail": "Water main found; gas meter not checked."
+    },
+    {
+      "id": "drill",
+      "label": "Drill in the last 6 months",
+      "status": "open",
+      "points": 3,
+      "detail": "Last drill: none recorded. A 10 minute tornado drill counts."
+    }
+  ],
+  "expiring": [
+    {
+      "item": "Bottled water, 24-pack",
+      "category": "water",
+      "date": "2026-11-08",
+      "qty": "1 case",
+      "location": "Garage shelf",
+      "idea": "Use for lunches, then replace.",
+      "private": false
+    },
+    {
+      "id": "x1",
+      "item": "Peanut butter",
+      "category": "food",
+      "date": "2026-11-20",
+      "qty": "2 jars",
+      "location": "Pantry",
+      "idea": "Sandwiches and apple slices.",
+      "private": false,
+      "estimated": false
+    },
+    {
+      "item": "AA batteries",
+      "category": "light",
+      "date": "2026-12-01",
+      "qty": "8",
+      "location": "Kitchen drawer",
+      "idea": "Move into the TV remotes and buy a fresh pack.",
+      "private": false
+    },
+    {
+      "item": "Canned chili",
+      "category": "food",
+      "date": "2026-12-15",
+      "qty": "6 cans",
+      "location": "Pantry",
+      "idea": "Chili night with rice.",
+      "private": false
+    },
+    {
+      "item": "Home-canned salsa (batch of 8 pints)",
+      "category": "food",
+      "date": "2027-01-10",
+      "qty": "5 pints",
+      "location": "Basement",
+      "idea": "Taco night.",
+      "private": false
+    },
+    {
+      "item": "Granola bars",
+      "category": "food",
+      "date": "2027-01-22",
+      "qty": "2 boxes",
+      "location": "Go-bags",
+      "idea": "School snacks; restock the go-bags.",
+      "private": false
+    }
+  ],
+  "mealIdeas": [
+    {
+      "title": "Chili and rice",
+      "uses": [
+        "Canned chili",
+        "Rice"
+      ],
+      "minutes": 20
+    },
+    {
+      "title": "Peanut butter and apple lunches",
+      "uses": [
+        "Peanut butter"
+      ],
+      "minutes": 5
+    },
+    {
+      "title": "Taco night",
+      "uses": [
+        "Home-canned salsa",
+        "Canned beans"
+      ],
+      "minutes": 25
+    }
+  ],
+  "task": {
+    "title": "Add 10 gallons of water",
+    "minutes": 15,
+    "week": "Week of Oct 26",
+    "category": "water",
+    "addsDays": 2,
+    "steps": [
+      "Pick up two 5 gallon jugs, or fill clean food-grade containers.",
+      "Label with today's date; swap stored tap water every 6 months.",
+      "Store away from sunlight and chemicals."
+    ],
+    "why": "Water is your biggest gap. This takes you from 6 to 8 days.",
+    "source": "Ready.gov Water"
+  },
+  "shopping": {
+    "monthlyBudget": 80,
+    "spent": 46,
+    "weekOf": "Oct 26",
+    "pace": "About $20 a week of things you already eat.",
+    "items": [
+      {
+        "item": "Water, two 5 gallon jugs",
+        "qty": "2",
+        "estCost": 14,
+        "done": false,
+        "why": "Water gap"
+      },
+      {
+        "item": "Canned beans",
+        "qty": "6 cans",
+        "estCost": 7,
+        "done": true,
+        "why": "Food days"
+      },
+      {
+        "item": "Heavy-duty trash bags",
+        "qty": "1 box",
+        "estCost": 9,
+        "done": false,
+        "why": "Sanitation"
+      },
+      {
+        "item": "AA batteries",
+        "qty": "1 pack",
+        "estCost": null,
+        "done": false,
+        "why": "Light; price not checked"
+      }
+    ]
+  },
+  "hazards": {
+    "county": "Example County",
+    "source": "FEMA National Risk Index",
+    "url": "https://hazards.fema.gov/nri/",
+    "asOf": "NRI v1.20 (example)",
+    "top": [
+      {
+        "hazard": "Tornado",
+        "rating": "Very High",
+        "mode": "on"
+      },
+      {
+        "hazard": "Hail",
+        "rating": "Relatively High",
+        "mode": "on"
+      },
+      {
+        "hazard": "Winter weather",
+        "rating": "Relatively High",
+        "mode": "on"
+      },
+      {
+        "hazard": "Heat wave",
+        "rating": "Relatively Moderate",
+        "mode": "off"
+      },
+      {
+        "hazard": "Riverine flooding",
+        "rating": "Relatively Moderate",
+        "mode": "off"
+      },
+      {
+        "hazard": "Drought",
+        "rating": "Relatively Low",
+        "mode": "off"
+      }
+    ]
+  },
+  "family": [
+    {
+      "name": "Alex",
+      "role": "Plan lead",
+      "relation": "Owner",
+      "town": "Anytown",
+      "needs": null,
+      "lastUpdate": "Oct 26",
+      "checklist": [
+        {
+          "text": "Run the monthly check-in",
+          "done": true
+        },
+        {
+          "text": "Print the plan and wallet cards",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Jordan",
+      "role": "Medicines and first aid lead",
+      "relation": "Partner",
+      "town": "Exampleville",
+      "needs": null,
+      "lastUpdate": "Oct 20",
+      "checklist": [
+        {
+          "text": "Check first aid kit dates",
+          "done": true
+        },
+        {
+          "text": "Refill the 4 missing first aid items",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Sam",
+      "role": "Comms and pets lead",
+      "relation": "Adult child, 19",
+      "town": "College Town",
+      "needs": "Get-home bag at campus",
+      "lastUpdate": "Oct 18",
+      "checklist": [
+        {
+          "text": "Pet go kit packed",
+          "done": true
+        },
+        {
+          "text": "Get-home plan from campus",
+          "done": false
+        }
+      ]
+    },
+    {
+      "name": "Riley",
+      "role": "Flashlight checker",
+      "relation": "Child",
+      "town": null,
+      "needs": "Knows the meeting places",
+      "lastUpdate": "Oct 12",
+      "checklist": [
+        {
+          "text": "Test flashlights monthly",
+          "done": true
+        }
+      ],
+      "ageBand": "9-13",
+      "showName": false,
+      "pageLabel": "Child A"
+    },
+    {
+      "name": "Casey",
+      "role": "Go-bag helper",
+      "relation": "Child",
+      "town": null,
+      "needs": "Comfort item in go-bag",
+      "lastUpdate": "Oct 12",
+      "checklist": [
+        {
+          "text": "Pick a comfort item for the go-bag",
+          "done": false
+        }
+      ],
+      "ageBand": "4-8",
+      "showName": false,
+      "pageLabel": "Child B"
+    }
+  ],
+  "headlineChecks": [
+    {
+      "date": "Oct 22",
+      "headline": "Post says the county water supply is unsafe to drink",
+      "verdict": "UNVERIFIED",
+      "action": "Nothing to do now. No boil notice from the water utility or county.",
+      "sources": [
+        {
+          "title": "Example Water Utility notices (example)",
+          "url": "https://www.example.com/notices",
+          "date": "Oct 22"
+        }
+      ],
+      "confidence": "Low. Single social post, no official source.",
+      "full": "Do now: nothing. UNVERIFIED: a post says the county water is unsafe to drink. True: no boil notice from the water utility or the county as of Oct 22. Off: the post names no test, no date, and no official source. For your home: keep drinking tap water; your stored water stays for outages. One calm step: none needed. Sources: 1. Example Water Utility notices, Oct 22. Confidence: Low on the claim; single social post. Your county alert signup and evacuation zone page are the source of truth for local orders."
+    },
+    {
+      "date": "Oct 14",
+      "headline": "Winter storm watch for the region this weekend",
+      "verdict": "VERIFIED",
+      "action": "Charge power banks; check the warm room plan.",
+      "sources": [
+        {
+          "title": "NWS alerts (example)",
+          "url": "https://alerts.weather.gov/"
+        }
+      ],
+      "confidence": "High. Active NWS watch for the county."
+    },
+    {
+      "date": "Oct 3",
+      "headline": "Grocery stores will close for a week",
+      "verdict": "PARTLY VERIFIED",
+      "action": "Nothing to do now. Keep the normal weekly buy.",
+      "sources": [
+        {
+          "title": "Example City news release (example)",
+          "url": "https://www.example.com/news"
+        }
+      ],
+      "confidence": "Medium. One store closing for remodel; no area-wide closure."
+    }
+  ],
+  "seasonal": [
+    {
+      "month": "Nov",
+      "items": [
+        "Car winter kit",
+        "Know how to keep pipes from freezing"
+      ]
+    },
+    {
+      "month": "Dec",
+      "items": [
+        "Warm room plan",
+        "Space heater safety"
+      ]
+    },
+    {
+      "month": "Jan",
+      "items": [
+        "Swap stored water",
+        "Test smoke and CO alarms"
+      ]
+    },
+    {
+      "month": "Mar",
+      "items": [
+        "Tornado drill",
+        "Check the shelter spot"
+      ]
+    },
+    {
+      "month": "Jun",
+      "items": [
+        "Heat plan and cooling places",
+        "Never leave people or pets in a closed car"
+      ]
+    }
+  ],
+  "outagePlan": {
+    "steps": [
+      "Keep the fridge and freezer closed.",
+      "Generators outside only, at least 20 feet from windows and doors.",
+      "Unplug electronics to protect them from surges.",
+      "Check on neighbors."
+    ],
+    "fridgeHours": 4,
+    "freezerHours": 48,
+    "source": "Ready.gov Power Outages; FoodSafety.gov"
+  },
+  "outageUseFirst": [
+    {
+      "item": "Milk and yogurt",
+      "where": "fridge",
+      "qty": "1 gallon, 6 cups",
+      "date": "Oct 31",
+      "note": null
+    },
+    {
+      "item": "Leftover chili",
+      "where": "fridge",
+      "qty": "About 4 servings",
+      "date": null,
+      "note": "No date; eat first."
+    },
+    {
+      "item": "Frozen chicken and vegetables",
+      "where": "freezer",
+      "qty": "About 3 meals",
+      "date": null,
+      "note": "Keep the door closed."
+    }
+  ],
+  "waterPlan": {
+    "storedGallons": 30,
+    "refillBy": "Apr 2027",
+    "treatment": "Unscented bleach: 8 drops of 6% bleach per gallon of clear water, stir, wait 30 minutes.",
+    "source": "EPA Emergency Disinfection of Drinking Water"
+  },
+  "printPlan": {
+    "contacts": [
+      {
+        "name": "Alex",
+        "phone": "555-0101"
+      },
+      {
+        "name": "Jordan",
+        "phone": "555-0102"
+      },
+      {
+        "name": "Sam",
+        "phone": "555-0103"
+      },
+      {
+        "name": "Family doctor (example)",
+        "phone": "555-0110"
+      }
+    ],
+    "outOfAreaContact": {
+      "name": "Aunt Pat (example)",
+      "phone": "555-0120"
+    },
+    "meetingPlaces": {
+      "nearHome": "Big oak tree at the end of the driveway",
+      "outOfNeighborhood": "Anytown Public Library",
+      "outOfTown": "Pat's home in Othertown"
+    },
+    "utilities": [
+      {
+        "what": "Water main",
+        "where": "Basement, north wall"
+      },
+      {
+        "what": "Electric panel",
+        "where": "Garage"
+      },
+      {
+        "what": "Gas meter",
+        "where": "Not checked yet"
+      }
+    ],
+    "evacuation": {
+      "five": [
+        "People and pets",
+        "Go-bags (hall closet)",
+        "Phones, wallet, keys, shoes"
+      ],
+      "fifteen": [
+        "Medicines and glasses",
+        "Documents bag",
+        "Pet go kit",
+        "Text Aunt Pat where you're going"
+      ],
+      "sixty": [
+        "Unplug small electronics",
+        "Leave a note: when and where",
+        "Check on neighbors",
+        "Follow official routes"
+      ]
+    },
+    "petFriendlyPlace": "Pat's home in Othertown",
+    "shelterSpot": "Basement, under the stairs",
+    "alertSignup": "Example County alerts page (example)",
+    "evacZoneSource": "Example County Emergency Management (example)"
+  },
+  "recalls": {
+    "lastCheck": "Oct 26",
+    "checked": 41,
+    "matches": [],
+    "sources": "openFDA food enforcement; CPSC recalls"
+  },
+  "modules": [
+    {
+      "id": "pets",
+      "label": "Pets",
+      "on": true
+    },
+    {
+      "id": "evacuation",
+      "label": "Evacuation and go-bags",
+      "on": true
+    },
+    {
+      "id": "kits",
+      "label": "Kit templates",
+      "on": true
+    },
+    {
+      "id": "hazards",
+      "label": "Hazard modes",
+      "on": true
+    },
+    {
+      "id": "canning",
+      "label": "Home canning",
+      "on": true
+    },
+    {
+      "id": "money-documents",
+      "label": "Money and documents",
+      "on": false
+    },
+    {
+      "id": "extra-needs",
+      "label": "Extra needs",
+      "on": false
+    },
+    {
+      "id": "gardening",
+      "label": "Garden",
+      "on": false
+    },
+    {
+      "id": "firearms-safety",
+      "label": "Firearms safety storage",
+      "on": false
+    },
+    {
+      "id": "advanced-connections",
+      "label": "Advanced connections",
+      "on": false
+    }
+  ],
+  "connections": [
+    {
+      "id": "nws",
+      "label": "NWS alerts for your area",
+      "on": true,
+      "kind": "default",
+      "note": "Checked twice a day; hourly during watches.",
+      "addPhrase": null
+    },
+    {
+      "id": "nri",
+      "label": "FEMA hazard ratings",
+      "on": true,
+      "kind": "default",
+      "note": "County ratings set your hazard modes.",
+      "addPhrase": null
+    },
+    {
+      "id": "recalls",
+      "label": "Pantry recall check",
+      "on": true,
+      "kind": "default",
+      "note": "openFDA and CPSC matched to your inventory.",
+      "addPhrase": null
+    },
+    {
+      "id": "location",
+      "label": "Phone location",
+      "on": false,
+      "kind": "optin",
+      "note": "Exact NWS point instead of ZIP center.",
+      "addPhrase": "use my location"
+    },
+    {
+      "id": "reminders",
+      "label": "Reminders",
+      "on": true,
+      "kind": "optin",
+      "note": "Rotation dates and the weekly task.",
+      "addPhrase": null
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "on": false,
+      "kind": "optin",
+      "note": "Monthly check-in and drills on your calendar.",
+      "addPhrase": "add to my calendar"
+    },
+    {
+      "id": "sheet",
+      "label": "Google Sheet inventory",
+      "on": false,
+      "kind": "optin",
+      "note": "Edit inventory in a spreadsheet.",
+      "addPhrase": "make an inventory sheet"
+    },
+    {
+      "id": "sensors",
+      "label": "Sensors (Zapier, or IFTTT with Pro)",
+      "on": false,
+      "kind": "optin",
+      "note": "Leak or power-loss sensor starts emergency mode. Zapier first; IFTTT needs IFTTT Pro.",
+      "addPhrase": "connect my sensors"
+    }
+  ],
+  "channels": [
+    {
+      "id": "chat",
+      "label": "Chat",
+      "status": "on",
+      "levels": [
+        "ACT NOW",
+        "PREPARE",
+        "FYI"
+      ],
+      "note": "Always on."
+    },
+    {
+      "id": "alarm",
+      "label": "Phone alarm",
+      "status": "available",
+      "levels": [
+        "ACT NOW"
+      ],
+      "note": "Offered when emergency mode turns on, for overnight warnings."
+    },
+    {
+      "id": "reminders",
+      "label": "Reminders",
+      "status": "on",
+      "levels": [],
+      "note": "Tasks and dates only, never alerts."
+    },
+    {
+      "id": "email",
+      "label": "Email to you",
+      "status": "available",
+      "levels": [
+        "PREPARE"
+      ],
+      "note": "Your own address only."
+    },
+    {
+      "id": "slack",
+      "label": "Slack DM to you",
+      "status": "available",
+      "levels": [
+        "PREPARE"
+      ],
+      "note": "A DM to you only."
+    },
+    {
+      "id": "imessage",
+      "label": "iMessage",
+      "status": "later",
+      "levels": [],
+      "note": "Coming later."
+    },
+    {
+      "id": "call",
+      "label": "Phone call",
+      "status": "later",
+      "levels": [],
+      "note": "Coming later."
+    }
+  ],
+  "history": [
+    {
+      "date": "Aug 1",
+      "score": 34,
+      "coverage": 0.62
+    },
+    {
+      "date": "Aug 29",
+      "score": 44,
+      "coverage": 0.74
+    },
+    {
+      "date": "Sep 26",
+      "score": 52,
+      "coverage": 0.86
+    },
+    {
+      "date": "Oct 26",
+      "score": 60,
+      "coverage": 0.93
+    }
+  ],
+  "sources": [
+    {
+      "title": "Ready.gov Build a Kit",
+      "url": "https://www.ready.gov/kit"
+    },
+    {
+      "title": "FEMA National Risk Index",
+      "url": "https://hazards.fema.gov/nri/"
+    },
+    {
+      "title": "NWS alerts",
+      "url": "https://www.weather.gov/alerts"
+    },
+    {
+      "title": "EPA emergency disinfection of drinking water",
+      "url": "https://www.epa.gov/ground-water-and-drinking-water/emergency-disinfection-drinking-water"
+    },
+    {
+      "title": "FoodSafety.gov food safety during a power outage",
+      "url": "https://www.foodsafety.gov/food-safety-charts/food-safety-during-power-outage"
+    },
+    {
+      "title": "DisasterAssistance.gov",
+      "url": "https://www.disasterassistance.gov/"
+    }
+  ]
+}

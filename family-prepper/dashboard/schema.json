@@ -1,0 +1,1455 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/datadda27/grokbot-skills/main/family-prepper/dashboard/schema.json",
+  "title": "Prepper dashboard data",
+  "description": "Data for the Prepper Page. null means UNKNOWN (not answered yet). It earns 0 toward the score and shows as points waiting; it is never called a failure. Private items (medicine names and doses, firearms, cash amounts) never appear here; gen.py refuses them. The `computed` block is written by gen.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "asOf",
+    "asOfLabel",
+    "page",
+    "household",
+    "targets",
+    "alert",
+    "lifeSafety",
+    "categories",
+    "planItems",
+    "expiring",
+    "mealIdeas",
+    "task",
+    "shopping",
+    "hazards",
+    "family",
+    "headlineChecks",
+    "seasonal",
+    "outagePlan",
+    "waterPlan",
+    "printPlan",
+    "recalls",
+    "modules",
+    "connections",
+    "history",
+    "sources"
+  ],
+  "properties": {
+    "_example": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "asOf": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "asOfLabel": {
+      "type": "string"
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "household": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string",
+          "pattern": "^\\d{5}$"
+        },
+        "county": {
+          "type": "string"
+        },
+        "countyFips": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{5}$"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "adults": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kids": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ageBand": {
+                "enum": [
+                  "0-1",
+                  "1-3",
+                  "4-8",
+                  "9-13"
+                ]
+              }
+            },
+            "required": [
+              "ageBand"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "pets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "waterGalPerDay": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "foodDays": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            },
+            "required": [
+              "kind",
+              "name",
+              "waterGalPerDay",
+              "foodDays"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "climateHot": {
+          "type": "boolean"
+        },
+        "phones": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Optional: phones in the house, asked once in setup. Phone alerts doneShare = phones with alerts on / phones."
+        }
+      },
+      "required": [
+        "name",
+        "place",
+        "zip",
+        "county",
+        "countyFips",
+        "timezone",
+        "adults",
+        "kids",
+        "pets",
+        "climateHot"
+      ],
+      "additionalProperties": false
+    },
+    "targets": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "goalTier": {
+          "enum": [
+            "72h",
+            "2w",
+            "1m",
+            "3m"
+          ]
+        },
+        "optionalTiers": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "1m",
+              "3m"
+            ]
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "days",
+        "goalTier",
+        "optionalTiers"
+      ],
+      "additionalProperties": false
+    },
+    "alert": {
+      "type": "object",
+      "properties": {
+        "lastCheck": {
+          "type": "string"
+        },
+        "nextCheck": {
+          "type": "string"
+        },
+        "cadence": {
+          "type": "string"
+        },
+        "emergencyMode": {
+          "type": "object",
+          "properties": {
+            "on": {
+              "type": "boolean"
+            },
+            "since": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cadenceMin": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 60
+            }
+          },
+          "required": [
+            "on",
+            "since",
+            "cadenceMin"
+          ],
+          "additionalProperties": false
+        },
+        "active": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "event": {
+                "type": "string"
+              },
+              "level": {
+                "enum": [
+                  "ACT NOW",
+                  "PREPARE",
+                  "FYI"
+                ]
+              },
+              "headline": {
+                "type": "string"
+              },
+              "until": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "area": {
+                "type": "string"
+              },
+              "doNow": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https://"
+              }
+            },
+            "required": [
+              "id",
+              "event",
+              "level",
+              "headline",
+              "until",
+              "area",
+              "doNow",
+              "source",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "fyi": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "watchedPlaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "lastCheck",
+        "nextCheck",
+        "cadence",
+        "emergencyMode",
+        "active",
+        "fyi",
+        "watchedPlaces"
+      ],
+      "additionalProperties": false
+    },
+    "lifeSafety": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "done",
+              "open",
+              "unknown",
+              "na"
+            ],
+            "description": "unknown = not answered yet: earns 0 and shows as points waiting. The score's denominator never changes, so answering can only raise the score. na = does not apply (removed from the denominator)."
+          },
+          "points": {
+            "type": "number",
+            "minimum": 0
+          },
+          "doneShare": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 1,
+            "description": "Optional, only with status open: the share already done (for example phone alerts on 1 of 5 phones = 0.2). Earns points x doneShare; the rest shows as the gap. Say the split in detail."
+          },
+          "detail": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status",
+          "points",
+          "detail",
+          "source"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "enum": [
+              "water",
+              "food",
+              "meds",
+              "sanitation",
+              "power",
+              "light",
+              "heat",
+              "firstaid",
+              "comms",
+              "documents"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "days",
+              "checklist"
+            ]
+          },
+          "days": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Scored days: the owner's estimate, or the finished count. An inventory batch in progress goes in countedDays and never lowers this."
+          },
+          "itemsDone": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "itemsTotal": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0
+          },
+          "note": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "countedDays": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Optional, days categories only: the running count from an inventory batch that is not finished. gen.py scores the higher of days and countedDays and shows 'counted so far X of ~Y days'. When the owner says counting is complete (or confirms once when asked), move the count into days and remove this field."
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "kind",
+          "days",
+          "itemsDone",
+          "itemsTotal",
+          "weight",
+          "note",
+          "source"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "planItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "done",
+              "open",
+              "unknown",
+              "na"
+            ],
+            "description": "unknown = not answered yet: earns 0 and shows as points waiting. The score's denominator never changes, so answering can only raise the score. na = does not apply (removed from the denominator)."
+          },
+          "points": {
+            "type": "number",
+            "minimum": 0
+          },
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status",
+          "points",
+          "detail"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "expiring": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "item": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "qty": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "idea": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "private": {
+            "type": "boolean"
+          },
+          "estimated": {
+            "type": "boolean",
+            "description": "Optional: true when the package is undated and the date is the low end of the shelf-life range (reference/shelf-life-us.md). A date not read from a photo is never estimated; it stays out of this list as UNKNOWN."
+          }
+        },
+        "required": [
+          "item",
+          "category",
+          "date",
+          "qty",
+          "location",
+          "idea",
+          "private"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "mealIdeas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "uses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          },
+          "minutes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "required": [
+          "title",
+          "uses",
+          "minutes"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "minutes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "week": {
+          "type": "string"
+        },
+        "category": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Supply category id the task adds days to, or null."
+        },
+        "addsDays": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "why": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "itemIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional. Life safety or plan item ids this task completes (for example [\"smoke\", \"alerts\"]). gen.py counts their points as the task's gain."
+        }
+      },
+      "required": [
+        "title",
+        "minutes",
+        "week",
+        "category",
+        "addsDays",
+        "steps",
+        "why",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "shopping": {
+      "type": "object",
+      "properties": {
+        "monthlyBudget": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "spent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "weekOf": {
+          "type": "string"
+        },
+        "pace": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item": {
+                "type": "string"
+              },
+              "qty": {
+                "type": "string"
+              },
+              "estCost": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "done": {
+                "type": "boolean"
+              },
+              "why": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "item",
+              "qty",
+              "estCost",
+              "done",
+              "why"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "monthlyBudget",
+        "spent",
+        "weekOf",
+        "pace",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "hazards": {
+      "type": "object",
+      "properties": {
+        "county": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "asOf": {
+          "type": "string"
+        },
+        "top": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "hazard": {
+                "type": "string"
+              },
+              "rating": {
+                "enum": [
+                  "Very High",
+                  "Relatively High",
+                  "Relatively Moderate",
+                  "Relatively Low",
+                  "Very Low",
+                  "No Rating",
+                  "Not Applicable",
+                  "Insufficient Data"
+                ]
+              },
+              "mode": {
+                "enum": [
+                  "on",
+                  "off",
+                  "none"
+                ]
+              }
+            },
+            "required": [
+              "hazard",
+              "rating",
+              "mode"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "county",
+        "source",
+        "url",
+        "asOf",
+        "top"
+      ],
+      "additionalProperties": false
+    },
+    "family": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "relation": {
+            "type": "string"
+          },
+          "town": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "needs": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lastUpdate": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checklist": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "done": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "text",
+                "done"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          },
+          "ageBand": {
+            "enum": [
+              "0-1",
+              "1-3",
+              "4-8",
+              "9-13",
+              "14-17"
+            ],
+            "description": "Set for minors. The Page shows '<pageLabel or Child>, <age band>' instead of the name unless showName is true."
+          },
+          "showName": {
+            "type": "boolean",
+            "description": "Minors only. True only when the owner asked to show the child's first name on the Page."
+          },
+          "pageLabel": {
+            "type": "string",
+            "pattern": "^Child( [A-Z])?$",
+            "description": "Minors only. Set once when the child is added (Child A, Child B, in the order added) and never renumbered or reused when the list changes. The Page shows '<pageLabel>, <age band>'. Never a name."
+          }
+        },
+        "required": [
+          "name",
+          "role",
+          "relation",
+          "town",
+          "needs",
+          "lastUpdate",
+          "checklist"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "headlineChecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "VERIFIED",
+              "PARTLY VERIFIED",
+              "UNVERIFIED",
+              "NOT SUPPORTED"
+            ]
+          },
+          "action": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https://"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "Optional: the source's issued or updated date."
+                }
+              },
+              "required": [
+                "title",
+                "url"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "full": {
+            "type": "string",
+            "description": "Optional: the full Headline Check (all sections and every source). Chat gets the short version, about 1,200 characters."
+          }
+        },
+        "required": [
+          "date",
+          "headline",
+          "verdict",
+          "action",
+          "sources",
+          "confidence"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "seasonal": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "month",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "outagePlan": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "fridgeHours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "freezerHours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "steps",
+        "fridgeHours",
+        "freezerHours",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "outageUseFirst": {
+      "type": "array",
+      "description": "Optional: fridge and freezer food to eat first in an outage. Dates optional. Never counted toward food days.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "where": {
+            "enum": [
+              "fridge",
+              "freezer"
+            ]
+          },
+          "qty": {
+            "type": "string"
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "item",
+          "where",
+          "qty",
+          "date",
+          "note"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "waterPlan": {
+      "type": "object",
+      "properties": {
+        "storedGallons": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "refillBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "treatment": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "storedGallons",
+        "refillBy",
+        "treatment",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "printPlan": {
+      "type": "object",
+      "properties": {
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "phone"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "outOfAreaContact": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "phone"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meetingPlaces": {
+          "type": "object",
+          "properties": {
+            "nearHome": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "outOfNeighborhood": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "outOfTown": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "nearHome",
+            "outOfNeighborhood",
+            "outOfTown"
+          ],
+          "additionalProperties": false
+        },
+        "utilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "what": {
+                "type": "string"
+              },
+              "where": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "what",
+              "where"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "evacuation": {
+          "type": "object",
+          "properties": {
+            "five": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 0
+            },
+            "fifteen": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 0
+            },
+            "sixty": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 0
+            }
+          },
+          "required": [
+            "five",
+            "fifteen",
+            "sixty"
+          ],
+          "additionalProperties": false
+        },
+        "petFriendlyPlace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shelterSpot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alertSignup": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evacZoneSource": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "contacts",
+        "outOfAreaContact",
+        "meetingPlaces",
+        "utilities",
+        "evacuation",
+        "petFriendlyPlace",
+        "shelterSpot",
+        "alertSignup",
+        "evacZoneSource"
+      ],
+      "additionalProperties": false
+    },
+    "recalls": {
+      "type": "object",
+      "properties": {
+        "lastCheck": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "checked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item": {
+                "type": "string"
+              },
+              "product": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^https://"
+              }
+            },
+            "required": [
+              "item",
+              "product",
+              "reason",
+              "date",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "sources": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "lastCheck",
+        "checked",
+        "matches",
+        "sources"
+      ],
+      "additionalProperties": false
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "on": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "on"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "on": {
+            "type": "boolean"
+          },
+          "kind": {
+            "enum": [
+              "default",
+              "optin"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "addPhrase": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "on",
+          "kind",
+          "note",
+          "addPhrase"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "channels": {
+      "description": "Optional. Delivery channels, defined in SKILL.md (Delivery channels). Ids are free text so a new channel needs no schema change.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "on",
+              "available",
+              "later"
+            ]
+          },
+          "levels": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "ACT NOW",
+                "PREPARE",
+                "FYI"
+              ]
+            },
+            "minItems": 0
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status",
+          "levels",
+          "note"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "date",
+          "score",
+          "coverage"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          }
+        },
+        "required": [
+          "title",
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "computed": {
+      "type": "object",
+      "description": "Written by gen.py. Do not edit. score = round(100 x earned / applicable); setupPct = share of applicable points answered; pointsWaiting = points of unanswered items; gaps carry raw-weight gains."
+    }
+  }
+}
