@@ -1,6 +1,6 @@
 # Two-week starter list (US)
 
-Version: Prepper v1.2.0 (2026-10-27)
+Version: Prepper v1.2.1 (2026-10-28)
 
 A preloaded list for quick-add. The owner says "add the starter list" or ticks lines from it, and the bot scales it to the household with the calculator in `us.md`. Water and the kit items come from Ready.gov and the Red Cross. Food amounts are planning examples, not official figures; say so when you show them, and swap in foods the family already eats.
 
@@ -46,7 +46,7 @@ Rule of thumb for food: buy a little extra of what you already eat each week, pu
 - Pets: food, water, medicine, leash, carrier, records. (Ready.gov Pets)
 
 ## Buy a little each week (budget pacing)
-Default pace for a $20 a week budget. The bot rescales to the owner's budget and skips anything already on hand. Prices are rough estimates the bot checks against current local prices before showing a total; it never links a store or brand.
+Default pace for a $20 a week budget. The bot rescales to the owner's budget and skips anything already on hand. Prices are rough estimates the bot checks against current local prices before showing a total; it never names a store or brand on its own. Store options follow the shopping rule in SKILL.md (only when the owner asks).
 
 | Week | Focus |
 |---|---|

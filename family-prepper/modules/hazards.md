@@ -1,6 +1,6 @@
 # Module: Hazard modes
 
-Version: Prepper v1.2.0 (2026-10-27). Turned on per hazard from the county's FEMA National Risk Index (NRI) ratings, never from guesses. The bot suggests modes for hazards rated Relatively High or Very High; the owner confirms.
+Version: Prepper v1.2.1 (2026-10-28). Turned on per hazard from the county's FEMA National Risk Index (NRI) ratings, never from guesses. The bot suggests modes for hazards rated Relatively High or Very High; the owner confirms.
 
 Each mode adds a short checklist to the Page, a seasonal reminder, and the "Do now" lines the threat watch uses when that hazard's NWS watch or warning arrives. All steps are from the linked Ready.gov page.
 

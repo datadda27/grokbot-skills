@@ -1,6 +1,6 @@
 # Module: Kit templates (go-bag, car, first aid)
 
-Version: Prepper v1.2.0 (2026-10-27). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.1 (2026-10-28). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Each kit is a checklist on the Page with done / missing / not checked. Amounts scale to the household.
 

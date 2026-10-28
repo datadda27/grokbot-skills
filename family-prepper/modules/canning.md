@@ -1,6 +1,6 @@
 # Module: Home canning
 
-Version: Prepper v1.2.0 (2026-10-27). Opt-in, off by default.
+Version: Prepper v1.2.1 (2026-10-28). Opt-in, off by default.
 
 Sources: National Center for Home Food Preservation (NCHFP) (https://nchfp.uga.edu/how/can), USDA FSIS Shelf-Stable Food Safety (in `reference/shelf-life-us.md`).
 

@@ -1,6 +1,6 @@
 # Module: Extra needs (babies, kids, older adults, disabilities, medical devices)
 
-Version: Prepper v1.2.0 (2026-10-27). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.1 (2026-10-28). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Sources: Ready.gov Build a Kit (https://www.ready.gov/kit), Ready.gov Power Outages (https://www.ready.gov/power-outages), Ready.gov Older Adults (https://www.ready.gov/older-adults), Ready.gov Disability (https://www.ready.gov/disability), Ready.gov Kids (https://www.ready.gov/kids), Ready.gov Heat (https://www.ready.gov/heat).
 

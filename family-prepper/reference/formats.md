@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.0 (2026-10-27)
+Version: Prepper v1.2.1 (2026-10-28)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 

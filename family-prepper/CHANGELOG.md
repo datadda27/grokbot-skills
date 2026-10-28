@@ -1,5 +1,8 @@
 # Prepper changelog
 
+## v1.2.1 (2026-10-28)
+- Shopping rule: still never buys and no affiliate, referral or sponsored links, but when the owner asks where to buy something the bot gives the spec, then 2 to 4 neutral store options with plain links and that day's prices.
+
 ## v1.2.0 (2026-10-27)
 First public release under the final name.
 - Renamed to Prepper (was Family Prepper) in every user-facing line: method, getting-started skill (now `prepper-getting-started`), routine names ("Prepper: threat watch", "Prepper: weekly", "Prepper: seasonal reminder", "Prepper: nudge"), Page titles, version answers, and feedback text. The GitHub folder stays `family-prepper/`, so every link keeps working; the saved method file name and the issue label are unchanged.
