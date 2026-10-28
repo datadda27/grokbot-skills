@@ -2,6 +2,7 @@
 
 ## v1.2.1 (2026-10-28)
 - Shopping rule: still never buys and no affiliate, referral or sponsored links, but when the owner asks where to buy something the bot gives the spec, then 2 to 4 neutral store options with plain links and that day's prices.
+- Family sharing moved: no longer offered at the end of the quick start (one line promises it instead). Offered at the end of deep setup part 3 (Plan) with the printable plan, or once at the first monthly check-in that has a meeting place and an out-of-area contact if deep setup was skipped. New `share` command works anytime.
 
 ## v1.2.0 (2026-10-27)
 First public release under the final name.

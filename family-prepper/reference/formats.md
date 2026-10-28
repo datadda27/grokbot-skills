@@ -125,6 +125,7 @@ Counted so far: about 4 person-days of food. Your estimate of about 10 days stay
 ```
 
 ## 10. Family share text (the owner sends it; the bot never does)
+When: at the end of deep setup part 3 (Plan), once at the first monthly check-in that has a meeting place and an out-of-area contact if deep setup was skipped, or on `share`. Never at the end of the quick start.
 Introduce it as a text for "a spouse or adult child". Name recipients only if the owner named them in this conversation; never pull names from memory.
 Family members don't need Grok Bot. Use the Page's public link, which the owner turns on with the share control on the Page.
 ```
