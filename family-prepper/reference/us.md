@@ -1,6 +1,6 @@
 # Country pack: United States
 
-Version: Prepper v1.2.5 (2026-10-29)
+Version: Prepper v1.2.6 (2026-10-29)
 
 Every number the bot quotes to a US household comes from this file, with its link. If a number is not here, the bot looks it up on an official page and cites it, or says UNKNOWN. Another country gets its own file (for example `uk.md`) with the same headings, so the method never changes when a country is added.
 

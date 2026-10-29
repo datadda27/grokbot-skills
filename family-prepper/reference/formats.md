@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.5 (2026-10-29)
+Version: Prepper v1.2.6 (2026-10-29)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 
@@ -195,4 +195,15 @@ Prepper list (Oct 29)
 - AA batteries, 1 pack
 - Canned soup, 6
 ```
-Open shopping items only, plain text, no links, no prices unless asked, nothing private. Then: "Here's a list you can paste and send. I don't message anyone."
+Open shopping items only, with anything already bought or already in `plans.json` dropped first, plain text, no links, no prices unless asked, nothing private. Then: "Here's a list you can paste and send. I don't message anyone."
+
+## 15. Receipt logged (after the read-back passes)
+```
+**Logged: Walmart, Oct 29, 12:49 PM, $495.95** (89 items)
+- Saved the photo as receipts/2026-10-29-walmart-1249.jpg
+- 24 Vienna sausage, 6 soups, 12 beef stew and chicken with dumplings, 2 lanterns, 1 first aid kit, and 18 more lines
+- Not counted: bananas (perishable)
+Counted so far: about 9 days of food. Water stays at 0 gallons until the jugs are filled.
+Please confirm: how many lighters come in the BIC Utility pack?
+```
+Send only after the read-back of the photo, `receipts.json`, and `inventory.json` passed. If a save failed twice, say so instead: "I couldn't save that receipt yet. I'll try again; nothing is logged until it saves." One "Please confirm" line lists every assumed or unreadable value; leave it off when there are none.

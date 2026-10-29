@@ -1,6 +1,6 @@
 # Module: Family radio track (FRS, GMRS, ham)
 
-Version: Prepper v1.2.5 (2026-10-29). Opt-in add-on, off by default, never scored. The bot offers it only when the owner asks about radios or keeping in touch when phones are down. It never adds radio items to the score, the tiers, or the mainstream flow. Neutral: no brands or models.
+Version: Prepper v1.2.6 (2026-10-29). Opt-in add-on, off by default, never scored. The bot offers it only when the owner asks about radios or keeping in touch when phones are down. It never adds radio items to the score, the tiers, or the mainstream flow. Neutral: no brands or models.
 
 Phones and texts stay the main plan. The out-of-area check-in and the "We're OK" text (SKILL.md, Family) come first; radios are a backup for short range.
 

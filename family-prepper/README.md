@@ -2,7 +2,7 @@
 
 Public Grok Bot template: https://x.ai/bot/-XeyX8_sUb_Ca0a6vqDYY
 
-Method version: Prepper v1.2.5 (2026-10-29). The full method is [SKILL.md](SKILL.md), with changes in [CHANGELOG.md](CHANGELOG.md). This page is a short setup manifest; when the two differ, SKILL.md wins.
+Method version: Prepper v1.2.6 (2026-10-29). The full method is [SKILL.md](SKILL.md), with changes in [CHANGELOG.md](CHANGELOG.md). This page is a short setup manifest; when the two differ, SKILL.md wins.
 
 ## What it does (one job)
 Gets one household ready to stay home for two weeks, and keeps it there: water, food, medicine, power, light, heat, sanitation, first aid, communication, and documents, plus a plan everyone knows. Every number cites an official source.
@@ -55,6 +55,7 @@ The standout feature is **Headline Check**: paste a worrying post or headline an
 ## Integrations and tools
 Core, with no accounts needed:
 - Grok Bot chat, memory, the bot's own store, and Grok Bot Pages (the dashboard and the Family plan Page).
+- Storage: the bot's own store holds the record. `inventory.json` (every line has a status: bought, in cart, put back, or considered; lines are never deleted), `receipts/` (each receipt photo, named by date and store), `receipts.json` (each receipt item by item, linked from inventory lines), `plans.json` (store lists and advice not yet bought), and `dashboard-data.json`. Every save is read back before the bot says it is logged, and a weekly check keeps memory in line with these files.
 - Free, keyless official sources: NWS alerts, FEMA IPAWS, FEMA National Risk Index, OpenFEMA, USGS, the National Hurricane Center, NIFC, US Drought Monitor, Open-Meteo, Zippopotam.us, and the FCC Area API. Exact requests are in [reference/data-sources-us.md](reference/data-sources-us.md).
 - Optional monthly recall check (off until the owner says yes): FDA, USDA FSIS, CPSC, and NHTSA recall lists.
 - Grok Bot's free public X reads, for Headline Check and as context only. It never acts on X.

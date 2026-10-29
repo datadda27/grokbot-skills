@@ -1,5 +1,15 @@
 # Prepper changelog
 
+## v1.2.6 (2026-10-29)
+Reliability: receipts, statuses, read-backs, and memory that matches the files. Score logic is unchanged.
+- Receipts: each receipt photo is saved to `receipts/` (date, store, and time in the name) before anything is logged, then written item by item to the new `receipts.json`, and inventory lines link to it with `receiptId`. Several receipts in a row are each saved and logged before the next is read. New format 15 (receipt logged).
+- What goes in: inventory lines come only from a receipt or a clear "I bought it". When it is unclear, the bot asks once. Counts or pack sizes it did not read go in `assumed` and in one "Please confirm" line, and open questions stay in `needsConfirmation`.
+- Status, never delete: every inventory line has a status (bought, in cart, put back, or considered), with the model and price when known. Only bought lines count.
+- Before any purchase suggestion, the bot reads the inventory, the open shopping list, and `plans.json` and drops what is owned or planned. It reads the files and memory before asking about the household, pets, gear, or plans.
+- New `plans.json` for store lists and advice that were decided but not bought, read before shopping answers.
+- Saved means read back: every save is read back, retried once, and reported if it still fails. The bot never says "logged" until the read-back passed. Every reply goes through the send tool and is never blank. Helper tasks get store paths and the method version from the store, never a `/workspace` path.
+- Weekly memory check: memory notes about supplies, purchases, gear, and plans are compared with the files, and clashing notes are corrected without dropping any fact.
+
 ## v1.2.5 (2026-10-29)
 A family plan link, kids away from home, and three opt-in add-ons. Score logic is unchanged.
 - Family plan link: a second, basics-only Family plan Page with one permanent public link (`gen.py --family`, new `family-plan.template.tsx`). It shows meeting places, the out-of-area check-in, contacts, roles, shutoffs and alerts, the leave lines, and the wallet card, and never supplies, the score, cash, medicines, firearms, or device details (gen.py copies an allowlist; `test_family_page.py` checks the sample). Rebuilt whenever a plan field changes. The owner turns on its public link once; anyone with the link can view it. The share text (format 10) and format 7 now use this link. Replaces the old "never make a second Page" rule.

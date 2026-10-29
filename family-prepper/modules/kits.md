@@ -1,6 +1,6 @@
 # Module: Kit templates (two tiers, location kits, first aid, add-ons)
 
-Version: Prepper v1.2.5 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.6 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Each kit is a checklist on the Page with done / missing / not checked. Amounts scale to the household. Roles and the printable plan name only kits the household has confirmed it has; a kit that doesn't exist yet is a weekly build task ("Build the 72-hour carry kit for one person"), never a role.
 

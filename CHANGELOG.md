@@ -1,5 +1,9 @@
 # Changelog
 
+## Prepper v1.2.6 (2026-10-29)
+
+- Reliability: receipt photos saved to the store and logged item by item in `receipts.json` with inventory lines linked; inventory only from a receipt or a clear "I bought it", with assumed counts flagged for confirmation; every line has a status (bought, in cart, put back, considered) and is never deleted; owned and planned items dropped before any suggestion; new `plans.json`; every save read back before "logged"; replies never blank; weekly memory check against the files. Score logic is unchanged.
+
 ## Prepper v1.2.5 (2026-10-29)
 
 - A basics-only Family plan Page with one permanent public link for family (no supplies, score, cash, medicines, firearms, or device details); kids away from home and a "We're OK" check-in line; opt-in radio and vehicle add-ons; a firearms go-bag line in the opt-in safety module. Never scored.

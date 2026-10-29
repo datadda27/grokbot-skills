@@ -1,6 +1,6 @@
 # Two-week starter list (US)
 
-Version: Prepper v1.2.5 (2026-10-29)
+Version: Prepper v1.2.6 (2026-10-29)
 
 A preloaded list for quick-add. The owner says "add the starter list" or ticks lines from it, and the bot scales it to the household with the calculator in `us.md`. Water and the kit items come from Ready.gov and the Red Cross. Food amounts are planning examples, not official figures; say so when you show them, and swap in foods the family already eats.
 
