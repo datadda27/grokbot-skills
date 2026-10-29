@@ -1,6 +1,6 @@
 {
   "_example": "Everything on this page is made up for a fictional household (Example Household, Anytown, USA). Setup replaces every value; no real household details ship with the template.",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "asOf": "2026-10-26",
   "asOfLabel": "Oct 26, 2026, 4:00 PM CT",
   "page": {
@@ -61,7 +61,7 @@
     ],
     "watchedPlaces": [
       "Home (Anytown)",
-      "Jordan's office (Exampleville)",
+      "A work address",
       "College Town (family)"
     ]
   },
@@ -96,7 +96,8 @@
       "status": "open",
       "points": 3,
       "detail": "Not yet. Works when cell service and power are down.",
-      "source": "NWS"
+      "source": "NWS",
+      "free": false
     },
     {
       "id": "county",
@@ -104,7 +105,9 @@
       "status": "unknown",
       "points": 3,
       "detail": "Not sure. The bot found the county signup page; confirm and it counts.",
-      "source": "Example County Emergency Management"
+      "source": "Example County Emergency Management",
+      "minutes": 5,
+      "free": true
     },
     {
       "id": "device",
@@ -241,7 +244,9 @@
       "label": "Printed plan and wallet cards",
       "status": "open",
       "points": 3,
-      "detail": "Ready to print. Say \"print the plan\"."
+      "detail": "Ready to print. Say \"print the plan\".",
+      "minutes": 10,
+      "free": true
     },
     {
       "id": "meet",
@@ -255,14 +260,18 @@
       "label": "Utility shutoffs located",
       "status": "unknown",
       "points": 2,
-      "detail": "Water main found; gas meter not checked."
+      "detail": "Water main found; gas meter not checked.",
+      "minutes": 10,
+      "free": true
     },
     {
       "id": "drill",
       "label": "Drill in the last 6 months",
       "status": "open",
       "points": 3,
-      "detail": "Last drill: none recorded. A 10 minute tornado drill counts."
+      "detail": "Last drill: none recorded. A 10 minute tornado drill counts.",
+      "minutes": 10,
+      "free": true
     }
   ],
   "expiring": [
@@ -712,11 +721,19 @@
     "alertSignup": "Example County alerts page (example)",
     "evacZoneSource": "Example County Emergency Management (example)"
   },
+  "goBags": {
+    "packed": 5,
+    "needed": 7,
+    "spot": "Hall closet",
+    "note": "Kept in the hall closet. Child B's comfort item and the cat's kit are next."
+  },
   "recalls": {
+    "on": true,
     "lastCheck": "Oct 26",
+    "nextCheck": "Nov 23",
     "checked": 41,
     "matches": [],
-    "sources": "openFDA food enforcement; CPSC recalls"
+    "sources": "FDA (food and drug enforcement), USDA FSIS, CPSC, NHTSA car seats"
   },
   "modules": [
     {
@@ -789,11 +806,11 @@
     },
     {
       "id": "recalls",
-      "label": "Pantry recall check",
+      "label": "Monthly recall check",
       "on": true,
-      "kind": "default",
-      "note": "openFDA and CPSC matched to your inventory.",
-      "addPhrase": null
+      "kind": "optin",
+      "note": "Stored food, first aid items, gear, and car seats against FDA, USDA FSIS, CPSC, and NHTSA recalls. Never scored.",
+      "addPhrase": "recall check on"
     },
     {
       "id": "location",

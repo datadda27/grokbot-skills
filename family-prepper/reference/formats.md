@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.2 (2026-10-28)
+Version: Prepper v1.2.3 (2026-10-29)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 
@@ -86,12 +86,18 @@ Why: it keeps the 2-week food supply fresh. (+3 readiness when done)
 **Readiness** 62 (up 9) · Tier: 72 hours · Next: 2 weeks
 **Wins:** CO alarm installed · water at 8 days
 **Use next:** granola bars (Nov 14) · AA batteries (Dec) · 2 water jugs (rotate Jan 3)
+**Recall check:** no matches in 41 items.
 **Gaps:** food 6 of 14 days (+3) · first aid kit 9 of 18 items (+2)
 **This week · 15 minutes:** fill 4 clean jugs from the tap and date them. (+2)
 **Season ahead:** winter. Test the furnace CO alarm, and add a blanket and scraper to the car.
 **Drill (optional):** a 10-minute lights-out evening. Want to try it?
 ```
 One message. The weekly task is never sent separately on the same Saturday.
+The recall check line appears only when the owner turned the monthly recall check on. A match replaces it with one line per match, for example:
+```
+**Recall check:** your canned black beans match an FDA recall (Example Brand, 15 oz, possible underprocessing). Check the lot code on yours before using it. https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts
+```
+A medicine match is said the same way in chat but never goes on the Page.
 In the April and October check-ins, the last two lines are always:
 ```
 **Kit check (every 6 months):** dates on food, water, meds, and batteries; swap seasonal clothes in the carry kits you have.

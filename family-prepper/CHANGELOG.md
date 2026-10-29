@@ -1,5 +1,14 @@
 # Prepper changelog
 
+## v1.2.3 (2026-10-29)
+Dashboard v2 and an optional monthly recall check.
+- Dashboard v2: the Page now has three views. Home shows the readiness ring (a gray arc for points waiting on a yes or no), "Up from N on date", the tier pill, a Next goal card with the tier track and what each item needs (+N points), This week (the weekly task plus up to 2 quick free steps), At a glance cards for water, food, light and power, first aid, go-bags, and the plan with status pills, Life safety, and an outage and meeting card (eat-first list, fridge 4 hours, freezer 48 hours, where we meet). Family plan is the printable plan with a dashed-line wallet card. Details holds every supply line, plan steps, use it first, your area, outage and water, shopping, progress, headline checks, connections, and sources, with a table of contents. Score logic is unchanged.
+- gen.py computes the new Page parts (`nextTierRows`, `tierProvisional`, `cards`, `weekSteps`, `historyFirst`). New optional data: `minutes` and `free` on life safety and plan items, `goBags` (never scored), `recalls.on`, `recalls.nextCheck`, and `source` and `kind` on recall matches. Older data files still build.
+- The medical device row on the Page is yes or no only. Medicines stay a days count with "details private".
+- New optional monthly recall check: stored food, first aid items and medicines on hand, gear, and car seats against FDA (food and drug enforcement), USDA FSIS, CPSC, and NHTSA. Offered once, `recall check on` / `recall check off`, and `recall check` to run it now. Runs inside the monthly check-in, reports only matches with the official link, and is never scored. Medicine matches stay in chat and `private.json`, never on the Page. Every source link was checked on 2026-10-29.
+- The daily pantry and gear recall check in the morning threat watch is replaced by the monthly check. Older installs keep it on, now monthly, and are told once.
+- Verify kit renders all three views for the sample and a sparse variant (no go-bags, a recall match, older items without minutes).
+
 ## v1.2.2 (2026-10-28)
 Kits, go-bags, and Headline Check fixes from the deep setup test.
 - Go-bag before roles: in Family roles the bot first asks "Do you each have a 72-hour carry bag packed? Where is it kept?" Roles and checklists name only gear the household has confirmed; anything else becomes a weekly build task, never a role. "Car kit lead" is no longer a default role example. The printable plan says to keep a copy "in the go-bag, or with your important papers until you have one."

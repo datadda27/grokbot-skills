@@ -5,7 +5,7 @@ Defaults: dashboard.template.tsx and dashboard.canvas.tsx next to this file; $DA
 Only the data file changes between households. The template holds no household text.
 gen.py computes the readiness score (earned over every applicable point, so answering only raises it),
 setup progress, points waiting, tier, top gaps (gains in stated-weight points), the two-week calculator, and days until each
-best-by date, drops any item marked private, and refuses private keys (medicine details, firearms, cash amounts)."""
+best-by date, the at-a-glance cards and this week's steps (v1.2.3), drops any item marked private, and refuses private keys (medicine details, firearms, cash amounts)."""
 import json, os, sys, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -160,6 +160,123 @@ def compute(d):
         stretch = ["%s %s of %d days" % (cats[k]["label"], UNKNOWN_DAYS if cats[k]["days"] is None else "%g" % cats[k]["days"], STRETCH_DAYS)
                    for k in CORE if cats.get(k)]
 
+    byid = {r[7]: r for r in rows}
+
+    def earned_of(i):
+        r = byid.get(i)
+        return (r[3] or 0) if r else 0
+
+    def plus(g, rest):
+        return "+%d point%s %s" % (g, "" if g == 1 else "s", rest)
+
+    def need_row(title, detail, raw):
+        return {"title": title, "detail": detail, "gain": max(pts(raw), 0)}
+
+    next_rows = []
+    if tier == 0:
+        for k in CORE:
+            c = cats.get(k)
+            if c and (c["days"] is None or c["days"] < 3):
+                have = "not counted" if c["days"] is None else "%g" % c["days"]
+                next_rows.append(need_row(c["label"], "%s to 3 days" % have, c["weight"] * min(3 / target, 1) - earned_of(k)))
+        for x in d["lifeSafety"]:
+            if x["id"] in ("smoke", "co", "alerts") and x["status"] not in ("done", "na"):
+                next_rows.append(need_row(x["label"], "Not done yet", x["points"] - earned_of(x["id"])))
+        if not device_ok:
+            next_rows.append(need_row("Power-dependent device backup plan", "Not done yet",
+                                      sum(x["points"] - earned_of(x["id"]) for x in d["lifeSafety"] if x["id"] == "device")))
+    elif tier == 1:
+        for k in CORE:
+            c = cats[k]
+            if c["days"] < 14:
+                next_rows.append(need_row(c["label"], "%g to 14 days" % c["days"], c["weight"] * min(14 / target, 1) - earned_of(k)))
+        for c in others:
+            if c["kind"] == "checklist":
+                if c["itemsDone"] is None or not c["itemsTotal"]:
+                    next_rows.append(need_row(c["label"], "Not counted yet. Count it to see where it stands.", c["weight"]))
+                elif c["itemsDone"] / c["itemsTotal"] < 0.5:
+                    next_rows.append(need_row(c["label"], "%d of %d now, %d needed" % (c["itemsDone"], c["itemsTotal"], -(-c["itemsTotal"] // 2)),
+                                              c["weight"] * 0.5 - earned_of(c["id"])))
+            elif c["days"] is None or c["days"] < target / 2:
+                next_rows.append(need_row(c["label"], "To %g days" % (target / 2), c["weight"] * 0.5 - earned_of(c["id"])))
+
+    # At-a-glance cards (v1.2.3). Gains use the same 100/applicable scaling as the score; nothing here changes the score.
+    top_id = top[0]["id"] if top else None
+
+    def gain_of(ids):
+        return pts(sum(byid[i][2] - (byid[i][3] or 0) for i in ids if i in byid and byid[i][4]))
+
+    def status_of(ids, ratio, counted_all):
+        if top_id in ids:
+            return "Biggest gap"
+        if counted_all and gain_of(ids) == 0:
+            return "On target"
+        if not counted_all:
+            return "Not counted yet"
+        return "Almost there" if ratio >= 0.75 else "Building"
+
+    def note_of(c):
+        cn = c.get("countNote")
+        return ((cn[0].upper() + cn[1:] + ". ") if cn else "") + (c.get("note") or "")
+
+    cards = []
+    for k, title in (("water", "Water"), ("food", "Food")):
+        c = cats.get(k)
+        if not c or c["kind"] != "days":
+            continue
+        known = c["days"] is not None
+        ratio = min(c["days"] / target, 1) if known else 0
+        g = gain_of([k])
+        cards.append({"id": k, "title": c["label"] or title, "value": ("%g" % c["days"]) if known else "Not counted",
+                      "unit": ("of %d days" % target) if known else "", "ratio": round(ratio, 3), "tick": round(min(3 / target, 1), 3),
+                      "status": status_of([k], ratio, known), "note": note_of(c), "gain": g, "scored": True,
+                      "gainText": plus(g, "at %d days" % target) if known and g else
+                                  plus(g, "waiting on a count") if g else "At goal", "parts": []})
+    lp = [cats[k] for k in ("light", "power") if k in cats and cats[k]["kind"] == "checklist"]
+    if lp:
+        known = all(c["itemsDone"] is not None and c["itemsTotal"] for c in lp)
+        done = sum(c["itemsDone"] or 0 for c in lp)
+        total = sum(c["itemsTotal"] or 0 for c in lp)
+        ratio = done / total if total else 0
+        ids = [c["id"] for c in lp]
+        g = gain_of(ids)
+        worst = max(lp, key=lambda c: c["weight"] - earned_of(c["id"]))
+        cards.append({"id": "lightpower", "title": "Light and power", "value": "%d" % done if known else "Not counted",
+                      "unit": ("of %d ready" % total) if known else "", "ratio": round(ratio, 3), "tick": None,
+                      "status": status_of(ids, ratio, known), "note": worst.get("note") or "", "gain": g, "scored": True,
+                      "gainText": plus(g, "when all ready") if g else "At goal",
+                      "parts": [{"label": c["label"], "done": c["itemsDone"], "total": c["itemsTotal"],
+                                 "ratio": round(c["itemsDone"] / c["itemsTotal"], 3) if c["itemsDone"] is not None and c["itemsTotal"] else 0}
+                                for c in lp]})
+    c = cats.get("firstaid")
+    if c and c["kind"] == "checklist":
+        known = c["itemsDone"] is not None and bool(c["itemsTotal"])
+        ratio = c["itemsDone"] / c["itemsTotal"] if known else 0
+        g = gain_of(["firstaid"])
+        cards.append({"id": "firstaid", "title": c["label"], "value": "%d" % c["itemsDone"] if known else "Not counted",
+                      "unit": ("of %d items" % c["itemsTotal"]) if known else "", "ratio": round(ratio, 3), "tick": None,
+                      "status": status_of(["firstaid"], ratio, known), "note": c.get("note") or "", "gain": g, "scored": True,
+                      "gainText": plus(g, "when complete") if g else "At goal", "parts": []})
+    gb = d.get("goBags")
+    if gb and gb.get("needed"):
+        packed = gb.get("packed") or 0
+        cards.append({"id": "gobags", "title": "Go-bags", "value": "%d" % packed, "unit": "of %d packed" % gb["needed"],
+                      "ratio": round(min(packed / gb["needed"], 1), 3), "tick": None, "status": "Not scored",
+                      "note": gb.get("note") or "", "gain": 0, "scored": False,
+                      "gainText": "Not part of the score. Packed bags make leaving faster.", "parts": []})
+    plan_ids = [x["id"] for x in d["planItems"] if x["status"] != "na"]
+    if plan_ids:
+        pdone = sum(1 for x in d["planItems"] if x["status"] == "done")
+        papp = sum(byid[i][2] for i in plan_ids)
+        pearned = sum(earned_of(i) for i in plan_ids)
+        ratio = pearned / papp if papp else 0
+        g = gain_of(plan_ids)
+        nxt = [x["label"] for x in d["planItems"] if x["status"] in ("open", "unknown")][:2]
+        cards.append({"id": "plan", "title": "Plan", "value": "%d" % pdone, "unit": "of %d steps" % len(plan_ids),
+                      "ratio": round(ratio, 3), "tick": None, "status": status_of(plan_ids, ratio, True),
+                      "note": ("Next: " + "; ".join(nxt) + ".") if nxt else "Every plan step is done.", "gain": g, "scored": True,
+                      "gainText": plus(g, "when done") if g else "At goal", "parts": []})
+
     hh = d["household"]
     kcal = 2000 * hh["adults"]
     infants = 0
@@ -177,7 +294,6 @@ def compute(d):
 
     task_gain = 0
     t = d["task"]
-    byid = {r[7]: r for r in rows}
     ids = t.get("itemIds") or []
     if ids:
         task_gain = pts(sum(byid[i][2] - (byid[i][3] or 0) for i in ids if i in byid and byid[i][4]))
@@ -198,6 +314,25 @@ def compute(d):
                     "estimated": bool(e.get("estimated"))})
     exp.sort(key=lambda e: e["daysLeft"])
 
+    # This week (v1.2.3): the task first, then up to two free open life-safety or plan items, highest points first.
+    NOT_FREE = {"radio", "smoke", "co"}  # usually cost money; an item's own `free` flag wins
+    week = [{"title": t["title"], "minutes": t["minutes"], "gain": task_gain, "detail": " ".join(t.get("steps") or []) or t["why"]}]
+    pool = []
+    for oi, (group, items) in enumerate((("life safety", d["lifeSafety"]), ("plan", d["planItems"]))):
+        for ii, x in enumerate(items):
+            if x["status"] not in ("open", "unknown") or x["id"] in ids:
+                continue
+            if not x.get("free", x["id"] not in NOT_FREE):
+                continue
+            pool.append((-pts(x["points"] - earned_of(x["id"])), oi, ii, x))
+    pool.sort(key=lambda p: p[:3])
+    for g, _, _, x in pool[:2]:
+        week.append({"title": x["label"], "minutes": x.get("minutes"), "gain": -g, "detail": x["detail"]})
+
+    hist = d.get("history") or []
+    history_first = ({"date": hist[0]["date"], "score": hist[0]["score"]}
+                     if len(hist) >= 2 and hist[0]["score"] < score else None)
+
     sh = d["shopping"]
     budget_pct = (min(sh["spent"] / sh["monthlyBudget"], 1) if sh["monthlyBudget"] and sh["spent"] is not None else None)
 
@@ -209,6 +344,9 @@ def compute(d):
         "tierLabel": TIERS[tier][1] + (" (provisional)" if core_uncounted else ""),
         "nextTierLabel": TIERS[tier + 1][1] if tier + 1 < len(TIERS) else "",
         "nextTierNeeds": needs,
+        "nextTierRows": next_rows,
+        "tierProvisional": core_uncounted,
+        "cards": cards, "weekSteps": week, "historyFirst": history_first,
         "stretch": stretch,
         "gaps": top, "uncounted": uncounted,
         "taskGain": task_gain,

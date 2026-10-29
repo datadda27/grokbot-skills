@@ -16,19 +16,29 @@ python3 gen.py --summary dashboard-data.json              # score, setup %, tier
 ```
 Exit codes: 0 ok, 2 usage or missing file, 3 bad data (invalid JSON, a private field, a schema error, or a missing template marker). Install `jsonschema` for full validation; without it gen.py still checks the private fields and required sections.
 
-## What the Page shows
-- Views: Dashboard, Family plan (printable), Wallet card. The view switcher is the first thing on every view.
-- Titles use `household.name` ("The Smith household: family plan"); a blank name or sample data shows a neutral title.
-- Readiness ring out of 100 (gray share is points waiting), a separate setup progress bar, tier ladder, what the next tier needs, and the top 3 gaps with points.
-- Life safety first: smoke and CO alarms, phone alerts, NOAA radio, county signup, device backup.
-- Alerts: calm line when quiet; a warning box only for an active PREPARE, and red only for an active ACT NOW warning.
-- Days of supply ladder with a 3-day tick and the household target, plus the two-week calculator.
-- This week's 15-minute task with its points ("+N points when done", from `task.itemIds` or `task.category` and `addsDays`), and shopping a little each week against the budget.
-- Use it first: best-by timeline (estimated dates for undated packages are marked), meal ideas, and the pantry recall check.
-- County hazards (FEMA NRI) and the seasonal strip; outage and water plans, with the "Use first in an outage" list (`outageUseFirst`: fridge about 4 hours, a full, closed freezer about 48 hours; not counted toward food days).
-- Family cards with roles and checklists; the plan checklist. Kids with an `ageBand` show as their stored `pageLabel` plus the band ("Child A, 9 to 13") unless `showName` is true; gen.py replaces their names before embedding the data and never numbers them by list position.
-- Headline Check history with verdict chips, source dates, and the full check (`full`) for each.
-- Score history, Connections (with the phrase to say to add each), Delivery channels (when the data has a `channels` list), Modules, and Sources.
+## What the Page shows (dashboard v2, Prepper v1.2.3)
+One Page with three views on a switch at the top. Titles use `household.name` ("The Smith household: family emergency plan"); a blank name or sample data shows a neutral title.
+
+**Home**
+- Readiness: the ring out of 100 with a gray arc for points waiting on a yes or no, a legend, "Up from N on date" (from `history`), and the tier pill (Getting started, or "72 hours reached", marked provisional while points are waiting).
+- Next goal card: the tier track (72 hours, then 2 weeks), what each item still needs with +N points (`computed.nextTierRows`), and one line with the alert check times and setup progress.
+- Alert boxes only when needed: red for an active ACT NOW, a warning for PREPARE, a note for emergency mode, and a warning when the recall check found a match.
+- This week: the weekly task plus up to 2 quick free steps (`computed.weekSteps`, from `minutes` and `free` on life safety and plan items).
+- At a glance: water, food, light and power, first aid, go-bags, and the plan (`computed.cards`), each with a big number, a meter (3-day tick on water and food), and a status pill: Biggest gap, On target, Almost there, Building, or Not counted yet. Go-bags (`goBags`) say Not scored and never change the score.
+- Life safety: Done pills, +N on open items. The power-dependent medical device row is yes or no only.
+- If the power goes out or we get separated: the eat-first list (`outageUseFirst`) with the fridge 4 hours and freezer 48 hours line, and Where we meet.
+
+**Family plan** (made to print)
+- Contacts and meeting places, If we have to leave (5, 15, 60 minutes), shutoffs and alerts, who does what (kids with an `ageBand` show as their `pageLabel` plus the band, "Child A, 9 to 13", unless `showName` is true), and the wallet card front and back with dashed cut lines.
+
+**Details** (with a table of contents)
+- All supplies: every category as a full-width meter; dashed means not counted yet. The optional 30-day stretch shows only here. The two-week calculator.
+- Plan steps, Use it first (best-by table, meal ideas, and the monthly recall check: result, items checked, next check, sources, and each match with its official link), Your area (FEMA NRI hazards, FYI, seasonal), Outage and water, Shopping, Progress (when there are 2 or more scores), Headline checks and Connections (both collapsed), and Sources.
+
+## Optional data (older data files still build)
+- `lifeSafety[].minutes`, `planItems[].minutes`, and `free` (true when the step costs nothing): feed This week. A missing `free` counts as free except for the NOAA radio and alarms.
+- `goBags`: `packed`, `needed`, `spot`, `note`. Never scored.
+- `recalls.on` (missing means on, for older installs that had the daily check) and `recalls.nextCheck`. Each match can carry `source` (FDA, USDA FSIS, CPSC, NHTSA) and `kind` (food, first aid, gear, car seat). Medicine matches never go in this file.
 
 ## Score
 - Points: supplies 60 (water 12, food 10, medicines 10, sanitation 5, power 5, heat and cooling 5, light 4, first aid 4, comms 3, documents 2), life safety 25, plan 15.

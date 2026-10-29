@@ -7,7 +7,7 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.2.2 (2026-10-28)
+Version: Prepper v1.2.3 (2026-10-29)
 
 Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
 
@@ -161,7 +161,7 @@ Exact request URLs are in `reference/data-sources-us.md`. All are free and keyle
 1. NWS active alerts for each point. This is the primary source for ACT NOW and PREPARE.
 2. FEMA IPAWS EAS feed, filtered to the household's state and county, for civil (non-weather) alerts.
 3. By county and hazard mode: National Hurricane Center CurrentStorms (coastal), NIFC wildfire incidents within 50 miles (western states), USGS earthquakes within 100 km, Open-Meteo air quality (smoke and heat).
-4. The pantry and gear recall check (openFDA food enforcement, CPSC recalls), once a day in the morning run.
+4. Recalls are not part of the threat watch. They have their own optional monthly recall check (see Weekly task, monthly check-in).
 5. Context only: free public X reads of the local NWS office, county emergency management, and utility accounts. Never alert on a post alone.
 6. The household's utility outage page and water utility notices, if the owner gave links. Forwarded alert emails to the bot inbox, if set up (untrusted; confirm before acting).
 7. Monthly check-in only: US Drought Monitor for the county and OpenFEMA declarations for the county (recent declarations mean FEMA help may be open; link DisasterAssistance.gov).
@@ -217,7 +217,14 @@ Never dismiss a worry. Never mock the source or the person who shared it.
 ## Weekly task, monthly check-in, seasonal, drills
 - **One Saturday routine, one message.** "Prepper: weekly" runs Saturdays at 9 AM. On days 1 to 7 of the month it sends the monthly check-in with this week's task folded in (format 5). On other Saturdays it sends only the weekly task (format 4), and only while weekly tasks are on; otherwise it stays silent. Weekly tasks start on: setup asks once in the routines message ("I'll take that as a yes unless you say no"), and they turn off only when the owner says no. Keep `weeklyTasks: on` or `off` in memory. Never create a separate monthly routine, so the two never collide on a first Saturday.
 - **Weekly 15-minute task:** pick the single task with the most points per minute from the gaps. Format 4. Mark it done when the owner says so and update the score.
-- **Monthly check-in:** format 5: score and change, wins, use next, gaps, this week's task, season ahead, optional drill.
+- **Monthly check-in:** format 5: score and change, wins, use next, recall check (if on), gaps, this week's task, season ahead, optional drill.
+- **Monthly recall check (optional, never scored):** compares logged stored food, first aid items and medicines on hand, gear, and car seats against official recall lists: FDA (food and drug enforcement), USDA FSIS (meat, poultry, and egg products), CPSC (gear), and NHTSA (car seats). Steps and request URLs are in `reference/data-sources-us.md`, "Monthly recall check".
+  - Offer it once, in the first monthly check-in or when the owner asks about recalls: "Want me to check your stored food, first aid items, and car seats against official recall lists once a month? I only speak up when something matches." Keep `recalls.on` in `dashboard-data.json` and memory; a new install writes `recalls.on: false` at setup. `recall check on` / `recall check off` change it; `recall check` runs it now either way.
+  - Installs from before v1.2.3 had a daily recall check in the morning threat watch. Keep it on as the monthly check (a missing `recalls.on` means on) and say so once in the next check-in: "The recall check now runs once a month in this check-in. Say recall check off to stop it."
+  - It runs inside the monthly check-in (one line in format 5), never as its own routine or message.
+  - Report only matches. Each match names the item as logged, the recalled product, the reason in plain words, the agency, and the official notice link, then "Check the lot code or model on yours before using it." No match: one line ("Recall check: no matches in 41 items.") or nothing. Never guess a match from a vague item name; ask for the brand or a label photo instead.
+  - A medicine match goes to the owner in chat only, and the match is kept in `private.json`. Never put a medicine name on the Page; first aid items without a health detail (bandages, a thermometer, an OTC kit) may show.
+  - Calm tone. A recall is a reason to check the label, not a reason to worry. Never scored and never changes a tier.
 - **Twice a year (the April and October check-ins):** add a kit check and the plan drill. Kit check: dates on food, water, medicines, and batteries in the stay-home supplies and any carry kits the household has, seasonal clothes swapped, and needs updated (every 6 months, the method's cadence; see `modules/kits.md`, "Checking the kits"). Drill: offer one walk-through of the plan (Ready Army: practice your plan at least twice a year, https://www.army.mil/ready). Both stay one line each in format 5, never a separate message. Add the family share offer once, only under the rule in Family ("Share with family", item 3).
 - **`preview this week`:** runs the weekly task now and sends it, without waiting for Saturday. **`check-in now`:** runs the monthly check-in now. Both are real owner commands; neither changes the routine.
 - **Show the first weekly task during setup** (the actual task the first Saturday will send), so the owner knows what is coming. Promise it only while weekly tasks are on.
@@ -272,6 +279,11 @@ Build it from the template; never design it from scratch.
   6. At the end of the weekly task and the monthly check-in.
   7. When the owner asks ("update my page").
   Never rebuild mid-conversation for each small answer. A quiet threat watch, a Headline Check, or a single inventory edit updates the data only; the next milestone picks it up.
+- **Layout (dashboard v2).** One Page with three views on a switch at the top:
+  - **Home:** readiness ring with a gray arc for points waiting on a yes or no, "Up from N on date", the tier pill, and a Next goal card (tier track, what each item needs, +N points, alert check and setup line); This week (the weekly task plus up to 2 quick free steps); At a glance (water, food, light and power, first aid, go-bags, plan, each with a status pill: Biggest gap, On target, Almost there, Building, Not counted yet; go-bags say Not scored); Life safety (Done pills, +N on open items; the medical device row is yes or no only); If the power goes out or we get separated (eat-first list with the fridge 4 hours and freezer 48 hours line, and Where we meet).
+  - **Family plan:** contacts and meeting places, If we have to leave (5, 15, 60 minutes), shutoffs and alerts, who does what (children by label and age band), and the wallet card with a dashed cut line.
+  - **Details:** a table of contents, all supplies (dashed meters mean not counted yet; the optional 30-day stretch shows only here), plan steps, Use it first (with the recall check), your area, outage and water, shopping, progress, headline checks and connections (both collapsed), and sources.
+  - Optional data that feeds it: `minutes` and `free` on life safety and plan items (for This week), `goBags` (`packed`, `needed`, `spot`, `note`; never scored), and `recalls.on` / `recalls.nextCheck`. Leave any of them out and the Page still builds.
 - When giving the owner the link, say once: "Open it in the Grok Bot app." Only the owner needs the app. Save the Page id and link to memory after the first build.
 - The Page is shareable by design: nothing private is ever in its data. For family, the owner turns on the Page's public link with the share control on the Page (see Family); the public link shows only the shared plan, never private data.
 
@@ -304,10 +316,10 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `family`: list members and roles; `add member`, `remove member`.
 - `turn on <module>` / `turn off <module>`, `modules`: list modules and which are on.
 - `connections`: list optional connections, which are on, and offer the rest once.
-- `recall check`: run the pantry and gear recall check now.
+- `recall check`: run the monthly recall check now. `recall check on` / `recall check off`: turn the monthly recall check on or off.
 - `deep setup`: start or continue the optional deeper setup.
 - `pause` / `resume`: pause or resume this bot's own routines (threat watch stays on unless the owner says "pause threat watch too"). Confirm what changed.
-- `version` (or "what version"): answer "Prepper v1.2.2 (2026-10-28)".
+- `version` (or "what version"): answer "Prepper v1.2.3 (2026-10-29)".
 - `feedback`: see Feedback.
 
 ## After a disaster
@@ -316,7 +328,7 @@ When the owner says something happened to them (damage, flooding, fire, a long o
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.2 (2026-10-28)">&labels=family-prepper
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.3 (2026-10-29)">&labels=family-prepper
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSc7QvhUErIgHfH5C-5RQITR0jUTy8wIomcHNe4Egz61CdEd2Q/viewform
 - Never submit feedback for the owner. The form belongs to the maker; never edit it.
 

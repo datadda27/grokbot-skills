@@ -1,6 +1,6 @@
 # Data sources and connections (US)
 
-Version: Prepper v1.2.2 (2026-10-28)
+Version: Prepper v1.2.3 (2026-10-29)
 
 All default sources are free and need no key or account. Every request sends a User-Agent header naming the bot, for example `User-Agent: FamilyPrepperBot/1.0 (Grok Bot template)`. Each was checked live from a server on 2026-10-26. Mark a source UNKNOWN for the run if it fails; never guess its contents.
 
@@ -21,21 +21,37 @@ All default sources are free and need no key or account. Every request sends a U
 | Emergency Alert System messages (non-weather civil alerts) | FEMA IPAWS EAS feed (Atom) | `https://apps.fema.gov/IPAWSOPEN_EAS_SERVICE/rest/feed` (filter entries to the household's state and county codes) |
 | Drought level (monthly check-in, garden and water notes) | US Drought Monitor | `https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=<5-digit FIPS>&startdate=M/D/YYYY&enddate=M/D/YYYY&statisticsType=1` (CSV) |
 | Air quality (smoke and heat modes) | Open-Meteo Air Quality (used instead of AirNow, which needs a key) | `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=LAT&longitude=LON&current=us_aqi,pm2_5` |
-| Pantry recall check (food) | openFDA food enforcement | `https://api.fda.gov/food/enforcement.json?search=report_date:[YYYYMMDD+TO+YYYYMMDD]+AND+status:"Ongoing"&limit=100` |
-| Product recall check (gear: heaters, generators, batteries, alarms, chargers) | CPSC recalls | `https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=YYYY-MM-DD` |
 | Official local posts, as context only | Free public X reads of the NWS office, county emergency management, and utility accounts | never alert on posts alone; confirm with an official source above |
 
 Notes:
-- openFDA says its data is unvalidated and not for medical decisions. A recall match is a prompt to check the FDA or maker notice, never a verdict.
 - Earthquake and wildfire checks are informational; NWS and county alerts still drive ACT NOW.
 - NRI ratings are relative to other US counties. Say "relatively high compared with other counties", never "dangerous".
 
-## Pantry and gear recall check
-Runs in the morning threat watch once a day, and in the monthly check-in.
-1. Pull openFDA food enforcement reports from the last 7 days (30 in the check-in) with status Ongoing.
-2. Match `product_description` and `recalling_firm` against inventory lines (item names and any brand the owner gave in a photo). Also match `distribution_pattern` to the household's state or "nationwide".
-3. Pull CPSC recalls for the same window and match against gear lines (heaters, generators, power banks, alarms, flashlights, chargers, CO and smoke alarms).
-4. A strong match (same product type and same brand) is a PREPARE message: what was recalled, the official notice link, and "check the lot code on yours before using it". A weak match goes in the check-in as FYI. No match, say nothing.
+## Monthly recall check (optional, never scored)
+Off until the owner says yes (see SKILL.md, "Monthly recall check"). Runs once a month inside the monthly check-in, or now with `recall check`. Reports only matches. Every link below loaded on 2026-10-29. The openFDA, FDA, and SaferProducts.gov requests answer scripts. The FSIS, CPSC, and nhtsa.gov pages may turn away scripted requests, so open those in the browser; if a source still fails, mark it UNKNOWN for the run and say so in one line.
+
+| What is checked | Source | Request or page |
+|---|---|---|
+| Stored food | openFDA food enforcement | `https://api.fda.gov/food/enforcement.json?search=report_date:[YYYYMMDD+TO+YYYYMMDD]+AND+status:"Ongoing"&limit=100` (docs: https://open.fda.gov/apis/food/enforcement/) |
+| Meat, poultry, and egg products (canned meats, jerky, freeze-dried meals with meat) | USDA FSIS Recall API | `https://www.fsis.usda.gov/fsis/api/recall/v/1?field_year_id=<year id>` (docs: https://www.fsis.usda.gov/science-data/developer-resources/recall-api; notices: https://www.fsis.usda.gov/recalls) |
+| First aid items and medicines on hand (OTC kit items, the owner's own medicines) | openFDA drug enforcement | `https://api.fda.gov/drug/enforcement.json?search=report_date:[YYYYMMDD+TO+YYYYMMDD]+AND+status:"Ongoing"&limit=100` (docs: https://open.fda.gov/apis/drug/enforcement/) |
+| Gear (heaters, generators, power banks, batteries, flashlights, chargers, smoke and CO alarms, radios) | CPSC recalls via SaferProducts.gov | `https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=YYYY-MM-DD` (docs: https://www.cpsc.gov/Recalls/CPSC-Recalls-Application-Program-Interface-API-Information; notices: https://www.cpsc.gov/Recalls) |
+| Car seats and booster seats | NHTSA recalls | look up by seat brand and model at https://www.nhtsa.gov/recalls (car seat search). NHTSA's API answers one product at a time; see https://www.nhtsa.gov/nhtsa-datasets-and-apis. Car seat safety and registration: https://www.nhtsa.gov/vehicle-safety/car-seats-and-booster-seats |
+| Official consumer recall list, for the notice link | FDA | https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts |
+
+Steps:
+1. Use the window since the last recall check (30 days the first time).
+2. Food: match `product_description` and `recalling_firm` against stored food lines (item names and any brand the owner gave in a photo). Keep only records whose `distribution_pattern` covers the household's state or says nationwide.
+3. Meat, poultry, and egg products: match FSIS `field_title`, `field_product_items`, and `field_establishment` the same way, and `field_states` to the household's state or Nationwide.
+4. First aid and medicines: match openFDA drug enforcement `product_description` and `recalling_firm` against first aid kit items and the medicine names in `private.json`. A medicine match is told in chat only and stored in `private.json`; it never reaches `dashboard-data.json`.
+5. Gear: match CPSC recall titles and product names against gear lines.
+6. Car seats: only if the household logged a car seat with a brand and model. Check that seat on NHTSA. No model, no check; ask once for the label on the seat.
+7. A match needs the same product type and the same brand (or model). Anything weaker is not a match; ask for the brand or a label photo if it matters. Never guess.
+8. Write `recalls` in `dashboard-data.json`: `on`, `lastCheck`, `nextCheck`, `checked` (items compared), `sources`, and `matches` (`item`, `product`, `reason`, `date`, `url`, `source`, `kind`). Every match keeps the official notice link. No match means an empty list.
+9. Say it in the check-in in one line (format 5). Never scored, never changes a tier, never a separate alert message.
+
+Notes:
+- openFDA says its data is unvalidated and not for medical decisions. A recall match is a prompt to check the agency or maker notice, never a verdict. For a medicine, the next step is the pharmacist or the maker's notice.
 
 ## Opt-in at setup (each asked once, all skippable)
 | Connection | What it adds | How it is asked |

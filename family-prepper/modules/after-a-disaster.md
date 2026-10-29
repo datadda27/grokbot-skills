@@ -1,6 +1,6 @@
 # Module: After a disaster
 
-Version: Prepper v1.2.2 (2026-10-28). Always on; used when a federal declaration (OpenFEMA) covers the county or the owner says something happened.
+Version: Prepper v1.2.3 (2026-10-29). Always on; used when a federal declaration (OpenFEMA) covers the county or the owner says something happened.
 
 Source: Ready.gov Recovering from Disaster (https://www.ready.gov/recovering-disaster).
 

@@ -363,6 +363,18 @@
           },
           "source": {
             "type": "string"
+          },
+          "minutes": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Optional (v1.2.3): about how long it takes. Shown in This week."
+          },
+          "free": {
+            "type": "boolean",
+            "description": "Optional (v1.2.3): true when it costs nothing. This week lists only free items after the task. Missing means free, except radio, smoke, and co."
           }
         },
         "required": [
@@ -487,6 +499,18 @@
           },
           "detail": {
             "type": "string"
+          },
+          "minutes": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Optional (v1.2.3): about how long it takes. Shown in This week."
+          },
+          "free": {
+            "type": "boolean",
+            "description": "Optional (v1.2.3): true when it costs nothing. This week lists only free items after the task. Missing means free, except radio, smoke, and co."
           }
         },
         "required": [
@@ -1262,6 +1286,22 @@
               "url": {
                 "type": "string",
                 "pattern": "^https://"
+              },
+              "source": {
+                "enum": [
+                  "FDA",
+                  "USDA FSIS",
+                  "CPSC",
+                  "NHTSA"
+                ]
+              },
+              "kind": {
+                "enum": [
+                  "food",
+                  "first aid",
+                  "gear",
+                  "car seat"
+                ]
               }
             },
             "required": [
@@ -1277,6 +1317,16 @@
         },
         "sources": {
           "type": "string"
+        },
+        "on": {
+          "type": "boolean",
+          "description": "v1.2.3: the optional monthly recall check is on. Off until the owner says yes. Missing means on for installs from before v1.2.3."
+        },
+        "nextCheck": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "required": [
@@ -1450,6 +1500,35 @@
     "computed": {
       "type": "object",
       "description": "Written by gen.py. Do not edit. score = round(100 x earned / applicable); setupPct = share of applicable points answered; pointsWaiting = points of unanswered items; gaps carry raw-weight gains."
+    },
+    "goBags": {
+      "type": "object",
+      "description": "Optional (v1.2.3), never scored: carry kits packed (one per person and pet, or as the household chose) out of the number needed. Shown as the Go-bags card.",
+      "properties": {
+        "packed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "needed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "spot": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "packed",
+        "needed",
+        "note"
+      ],
+      "additionalProperties": false
     }
   }
 }
