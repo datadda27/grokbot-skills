@@ -1,5 +1,9 @@
 # Changelog
 
+## Portal Tracker v2.1.3 (2026-10-29)
+
+- Board threads are picked and read automatically (top 3 to 5 per board, 8 max per run). No more "which threads would you read" cards. New pick threads / auto threads commands; asking only after pick threads.
+
 ## Portal Tracker v2.1.2 (2026-10-26)
 
 - Data-driven source captions (serviceNames), rank chart hidden under 2 points, CFP shows UNKNOWN unless a sourced 'not released', removed 'Big 12' fallback label, per-transfer source column, getting-started reads device time zone and sets default alert/late times, new Polls check showing 'Unranked' when the team isn't in the AP/Coaches poll (UNKNOWN only when no poll could be read).

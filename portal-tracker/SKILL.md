@@ -7,7 +7,7 @@ description: >-
 ---
 # Recruiting & Portal Tracker method
 
-Version: Portal Tracker v2.1.2 (2026-10-26)
+Version: Portal Tracker v2.1.3 (2026-10-29)
 
 Bump this version line (and add a changelog line) whenever this method changes.
 
@@ -206,8 +206,12 @@ Board builder (runs in setup, once per site):
 
 Daily, for each picked board:
 - Rank the day's most active threads by real information: staff posts, commits, visits, portal news, and staff predictions rank high; long fan arguments with little staff input rank low.
-- Give each a one-line summary and a "worth reading" or "skip" call, with a link.
-- Ask which ones the owner would actually read (a multi-select question) and save the answers to tune ranking.
+- Give each a one-line summary and a Read, Skim, or Skip call, with a link.
+- Pick and read the best threads yourself. Never ask the owner which threads to read or which they would read, and never send a thread-picking question, card, or widget.
+- Each run, open and read the top 3 to 5 threads per board (at most 5 per board and 8 across all boards), picked in this order: staff posts, then news on the team's commits, targets, visits, and portal moves, then reply activity since the last run, then recency. Skip threads already read that have no new posts since (track them in seen.md).
+- Report what each thread you read actually says, in your own words, with its link, in the digest and on the Board tab. Premium thread summaries stay for the owner's own use only.
+- Tune the ranking quietly from what the owner tells you (for example "more like this" or "skip presser threads") and from earlier picks saved in forum-prefs.md. Save new signals there.
+- Only if the owner says they want to choose threads themselves (the pick threads command), save pickThreads: true in forum-prefs.md and add at most one optional thread card after the digest. The auto threads command turns it back off.
 - Let the owner flag posters they trust (staff or people with real connections). Surface substantive posts from flagged posters in their own section, and suggest new posters who seem well connected so the owner can keep or drop them.
 - Read only. Never post, react, vote, or follow on the board.
 
@@ -224,12 +228,13 @@ Daily, for each picked board:
 - **resume:** resume the bot's own routines and say when the next run is.
 - **feedback:** start the feedback flow below.
 - **digest auto**, **digest daily**, **digest weekly:** switch the digest mode (see Digest timing), confirm it, and say when the next digest is.
-- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1.2 (2026-10-26)".
+- **pick threads**, **auto threads:** pick threads turns on one optional thread card after each digest so the owner can choose; auto threads (the default) goes back to the bot picking and reading the best threads on its own. Confirm the change.
+- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1.3 (2026-10-29)".
 
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1.2 (2026-10-26)"), added automatically.
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1.3 (2026-10-29)"), added automatically.
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSfOK3zhOYxKsAvNsFA9NJM4wTKCfTC02ggoLiiq4pOzaF11jw/viewform
 - Never submit feedback for the owner. They open the link and send it themselves.
 - The feedback form belongs to the maker. Never try to edit it.
@@ -244,4 +249,5 @@ Plain words, short lines, fan-friendly. No hype, no scare copy. Lead with the ne
 - 2026-10-26 (v2.1): Added Digest timing (auto, always daily, weekly; auto follows the team's own season through its last game including bowls or CFP, offseason 2 or 3 a week, portal window daily plus midday, signing days morning, midday and night with a live signed list, June official visit weekends daily, overlapping modes in one digest, no filler) and the digest mode commands. Added Top reads today and Top on X to the digest and dashboard (free public X reads only, confirmed source vs buzz tags, Premium top reads headline only). Stated the Premium sharing rule plainly (own use only, no screenshots, reposts, or sharing). Shipped the board builder in setup, per site, multiple sites. Noted the feedback form belongs to the maker.
 - 2026-10-26 (v2.1.1): Every number field in the schema and template now accepts null and renders UNKNOWN (fixes the 3 TS2322 errors a stranger test hit on lastCycle rank247, inTP and outTP). Flip watch uses Defend / Target everywhere. Removed the leftover conference assumption from gen.py; teamStatus.conference is generic. Ratings are stored as published with service and scale ({service, value, scale}); gen.py still accepts the older shape. Top on X keeps at least 3 confirmed-source posts out of 5 when any exist. 247Sports and ESPN values are UNKNOWN when their pages block automated reads; never estimated. Ranks show NR when a source lists the player as unranked and UNKNOWN when there is no source or value; NA is gone from the page. gen.py maps the legacy teamStatus.big12 key to teamStatus.conference so older data keeps its standing.
 - 2026-10-26 (v2.1.2): Template captions take service names from the data (new serviceNames field), never hard-coded; a missing name shows "Source: UNKNOWN" or is left out. The rank chart hides a service's line with fewer than 2 points and hides the whole chart when no service has 2. An empty CFP value shows UNKNOWN; "Not out yet" needs the new sourced notReleased flag. gen.py no longer invents a conference label for the legacy big12 mapping (the page says "Conference standing"). Transfers with a null or missing source show "No source". Each digest run checks the AP and Coaches polls (and the CFP rankings once out) from a free source; a read poll that leaves the team out stores "NR" and shows "Unranked" (UNKNOWN only when no poll source could be read), and each poll stores its poll date and source link, shown on the Overview and Team tabs. Setup reads and confirms the device time zone, the terms warning says "may ban", and the routines have default times (big-move alert 9 AM, 1 PM, 5 PM; late update 9:30 PM).
+- 2026-10-29 (v2.1.3): Board threads are now picked and read automatically. The bot no longer asks the owner which threads to read. Each run it reads the top 3 to 5 threads per board (8 max across boards), ranked by staff posts, team news, reply activity, then recency, and reports what each says with a link. Ranking tunes quietly from the owner's comments and saved picks. Added the pick threads and auto threads commands; asking is only allowed after pick threads.
 - v1: First version.
