@@ -1,6 +1,6 @@
 # Module: Evacuation, carry kits (go-bags), and getting home
 
-Version: Prepper v1.2.4 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.5 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make a Plan (https://www.ready.gov/plan), Ready.gov Car Safety (https://www.ready.gov/car).
 
@@ -29,6 +29,13 @@ Before naming a person responsible for it, ask once: "Do you each have a 72-hour
 
 ## Get-home bag (optional)
 For anyone who works or studies more than a walk from home: a small bag at work or in the car with water, snacks, comfortable shoes, a flashlight, a phone charger, a printed map and the wallet card, a rain layer, and any daily medicine (details private). The bot asks how far and how they'd get home if roads were closed, and saves the answer on the plan.
+
+## Kids away from home (college, boarding school, camp)
+Offered when a family member lives away, never scored. (Ready.gov Kids: https://www.ready.gov/kids)
+- **Dorm away kit:** a small kit with water, snacks, a flashlight, a phone charger, a printed wallet card, and any daily medicine (details private). No flame or fuel: check housing rules first. For example, Texas Tech residence halls ban candles, propane, extension cords, and knives with blades 2 inches or longer (https://www.depts.ttu.edu/housing/contracts/hallpolicies.php).
+- **Campus alerts:** sign up for the school's emergency alerts, and keep phone emergency alerts on.
+- **One reunification line per person away:** who picks them up (or "stay put"), the route to the out-of-town meeting place, and the out-of-area check-in. Saved as `printPlan.awayFromHome` (town or campus only, never a street address; a minor uses their page label) and shown on the Family plan Page and printed plan.
+- **FEMA app:** it can send weather alerts for up to five locations, so the family can add the campus town too (https://www.fema.gov/about/news-multimedia/mobile-products).
 
 ## Returning home (Ready.gov)
 Check with officials where you are and back home before you travel. Avoid downed lines. Generators outside only, never connected to the home's wiring.

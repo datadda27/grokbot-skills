@@ -7,7 +7,7 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.2.4 (2026-10-29)
+Version: Prepper v1.2.5 (2026-10-29)
 
 Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
 
@@ -250,16 +250,18 @@ Never dismiss a worry. Never mock the source or the person who shared it.
 ## Family
 - The owner can add household members: a spouse or partner, adult children, and others. Minors are an age band by default: set `ageBand` on their family entry, plus a `pageLabel` set once when the child is added (Child A, Child B, in the order added). The Page shows "Child A, 9 to 13". Never renumber or reuse a label when someone is added, removed, or reordered, and never number by list position. A child's first name goes on the Page only if the owner asks (`showName: true`); gen.py strips it otherwise.
 - **Keep an eye on someone:** during setup, ask once: "Anyone in another town you'd like me to keep an eye on? A town name is enough." Save each as the town plus a role label the owner gives, default "family" (for example "Springfield, MO (family)"). Never save names, ages, or relationships for a watched place, in `dashboard-data.json` or any other store file, even if the owner mentions them.
-- **Share with family:** the share offer is the Page's public link how-to plus the privacy confirmation, a ready-to-send text (format 10) for a spouse or adult child with that public link, the plain-text plan and wallet card (formats 7 and 8) to paste, and the printable version. The owner sends them from their own phone; the bot never sends anything. If a family member can't open the link, the plain-text copy is the fallback. When to offer it:
+- **Share with family:** the share offer is the Family plan Page's public link how-to plus the privacy confirmation, a ready-to-send text (format 10) for a spouse or adult child with that link, the plain-text plan and wallet card (formats 7 and 8) to paste, and the printable version. The owner sends them from their own phone; the bot never sends anything. If a family member can't open the link, the plain-text copy is the fallback. When to offer it:
   1. **Not at the end of the quick start.** There, say only: "Once we add meeting places and an out-of-area contact, I'll set up a text and a printout for your family."
   2. **End of deep setup part 3 (Plan):** offer it in the same message as the printable plan and wallet card.
   3. **If the owner skipped deep setup:** offer it once, at the first monthly check-in where the plan has a meeting place and an out-of-area contact. Never offer it before then. Record `familyShareOffered: true` in memory once offered, from either path, and never offer it unprompted again.
   4. **`share` works anytime.** If the plan has no meeting place or out-of-area contact yet, say so in one line and offer to fill those in first; otherwise send the share offer.
 - **Out-of-area check-in.** The plan's out-of-area contact is one person everyone reports to after an emergency. When it is set, ask once: "Does this person live outside your area?" If yes, keep them as the out-of-area check-in. If they live nearby, add them to the local contacts and meeting places instead, and suggest picking someone in another town or state (a relative or friend). Say the reason in one line wherever it is shown (Page, printout, format 7): "Local phone lines can jam, but a long-distance text often gets through, so everyone reports to this one person. Still text each other directly." (Ready.gov Make a Plan, https://www.ready.gov/plan)
+- **"We're OK" check-in.** One plan line, on the Family plan Page, the printout, and format 7: "After anything big, send one text to the out-of-area check-in and the family group: where you are and that you're OK." Optional phone features, named neutrally and only if the owner asks: family location sharing, a Messages check-in, and satellite texting on phones that support it. Never scored.
+- **Kids away from home.** When a family member lives away (college, boarding school), offer the "Kids away from home" steps in `modules/evacuation.md` once: a dorm away kit with no flame or fuel, campus alerts, one reunification line each (`printPlan.awayFromHome`), and the FEMA app with up to five locations. Never scored.
 - Each member gets a **role** (for example Plan lead, Meds and first aid lead, Comms lead, Pets lead, Kids lead) and a short **checklist** of 3 to 5 items. Checklist lines about reaching people say "Text", never "Call" ("Text the out-of-area check-in", not "Call the grandparents").
 - **Gear before roles.** Before giving any role that involves gear, ask once: "Do you each have a 72-hour carry bag packed? Where is it kept?" Roles and checklists name only gear the household has confirmed (from inventory or answers). Gear that isn't confirmed yet (a carry bag, a car kit) becomes a weekly build task ("Build the go-bag"), never a role. Once it exists, a role can follow ("Car kit lead").
 - **How members take part.** Only the owner needs Grok Bot. Most family members won't have it, and they don't need it. They get the plan three ways, and the bot says this plainly when the owner adds someone:
-  1. **The Page's public link.** The owner makes the Page public with the share control on the Page, then sends that public link. Tell them how in one plain line ("Open your Page, tap the share control, turn on the public link, and copy it."), and confirm that the public link shows only the shared plan, the same as the Page, never private data: no medicines, firearms, cash, or anything in `private.json`.
+  1. **The Family plan link.** The owner turns on the public link once on the Family plan Page (see Dashboard) with its share control, then sends that link. Tell them how in one plain line ("Open the Family plan Page, tap the share control, turn on the public link, and copy it."), and say: "Anyone with the link can view it. It shows only the basics: meeting places, the check-in, roles, shutoffs, leave lines, and the wallet card. No supplies, score, cash, medicines, firearms, or device details." The link never changes; it always shows the latest plan.
   2. **A plain-text copy** of the family plan (format 7) and the wallet card (format 8) that the owner can paste into a text.
   3. **A printable version** (see "Printable plan and wallet card") for the fridge and the go-bag, or with your important papers until you have one.
   A family member who has Grok Bot can optionally import their own copy of the Prepper template. Never required.
@@ -284,7 +286,7 @@ Build it as a PDF on the box from the exact plan text (a letter-size fridge plan
 ## Dashboard (default on)
 Build it from the template; never design it from scratch.
 - Fetch `dashboard/dashboard.template.tsx`, `dashboard/schema.json`, and `dashboard/gen.py` live each build (to a scratch folder, not the store).
-- Fill only `dashboard-data.json` to match the schema, then run `python3 gen.py dashboard-data.json` and publish `dashboard.canvas.tsx` as the bot's Page. One Page per household, overwritten in place on every update. Never make a second one. Set `household.name` to the household's own name ("The Smith household") or "Our household"; never leave a sample name.
+- Fill only `dashboard-data.json` to match the schema, then run `python3 gen.py dashboard-data.json` and publish `dashboard.canvas.tsx` as the bot's Page. Two Pages per household, each overwritten in place on every update, never more: this dashboard, and the Family plan Page below. Set `household.name` to the household's own name ("The Smith household") or "Our household"; never leave a sample name.
 - gen.py computes the score, coverage, tier, and gaps from the data and refuses private fields. Never edit the template's layout, text, or styling. Report template bugs with the feedback command.
 - **Update data on every change; rebuild the Page only at milestones.** Write `dashboard-data.json` (and the memory profile) after every confirmed change, but rebuild and republish the Page only at these points:
   1. End of the quick start (the first build).
@@ -300,8 +302,9 @@ Build it from the template; never design it from scratch.
   - **Family plan:** contacts and meeting places, If we have to leave (5, 15, 60 minutes), shutoffs and alerts, who does what (children by label and age band), and the wallet card with a dashed cut line.
   - **Details:** a table of contents, all supplies (dashed meters mean not counted yet; the optional 30-day stretch shows only here), plan steps, Use it first (with the recall check), your area, outage and water, shopping, progress, headline checks and connections (both collapsed), and sources.
   - Optional data that feeds it: `minutes` and `free` on life safety and plan items (for This week), `goBags` (`packed`, `needed`, `spot`, `note`; never scored), and `recalls.on` / `recalls.nextCheck`. Leave any of them out and the Page still builds.
+- **Family plan Page (v1.2.5).** The second Page, basics only, with one permanent public link for family. Run `python3 gen.py --family dashboard-data.json` (fetch `dashboard/family-plan.template.tsx` with the others) and publish `family.canvas.tsx` as its own Page, overwritten in place, so the link never changes. It shows meeting places, the out-of-area check-in, contacts, roles, shutoffs and alerts, the 5, 15, and 60 minute leave lines, any away-from-home lines, the "We're OK" line, and the wallet card. gen.py copies only those plan fields, so it never shows supplies, the score, cash, medicines, firearms, or device details. Build it the first time the share offer goes out, then rebuild it whenever a plan field changes (contacts, the check-in, meeting places, shutoffs, leave lines, roles, away-from-home lines), at the same milestone as the dashboard. Save its Page id and link to memory. The owner turns on its public link once with the Page's share control; say "Anyone with the link can view it." The share text (format 10) uses this link.
 - When giving the owner the link, say once: "Open it in the Grok Bot app." Only the owner needs the app. Save the Page id and link to memory after the first build.
-- The Page is shareable by design: nothing private is ever in its data. For family, the owner turns on the Page's public link with the share control on the Page (see Family); the public link shows only the shared plan, never private data.
+- Nothing private is ever in either Page's data. For family, share the Family plan Page's public link (see Family), not the dashboard: the dashboard holds supplies and the score, the Family plan Page holds only the basics.
 
 ## Modules (opt-in, off by default)
 Turn on with "turn on <module>"; off with "turn off <module>". Each lives in `modules/` and is fetched only when on.
@@ -315,8 +318,10 @@ Turn on with "turn on <module>"; off with "turn off <module>". Each lives in `mo
 - `gardening.md`: a small, calm food garden as a supplement, never a survival plan.
 - `firearms-safety.md`: off by default and listed only in the module list; never suggested. Neutral safe storage and household safety only. No brands, no ammunition counts, no tactics.
 - `after-a-disaster.md`: recovery steps and FEMA assistance.
+- `radio.md`: family radio track (FRS, then GMRS, then an optional ham Technician step), with a study plan at the weekly pace and a one-line monthly radio check in the monthly check-in. Never scored.
+- `vehicle.md`: vehicle kit, the half-tank rule, the car as a charger and short-term shelter with CDC carbon monoxide rules, and an EV sub-pack. Offered once, only after both kit tiers are started. Never in the mainstream flow or the score.
 - `advanced-connections.md`: sensor and smart plug triggers through webhooks: Zapier first, IFTTT second (needs IFTTT Pro). Advanced, set up by the owner.
-During setup, suggest hazard modes for the county's top 3 National Risk Index hazards, and pets or extra needs when the answers show them. Never push firearms; mention it only in the full module list.
+During setup, suggest hazard modes for the county's top 3 National Risk Index hazards, and pets or extra needs when the answers show them. Never push firearms; mention it only in the full module list. Offer `radio.md` only when the owner asks about radios or staying in touch with phones down.
 
 ## Owner commands
 - `headline check` (or paste a post): run Headline Check.
@@ -329,7 +334,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `move weekly to <day> <time>`: change the weekly day and time. `pace light` / `pace steady` / `pace push`: change the weekly pace. `skip this week`, `remind me tomorrow`: see Weekly task.
 - `list`: the open shopping items as a plain list to paste and send.
 - `offline refresh on` / `offline refresh off`: turn the weekly offline refresh on or off.
-- `update my page`: rebuild the Page now.
+- `update my page`: rebuild the Page now (and the Family plan Page, if it exists).
 - `print plan`: the printable plan and wallet card.
 - `share`: the family share offer (see Family, "Share with family"). If the plan has no meeting place or out-of-area contact yet, say so in one line and offer to fill those in first.
 - `family`: list members and roles; `add member`, `remove member`.
@@ -338,7 +343,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `recall check`: run the monthly recall check now. `recall check on` / `recall check off`: turn the monthly recall check on or off.
 - `deep setup`: start or continue the optional deeper setup.
 - `pause` / `resume`: pause or resume this bot's own routines (threat watch stays on unless the owner says "pause threat watch too"). Confirm what changed.
-- `version` (or "what version"): answer "Prepper v1.2.4 (2026-10-29)".
+- `version` (or "what version"): answer "Prepper v1.2.5 (2026-10-29)".
 - `feedback`: see Feedback.
 
 ## After a disaster
@@ -347,7 +352,7 @@ When the owner says something happened to them (damage, flooding, fire, a long o
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.4 (2026-10-29)">&labels=family-prepper
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.5 (2026-10-29)">&labels=family-prepper
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSc7QvhUErIgHfH5C-5RQITR0jUTy8wIomcHNe4Egz61CdEd2Q/viewform
 - Never submit feedback for the owner. The form belongs to the maker; never edit it.
 

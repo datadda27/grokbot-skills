@@ -1,6 +1,6 @@
 {
   "_example": "Everything on this page is made up for a fictional household (Example Household, Anytown, USA). Setup replaces every value; no real household details ship with the template.",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "asOf": "2026-10-26",
   "asOfLabel": "Oct 26, 2026, 4:00 PM CT",
   "page": {
@@ -719,7 +719,16 @@
     "petFriendlyPlace": "Pat's home in Othertown",
     "shelterSpot": "Basement, under the stairs",
     "alertSignup": "Example County alerts page (example)",
-    "evacZoneSource": "Example County Emergency Management (example)"
+    "evacZoneSource": "Example County Emergency Management (example)",
+    "awayFromHome": [
+      {
+        "who": "Sam",
+        "where": "Example State University (example)",
+        "pickup": "Jordan drives up; if roads are closed, Sam stays put in the dorm",
+        "route": "Highway 9 south to Pat's home in Othertown",
+        "alerts": "Campus alerts on"
+      }
+    ]
   },
   "goBags": {
     "packed": 5,

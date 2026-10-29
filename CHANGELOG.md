@@ -1,5 +1,9 @@
 # Changelog
 
+## Prepper v1.2.5 (2026-10-29)
+
+- A basics-only Family plan Page with one permanent public link for family (no supplies, score, cash, medicines, firearms, or device details); kids away from home and a "We're OK" check-in line; opt-in radio and vehicle add-ons; a firearms go-bag line in the opt-in safety module. Never scored.
+
 ## Prepper v1.2.4 (2026-10-29)
 
 - Flexible weekly day, time, and pace (skip this week, remind me tomorrow, next step); optional offline backup task with an opt-in weekly offline refresh; "Everyone texts" renamed to "Out-of-area check-in" with its reason and the trailing comma fixed; supplies count only once bought, plus a `list` command for a pasteable shopping list.

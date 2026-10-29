@@ -1238,6 +1238,49 @@
             "string",
             "null"
           ]
+        },
+        "awayFromHome": {
+          "type": "array",
+          "description": "Optional (v1.2.5), never scored: one reunification line per person away from home (a child at college or school). Town or campus only, never a street address.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "who": {
+                "type": "string",
+                "description": "Name, or a child's page label and age band"
+              },
+              "where": {
+                "type": "string",
+                "description": "Town or campus, never a street address"
+              },
+              "pickup": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Who picks them up, or how they get home"
+              },
+              "route": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Route to the out-of-town meeting place"
+              },
+              "alerts": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Campus or school alert signup: on, or the link"
+              }
+            },
+            "required": [
+              "who",
+              "where"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [

@@ -1,6 +1,6 @@
 # Module: Pets
 
-Version: Prepper v1.2.4 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.5 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Source: Ready.gov Pets (https://www.ready.gov/pets), Ready.gov Evacuation (https://www.ready.gov/evacuation), and CDC Pet Safety in Emergencies (https://www.cdc.gov/healthy-pets/emergency-preparedness/index.html).
 

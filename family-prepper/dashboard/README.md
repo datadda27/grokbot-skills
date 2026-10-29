@@ -14,7 +14,13 @@ python3 gen.py dashboard-data.json                      # writes dashboard.canva
 python3 gen.py dashboard-data.json dashboard.template.tsx out.canvas.tsx
 python3 gen.py --summary dashboard-data.json              # score, setup %, tier, top 3 gaps, task gain as JSON; no Page
 ```
+python3 gen.py --family dashboard-data.json               # the basics-only Family plan Page: family.canvas.tsx (v1.2.5)
+python3 test_family_page.py                                # checks the sample Family plan Page has no supplies, score, cash, medicines, firearms, or devices
+```
 Exit codes: 0 ok, 2 usage or missing file, 3 bad data (invalid JSON, a private field, a schema error, or a missing template marker). Install `jsonschema` for full validation; without it gen.py still checks the private fields and required sections.
+
+## Family plan Page (Prepper v1.2.5)
+A second Page, basics only, with one permanent public link for family: contacts, the out-of-area check-in, meeting places, the "We're OK" line, any away-from-home lines (`printPlan.awayFromHome`), the 5, 15, and 60 minute leave lines, shutoffs and alerts, who does what (names or child labels and roles only), and the wallet card. Built from `family-plan.template.tsx` with `gen.py --family`, which copies only an allowlist of plan fields. It never shows supplies, the score, cash, medicines, firearms, or device details. Rebuilt whenever a plan field changes; the owner turns on its public link once with the Page's share control.
 
 ## What the Page shows (dashboard v2, Prepper v1.2.3)
 One Page with three views on a switch at the top. Titles use `household.name` ("The Smith household: family emergency plan"); a blank name or sample data shows a neutral title.

@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.2.4 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.2.5 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
 import {
   Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,
@@ -101,6 +101,7 @@ type Dashboard = {
     utilities: { what: string; where: string | null }[];
     evacuation: { five: string[]; fifteen: string[]; sixty: string[] };
     petFriendlyPlace: string | null; shelterSpot: string | null; alertSignup: string | null; evacZoneSource: string | null;
+    awayFromHome?: { who: string; where: string; pickup?: string | null; route?: string | null; alerts?: string | null }[];
   };
   goBags?: { packed: number; needed: number; spot?: string | null; note: string };
   recalls: {
@@ -597,7 +598,7 @@ export default function Prepper() {
             </Grid>
           </Section>
 
-          <Section heading="Who does what" id="roles" caption={`Status as of each person's last update. The bot never messages family; share this page or the printed plan.`}>
+          <Section heading="Who does what" id="roles" caption={`Status as of each person's last update. The bot never messages family; share the Family plan link or the printed plan.`}>
             <Grid columns={3}>
               {d.family.map((f) => (
                 <Section key={`${memberName(f)}-${f.relation}`} heading={memberName(f)} caption={f.role}>
@@ -607,6 +608,15 @@ export default function Prepper() {
               ))}
             </Grid>
           </Section>
+
+          {(d.printPlan.awayFromHome || []).length ? (
+            <Section heading="Away from home" id="away" caption="One reunification line per person away. Not scored.">
+              <Properties items={(d.printPlan.awayFromHome || []).map((a) => ({
+                label: `${a.who} (${a.where})`,
+                value: `Pickup: ${orUnknown(a.pickup)}. Route: ${orUnknown(a.route)}. Campus alerts: ${orUnknown(a.alerts)}.`,
+              }))} />
+            </Section>
+          ) : null}
 
           <Section heading="Wallet card" id="wallet" caption={`Cut along the dashed lines. 3.5 by 2 inches. Say "print wallet cards" for the PDF.`}>
             {walletCard(t, d)}

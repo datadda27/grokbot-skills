@@ -1,5 +1,14 @@
 # Prepper changelog
 
+## v1.2.5 (2026-10-29)
+A family plan link, kids away from home, and three opt-in add-ons. Score logic is unchanged.
+- Family plan link: a second, basics-only Family plan Page with one permanent public link (`gen.py --family`, new `family-plan.template.tsx`). It shows meeting places, the out-of-area check-in, contacts, roles, shutoffs and alerts, the leave lines, and the wallet card, and never supplies, the score, cash, medicines, firearms, or device details (gen.py copies an allowlist; `test_family_page.py` checks the sample). Rebuilt whenever a plan field changes. The owner turns on its public link once; anyone with the link can view it. The share text (format 10) and format 7 now use this link. Replaces the old "never make a second Page" rule.
+- Kids away from home: a dorm away kit with no flame or fuel (check housing rules), campus alerts, one reunification line per person away (new optional `printPlan.awayFromHome`, shown on both Pages), and the FEMA app with up to five locations. Not scored.
+- "We're OK" check-in: one plan line (one text to the out-of-area check-in and the family group), with optional phone features named neutrally.
+- New opt-in `modules/radio.md`: FRS, GMRS, and an optional ham Technician step with current fees, exam, and study links; a study plan at the weekly pace and a monthly radio check line. Never scored.
+- New opt-in `modules/vehicle.md`: vehicle kit, the half-tank rule, the car as a charger and short-term shelter with CDC carbon monoxide rules, and an EV sub-pack. Offered only after both kit tiers are started. Never scored.
+- Firearms safety module: a go-bag line given only when the owner raises it, with federal and optional Texas notes and a "not legal advice" note. Never asked about.
+
 ## v1.2.4 (2026-10-29)
 Flexible weekly schedule, offline backup, clearer out-of-area check-in, and planned versus bought.
 - Weekly schedule: setup asks once for the weekly day and time (default Saturday 9 AM) and a pace: light (1 step, about 15 minutes, default), steady (2 steps or about 45 minutes), or push (2 messages a week or a 1 to 2 hour weekend project). New commands: `move weekly to <day> <time>`, `pace light|steady|push`, `skip this week`, `remind me tomorrow`, `next step`. Still one weekly routine; the monthly check-in and offline refresh ride it. Pace never changes the score or the 2-week goal. New optional `weekly` data.

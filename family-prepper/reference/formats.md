@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.4 (2026-10-29)
+Version: Prepper v1.2.5 (2026-10-29)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 
@@ -103,6 +103,7 @@ The recall check line appears only when the owner turned the monthly recall chec
 **Recall check:** your canned black beans match an FDA recall (Example Brand, 15 oz, possible underprocessing). Check the lot code on yours before using it. https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts
 ```
 A medicine match is said the same way in chat but never goes on the Page.
+Only when `modules/radio.md` is on, add one line: "**Radio check:** everyone on the family channel for one minute." Never scored.
 In the April and October check-ins, the last two lines are always:
 ```
 **Kit check (every 6 months):** dates on food, water, meds, and batteries; swap seasonal clothes in the carry kits you have.
@@ -125,7 +126,8 @@ Want the winter mode on until March?
 - Out-of-area check-in: <name>, <phone>. Local phone lines can jam, but a long-distance text often gets through, so everyone reports to this one person. Still text each other directly.
 - Alerts: phone emergency alerts on, and the county signup: <link>
 - Your job: <role>. Your checklist: <3 items>
-- Our page: <public Page link> (no medicines, cash, or firearms details on it)
+- If something happens: text the out-of-area check-in and the family group "We're OK" and where you are.
+- Our family plan: <Family plan link> (basics only: no supplies, score, cash, medicines, firearms, or device details)
 ```
 The bot drafts this and says: "Here's a draft to send. I don't message anyone."
 
@@ -155,12 +157,13 @@ Counted so far: about 4 person-days of food. Your estimate of about 10 days stay
 ## 10. Family share text (the owner sends it; the bot never does)
 When: at the end of deep setup part 3 (Plan), once at the first monthly check-in that has a meeting place and an out-of-area contact if deep setup was skipped, or on `share`. Never at the end of the quick start.
 Introduce it as a text for "a spouse or adult child". Name recipients only if the owner named them in this conversation; never pull names from memory.
-Family members don't need Grok Bot. Use the Page's public link, which the owner turns on with the share control on the Page.
+Family members don't need Grok Bot. Use the Family plan Page's public link (the basics-only second Page, see SKILL.md, Dashboard), which the owner turns on once with the share control on that Page.
 ```
-I set up our family emergency plan. Here's our page with the plan, meeting spots, and supplies: <public Page link>
+I set up our family emergency plan. Here's our family plan with meeting spots, check-in, and who does what: <Family plan link>
+It always shows the latest version. If something happens, text me and <out-of-area check-in name> "We're OK" and where you are.
 Can you check that your phone's emergency alerts are on? Settings > Notifications (iPhone) or Settings > Safety and emergency (Android).
 ```
-Before it, if the public link isn't on yet: "To share the Page, open it, tap the share control, turn on the public link, and copy it. The public link shows only the shared plan, never medicines, firearms, cash, or other private notes."
+Before it, if the public link isn't on yet: "To share the family plan, open the Family plan Page, tap the share control, turn on the public link, and copy it. Anyone with the link can view it. It shows only the basics: meeting places, the check-in, roles, shutoffs, leave lines, and the wallet card, never supplies, your score, cash, medicines, firearms, or device details."
 The bot says: "Here's a text you can send. I don't message anyone. Want the plan and wallet card as plain text to paste, or a printable version?" Plain text is format 7 plus format 8; printable is the PDF plan and wallet cards.
 
 ## 11. First threat watch (sent once, ever; never used as the setup sample)

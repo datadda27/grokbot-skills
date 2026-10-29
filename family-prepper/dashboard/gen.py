@@ -1,7 +1,9 @@
 """Build the Prepper Page source from dashboard-data.json.
 Usage: python3 gen.py DATA.json [TEMPLATE.tsx] [OUT.tsx]
        python3 gen.py --summary DATA.json   (prints score, setup %, tier, top 3 gaps, task gain as JSON; writes no Page)
-Defaults: dashboard.template.tsx and dashboard.canvas.tsx next to this file; $DASH_DATA may stand in for DATA.json.
+       python3 gen.py --family DATA.json [TEMPLATE.tsx] [OUT.tsx]   (the basics-only Family plan Page, v1.2.5)
+Defaults: dashboard.template.tsx and dashboard.canvas.tsx next to this file (family-plan.template.tsx and family.canvas.tsx
+with --family); $DASH_DATA may stand in for DATA.json.
 Only the data file changes between households. The template holds no household text.
 gen.py computes the readiness score (earned over every applicable point, so answering only raises it),
 setup progress, points waiting, tier, top gaps (gains in stated-weight points), the two-week calculator, and days until each
@@ -9,7 +11,7 @@ best-by date, the at-a-glance cards and this week's steps (v1.2.3), drops any it
 import json, os, sys, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-USAGE = "usage: python3 gen.py [--summary] DATA.json [TEMPLATE.tsx] [OUT.tsx]   (or set DASH_DATA instead of DATA.json; -h for help)"
+USAGE = "usage: python3 gen.py [--summary | --family] DATA.json [TEMPLATE.tsx] [OUT.tsx]   (or set DASH_DATA instead of DATA.json; -h for help)"
 MARK = "export const DATA: Dashboard = __DATA__;"
 FORBIDDEN = {"medication", "medications", "medicine", "medicines", "dose", "dosage", "doses", "prescription", "prescriptions",
              "rx", "firearm", "firearms", "gun", "guns", "ammo", "ammunition", "cash", "cashamount", "safe", "safecode",
@@ -37,6 +39,23 @@ def check_private(o, path="$"):
     elif isinstance(o, list):
         for i, v in enumerate(o):
             check_private(v, "%s[%d]" % (path, i))
+
+
+# The Family plan Page (v1.2.5) gets only these plan fields, copied by allowlist: never supplies, score, cash,
+# medicines, firearms, device details, shopping, alerts, or anything computed.
+FAMILY_PLAN_KEYS = ["contacts", "outOfAreaContact", "meetingPlaces", "utilities", "evacuation", "petFriendlyPlace",
+                    "shelterSpot", "alertSignup", "evacZoneSource", "awayFromHome"]
+
+
+def family_data(d):
+    pp = d["printPlan"]
+    return {
+        **({"_example": d["_example"]} if d.get("_example") else {}),
+        "version": d["version"], "asOfLabel": d["asOfLabel"],
+        "household": {"name": d["household"]["name"], "hasPets": bool(d["household"]["pets"])},
+        "plan": {k: pp[k] for k in FAMILY_PLAN_KEYS if k in pp},
+        "family": [{"name": f["name"], "role": f["role"]} for f in d["family"]],
+    }
 
 
 def r1(x):
@@ -366,7 +385,10 @@ def main(argv):
         print(__doc__.strip() + "\n\n" + USAGE)
         sys.exit(0)
     summary = "--summary" in args
-    args = [a for a in args if a != "--summary"]
+    family = "--family" in args
+    if summary and family:
+        fail("use --summary or --family, not both")
+    args = [a for a in args if a not in ("--summary", "--family")]
     if any(a.startswith("-") for a in args):
         fail("unknown option " + [a for a in args if a.startswith("-")][0])
     if len(args) > 3:
@@ -376,8 +398,8 @@ def main(argv):
         fail("missing DATA.json")
     if not os.path.isfile(data_p):
         fail("data file not found: " + data_p)
-    tpl_p = args[1] if len(args) > 1 else os.path.join(HERE, "dashboard.template.tsx")
-    out_p = args[2] if len(args) > 2 else os.path.join(HERE, "dashboard.canvas.tsx")
+    tpl_p = args[1] if len(args) > 1 else os.path.join(HERE, "family-plan.template.tsx" if family else "dashboard.template.tsx")
+    out_p = args[2] if len(args) > 2 else os.path.join(HERE, "family.canvas.tsx" if family else "dashboard.canvas.tsx")
     if not summary and not os.path.isfile(tpl_p):
         fail("template not found: " + tpl_p)
     try:
@@ -408,6 +430,16 @@ def main(argv):
     for f in d["family"]:
         if f.get("ageBand") and not f.get("showName"):
             f["name"] = "%s, %s" % (f.get("pageLabel") or "Child", f["ageBand"].replace("-", " to "))
+    if family:
+        t = open(tpl_p, encoding="utf-8").read()
+        fmark = "export const DATA: FamilyPlan = __DATA__;"
+        if fmark not in t:
+            fail("template is missing the line: " + fmark, 3)
+        fd = family_data(d)
+        check_private(fd)
+        open(out_p, "w", encoding="utf-8").write(t.replace(fmark, "export const DATA: FamilyPlan = " + json.dumps(fd, indent=2, ensure_ascii=False) + ";"))
+        print("ok", out_p, os.path.getsize(out_p))
+        return
     apply_counting(d)
     d["computed"] = compute(d)
     if summary:

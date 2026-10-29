@@ -1,6 +1,6 @@
 # Module: Kit templates (two tiers, location kits, first aid, add-ons)
 
-Version: Prepper v1.2.4 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.5 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Each kit is a checklist on the Page with done / missing / not checked. Amounts scale to the household. Roles and the printable plan name only kits the household has confirmed it has; a kit that doesn't exist yet is a weekly build task ("Build the 72-hour carry kit for one person"), never a role.
 
@@ -15,7 +15,7 @@ So Prepper uses two tiers:
 1. **2-week stay-home kit.** The supplies the readiness score already counts (water, food, medicines, sanitation, power and light, first aid, documents). Nothing new to score; this section just names it as a kit. Keep it together in one known spot at home.
 2. **72-hour carry kit.** One per person and one per pet, small enough to carry, kept together in one known spot near an exit that everyone in the house can name.
 
-Location kits (vehicle, work) are optional. Offer them once both tiers are started, not before.
+Location kits (vehicle, work) are optional. Offer them once both tiers are started, not before. The full vehicle add-on (fuel, the car as a charger and shelter, carbon monoxide rules, EVs) is `modules/vehicle.md`.
 
 ## Tier 1: 2-week stay-home kit
 The score's categories and amounts (see `SKILL.md` Readiness score and `reference/us.md`). One flashlight per person, which is stricter than the 1 per 2 people in the Marine Corps and Army lists, because each person may need their own light at night. Keep the stay-home supplies in one place, so the monthly check-in can check one spot.
