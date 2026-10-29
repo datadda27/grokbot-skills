@@ -1,6 +1,6 @@
 # Two-week starter list (US)
 
-Version: Prepper v1.2.1 (2026-10-28)
+Version: Prepper v1.2.2 (2026-10-28)
 
 A preloaded list for quick-add. The owner says "add the starter list" or ticks lines from it, and the bot scales it to the household with the calculator in `us.md`. Water and the kit items come from Ready.gov and the Red Cross. Food amounts are planning examples, not official figures; say so when you show them, and swap in foods the family already eats.
 
@@ -34,7 +34,7 @@ Rule of thumb for food: buy a little extra of what you already eat each week, pu
 | Wrench or pliers for utility shutoffs | 1 | Ready.gov Kit |
 | Sleeping bag or warm blanket | 1 per person | Ready.gov Kit |
 | Paper plates, cups, utensils, paper towels | 2 weeks' worth | Ready.gov Kit |
-| Cash in small bills | owner decides; never recorded on the Page | Ready.gov Kit |
+| Cash in small bills | owner decides; yes or no in `private.json` only, no amount anywhere | Ready.gov Kit |
 | Copies of key documents in a waterproof bag or saved securely online | 1 set | Ready.gov Financial Preparedness |
 | Appliance thermometers for fridge and freezer | 2 | FoodSafety.gov (40°F rule) |
 | Cooler and ice packs | 1 | Ready.gov Power Outages |

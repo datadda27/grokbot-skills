@@ -1,6 +1,6 @@
-# Module: Evacuation, go-bags, and getting home
+# Module: Evacuation, carry kits (go-bags), and getting home
 
-Version: Prepper v1.2.1 (2026-10-28). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.2 (2026-10-28). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make a Plan (https://www.ready.gov/plan), Ready.gov Car Safety (https://www.ready.gov/car).
 
@@ -15,16 +15,17 @@ Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make
 ## Three plans by time (the bot fills them in with the household)
 Structure is the bot's; the steps come from Ready.gov Evacuation.
 
-**5 minutes (leave now):** people and pets, the go-bags, phones and chargers, wallet and keys, sturdy shoes. Out the door. Do not stop for anything else.
+**5 minutes (leave now):** people and pets, the go-bags (if packed), phones and chargers, wallet and keys, sturdy shoes. Out the door. Do not stop for anything else.
 
 **15 minutes:** the 5-minute list, plus: medications and glasses from the home spots, the documents bag, the pet go kit, water from the car kit shelf. Text the out-of-area contact where you're going. Lock doors and windows.
 
 **60 minutes:** the 15-minute list, plus: unplug small electronics; leave the fridge and freezer plugged in unless flooding is a risk; shut off water, gas, and electricity only if there is damage and officials say to; leave a note saying when you left and where you're going; check on neighbors who may need a ride; follow the recommended routes, no shortcuts. (Ready.gov Evacuation)
 
-Each plan prints on the printable plan with the household's own spots ("go-bags: hall closet").
+Each plan prints on the printable plan with the household's own spots ("go-bags: hall closet"). A plan names only gear the household has confirmed; until the carry kits exist, the line reads "go-bags: not packed yet (this week's build task)" and the documents line points to the important papers.
 
-## Go-bag (one per person; see `kits.md` for the full template)
-Keep it where everyone knows, with a named person responsible for it. (Ready.gov Evacuation)
+## Go-bag: the 72-hour carry kit (see `kits.md`, tier 2, for the full template)
+One per person and one per pet, small enough to carry, kept together in one known spot near an exit that everyone can name. (DoD Emergency Preparedness Guidance: a smaller kit you can easily transport if you need to evacuate, https://download.militaryonesource.mil/12038/MOS/ResourceGuides/DoD-Emergency-Preparedness-Guidance.pdf; Ready Marine Corps: make sure every member of the family knows where the kit is, https://www.ready.marines.mil/Build-a-Kit/Emergency-Kits/)
+Before naming a person responsible for it, ask once: "Do you each have a 72-hour carry bag packed? Where is it kept?" If not, building it is a weekly task, not a role. (Ready.gov Evacuation)
 
 ## Get-home bag (optional)
 For anyone who works or studies more than a walk from home: a small bag at work or in the car with water, snacks, comfortable shoes, a flashlight, a phone charger, a printed map and the wallet card, a rain layer, and any daily medicine (details private). The bot asks how far and how they'd get home if roads were closed, and saves the answer on the plan.

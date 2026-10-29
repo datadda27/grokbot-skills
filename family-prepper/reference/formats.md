@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.1 (2026-10-28)
+Version: Prepper v1.2.2 (2026-10-28)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 
@@ -49,6 +49,18 @@ Full check with all sources is on your Page.
 (Illustrative only. Real checks cite the actual pages read that day.)
 Verdicts: **VERIFIED** (official or two independent reliable sources), **PARTLY VERIFIED** (the core is real, details are off or unconfirmed), **UNVERIFIED** (no reliable source found yet; say what would confirm it). Never "FALSE" unless an official source directly refutes it; then write **NOT SUPPORTED** and cite it.
 
+**Scenario-list type.** When the post is a hypothetical or a ranked list of scenarios rather than a reported event, use the verdict **Thought experiment, not an event** (saved to history as `THOUGHT EXPERIMENT`). Keep the same short shape: Do now, verdict and claim, one takeaway tied to the household's biggest current gap, one step, sources (the plan guidance used, if any), confidence, and the county line. No alarm words. Don't repeat the post's ranking or time horizon, and don't raise the goal; 2 weeks stays the goal.
+```
+**Do now:** Nothing to do today. This is a what-if list, not news.
+
+**Thought experiment, not an event** · "Ranked: the 7 disasters most likely to hit in the next 5 years"
+**Takeaway for your home:** most of these lists come back to the same basics: water, light, and a plan. Your biggest gap is water, at 5 of 14 days.
+**One step:** fill 4 clean jugs from the tap and date them. (+2)
+**Confidence:** High that this is a hypothetical list, not a reported event.
+Your county alert signup and evacuation zone page are the source of truth for local orders: <county link>
+```
+(Illustrative only.)
+
 ## 3. Threat watch alert (only when a rule fires)
 ```
 **ACT NOW** · Tornado Warning for Example County until 4:45 PM CT
@@ -76,10 +88,15 @@ Why: it keeps the 2-week food supply fresh. (+3 readiness when done)
 **Use next:** granola bars (Nov 14) · AA batteries (Dec) · 2 water jugs (rotate Jan 3)
 **Gaps:** food 6 of 14 days (+3) · first aid kit 9 of 18 items (+2)
 **This week · 15 minutes:** fill 4 clean jugs from the tap and date them. (+2)
-**Season ahead:** winter. Check the car kit and the furnace CO alarm.
+**Season ahead:** winter. Test the furnace CO alarm, and add a blanket and scraper to the car.
 **Drill (optional):** a 10-minute lights-out evening. Want to try it?
 ```
 One message. The weekly task is never sent separately on the same Saturday.
+In the April and October check-ins, the last two lines are always:
+```
+**Kit check (every 6 months):** dates on food, water, meds, and batteries; swap seasonal clothes in the carry kits you have.
+**Drill (twice a year):** walk through the plan: meet at the outside spot, then find the shutoffs. Want to try it this week?
+```
 
 ## 6. Seasonal reminder (start of each hazard season for the county)
 ```

@@ -37,7 +37,7 @@ Exit codes: 0 ok, 2 usage or missing file, 3 bad data (invalid JSON, a private f
 - Score = round(100 x earned / applicable). Applicable is fixed for the household, so answering or adding anything can only raise the score.
 - Setup progress = answered points over applicable points, shown as its own bar.
 - Gap points equal the stated weights (scaled only when something is n/a) and do not shift as other answers come in.
-- Tiers: 72 hours (water, food, medicines, sanitation at 3 days or more, plus smoke, CO, alerts, and device backup done or not applicable); 2 weeks (those four at the target, other categories at least half); optional 1 month (30 days) and 3 months (90 days).
+- Tiers: 72 hours (water, food, medicines, sanitation at 3 days or more, plus smoke, CO, alerts, and device backup done or not applicable); 2 weeks (those four at the target, other categories at least half). Two weeks is the top tier. The optional 30-day stretch (`targets.optionalTiers: ["30d"]`, set only when the owner asks) prints as a separate line with no score or tier change. There is no 90-day tier.
 
 ## Privacy
 gen.py exits 3 if any key names medicines, doses, prescriptions, firearms, ammunition, cash, safe codes, PINs, passwords, SSNs, coordinates, street addresses, or emails. Expiring items marked `private` are dropped. Medicines appear only as a days count with "details private".

@@ -1,5 +1,17 @@
 # Prepper changelog
 
+## v1.2.2 (2026-10-28)
+Kits, go-bags, and Headline Check fixes from the deep setup test.
+- Go-bag before roles: in Family roles the bot first asks "Do you each have a 72-hour carry bag packed? Where is it kept?" Roles and checklists name only gear the household has confirmed; anything else becomes a weekly build task, never a role. "Car kit lead" is no longer a default role example. The printable plan says to keep a copy "in the go-bag, or with your important papers until you have one."
+- Kits module restructured into two tiers, following DoD, Ready Marine Corps, Ready Army, and Ready.gov guidance: a 2-week stay-home kit (the score's existing categories) and a 72-hour carry kit, one per person and one per pet, kept in one known spot near an exit. Vehicle and work kits are optional. The score keeps 1 flashlight per person.
+- New optional add-on checklist in `kits.md` (can opener, multi-tool, gloves, N95s, duct tape, plastic sheeting, and more). It never touches the score, tier, or gaps.
+- Cash: "cash in small bills" is tracked only as yes or no in `private.json`. No amount anywhere, and nothing about cash on the Page or the printout.
+- Power-dependent medical devices (`extra-needs.md`): a backup checklist (spare charged battery, car adapter, the utility's medical priority list) and a private device card (model, serial, how to run it, supplier phone) printed separately and never on the Page or the shared plan. Setup still asks only whether there is a device; the method and getting-started skill point to the module when the answer is yes.
+- Pets: a pet carry kit (labeled crate, spare collar and ID, microchip number on the private card, pet first aid, 2 weeks of pet medicine, waste bags).
+- Kit check every 6 months and a plan drill twice a year, both folded into the April and October monthly check-ins (format 5).
+- Headline Check: a scenario or ranked-list post gets the verdict "Thought experiment, not an event", one takeaway tied to the household's biggest gap, and one step. No alarm, no adopting the post's ranking or time horizon. Schema adds the `THOUGHT EXPERIMENT` verdict for the Page history.
+- Tiers: the 1-month and 3-month tiers are gone. An optional 30-day stretch (`targets.optionalTiers: ["30d"]`) is shown only when the owner asks, as a separate line on the Page that never changes the score, tier, or gaps. Two weeks stays the goal; no 90-day tier. gen.py, schema, and template updated.
+
 ## v1.2.1 (2026-10-28)
 - Shopping rule: still never buys and no affiliate, referral or sponsored links, but when the owner asks where to buy something the bot gives the spec, then 2 to 4 neutral store options with plain links and that day's prices.
 - Family sharing moved: no longer offered at the end of the quick start (one line promises it instead). Offered at the end of deep setup part 3 (Plan) with the printable plan, or once at the first monthly check-in that has a meeting place and an out-of-area contact if deep setup was skipped. New `share` command works anytime.

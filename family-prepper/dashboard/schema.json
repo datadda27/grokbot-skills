@@ -187,20 +187,19 @@
         "goalTier": {
           "enum": [
             "72h",
-            "2w",
-            "1m",
-            "3m"
+            "2w"
           ]
         },
         "optionalTiers": {
           "type": "array",
+          "description": "Holds \"30d\" only when the owner asked for the optional 30-day stretch. Never scored, never a tier.",
           "items": {
             "enum": [
-              "1m",
-              "3m"
+              "30d"
             ]
           },
-          "minItems": 0
+          "minItems": 0,
+          "maxItems": 1
         }
       },
       "required": [
@@ -877,7 +876,8 @@
               "VERIFIED",
               "PARTLY VERIFIED",
               "UNVERIFIED",
-              "NOT SUPPORTED"
+              "NOT SUPPORTED",
+              "THOUGHT EXPERIMENT"
             ]
           },
           "action": {

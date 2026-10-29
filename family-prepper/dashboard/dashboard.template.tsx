@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.2.1. gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.2.2. gen.py replaces the DATA line; this file holds no household text.
 import {
   Avatar, Bars, Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,
@@ -23,6 +23,7 @@ type Computed = {
   score: number; earned: number; counted: number; applicable: number; coverage: number; setupPct: number;
   pointsWaiting: number; provisional: boolean;
   tierIndex: number; tierId: string; tierLabel: string; nextTierLabel: string; nextTierNeeds: string[];
+  stretch: string[] | null;
   gaps: Gap[]; uncounted: { label: string; points: number }[]; taskGain: number;
   calc: {
     people: number; infants: number; kcalPerDay: number; kcalTarget: number; waterPerDay: number;
@@ -107,8 +108,6 @@ const UNKNOWN = "not counted yet";
 const TIERS: { id: string; label: string; optional: boolean }[] = [
   { id: "72h", label: "72 hours", optional: false },
   { id: "2w", label: "2 weeks", optional: false },
-  { id: "1m", label: "1 month", optional: true },
-  { id: "3m", label: "3 months", optional: true },
 ];
 
 function orUnknown(v: string | null | undefined, fallback: string = "UNKNOWN"): string {
@@ -169,10 +168,10 @@ function ring(t: GrokTheme, c: Computed): ReactNode {
   );
 }
 
-// Tier track: four steps on one line. Reached steps and the line up to them take the accent; optional steps hang off a dashed line.
+// Tier track: 72 hours then 2 weeks (the goal) on one line. Reached steps and the line up to them take the accent. The optional 30-day stretch is not a tier; it shows as text below.
 function tierLadder(t: GrokTheme, c: Computed): ReactNode {
   const accent = t.dataviz.categorical[0];
-  const x = (i: number) => 50 + i * 100;
+  const x = (i: number) => 100 + i * 200;
   return (
     <svg viewBox="0 0 400 76" width="100%" role="img" aria-label={`Tier ${c.tierLabel}`}>
       {TIERS.slice(1).map((tier, j) => {
@@ -459,9 +458,10 @@ export default function FamilyPrepper() {
               { label: "Points waiting", value: c.uncounted.length ? `${c.pointsWaiting}: ${c.uncounted.map((u) => u.label).join(", ")}` : "None" },
             ]} />
           </Section>
-          <Section heading={c.nextTierLabel ? `Next: ${c.nextTierLabel}` : "Top tier reached"}>
+          <Section heading={c.nextTierLabel ? `Next: ${c.nextTierLabel}` : "2 weeks reached: the goal"}>
             {tierLadder(t, c)}
             {c.nextTierNeeds.length ? <Checklist items={c.nextTierNeeds.map((n) => ({ text: n, done: false }))} /> : <Text>Keep rotating and checking in monthly.</Text>}
+            {c.stretch && c.stretch.length ? <Text>{`30-day stretch (optional, not scored): ${c.stretch.join(", ")}`}</Text> : null}
           </Section>
           <Section heading="Biggest gaps">
             {gapRows.length ? <Rows rows={gapRows} /> : <Text>No gaps left. Keep rotating and checking in monthly.</Text>}

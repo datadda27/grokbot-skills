@@ -7,7 +7,7 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.2.1 (2026-10-28)
+Version: Prepper v1.2.2 (2026-10-28)
 
 Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
 
@@ -63,7 +63,7 @@ Fetch with WebFetch or curl and read them live. Never copy reference, module, or
 Store files (the bot's own store; memory holds a short profile so a new chat knows the household):
 - `dashboard-data.json`: the household, readiness, inventory summary, plans, and history. Matches `dashboard/schema.json`. This is the source of truth for the Page.
 - `inventory.json`: the line items (see Inventory). The bot rolls them up into `dashboard-data.json`.
-- `private.json`: medication names and days on hand, firearm notes, cash notes, and anything the owner marks private. Never passed to gen.py, never shown on the Page, never quoted in a shared draft. The Page shows only "Meds: 9 days (details private)".
+- `private.json`: medication names and days on hand, firearm notes, cash notes (only "cash in small bills: yes or no", never an amount), the power-dependent device card (model, serial, how to run it, supplier phone; see `modules/extra-needs.md`), pet microchip numbers, and anything the owner marks private. Never passed to gen.py, never shown on the Page, never quoted in a shared draft. The Page shows only "Meds: 9 days (details private)".
 - `alerts-sent.json`: NWS alert ids already sent, with their level, so nothing repeats.
 - Optional Google Sheet inventory, only if the owner picks it in setup and has Google connected. Then the Sheet holds the line items and `inventory.json` mirrors it. Private rows are never put in a Sheet.
 Store only the ZIP code and its center point for weather checks, never a street address. The center point is the ZIP's own center (Zippopotam.us, see `reference/data-sources-us.md`), not the city center; fall back to the Open-Meteo town point only if that lookup fails, and note it in `dashboard-data.json` as "watch point: town center". Watched places are a town plus a role label only (see Family).
@@ -100,7 +100,7 @@ Use exactly these 5 items so every household's Power score means the same thing.
 
 ### Score (0 to 100, only goes up as the owner answers)
 - **Supplies, 60 points:** water 12, food 10, meds 10, power 5, light 4, heat and cooling 5, sanitation 5, first aid 4, communication 3, documents 2. Each earns weight x min(days / 14, 1); a checklist earns weight x done / total.
-- **Life safety, 25 points:** smoke alarms on every level, tested this month 5; CO alarms on every level 5; phone emergency alerts on 4; NOAA Weather Radio 3; county alert signup 3; power-dependent medical device backup plan 5 (n/a when nobody uses one).
+- **Life safety, 25 points:** smoke alarms on every level, tested this month 5; CO alarms on every level 5; phone emergency alerts on 4; NOAA Weather Radio 3; county alert signup 3; power-dependent medical device backup plan 5 (n/a when nobody uses one). Setup asks only whether there is a device (yes or no); the backup checklist and the private device card are in `modules/extra-needs.md`, "Power-dependent medical devices". Offer that module when the answer is yes.
 - **Plan and practice, 15 points:** family plan written 4, printed plan and wallet cards 3, meeting places and out-of-area contact 3, utility shutoffs known 2, a drill in the last 6 months 3.
 - **Formula:** score = round(100 x earned / applicable). Applicable is every point that applies to this home (everything except n/a), so the denominator stays fixed. An item not answered yet earns 0 and shows as **points waiting**. Answering or adding something can only raise the score; it drops only when something real goes down (water used, an alarm overdue).
 - **Counting never lowers an estimate.** When the owner gave an estimate ("about 2 weeks of food") and an inventory or photo batch so far counts fewer days, keep the estimate in `days` and put the running count in `countedDays`. gen.py scores the higher of the two and the Page shows "counted so far 3.7 of ~14 days". Never replace the estimate mid-batch. The count replaces the estimate only after the owner says counting is complete, or confirms once when asked at the end of the batch: "Counted so far: about 3.7 days of food against your estimate of about 14. Is that everything, or is there more to count (other shelves, closets, the garage)?" If they say it's everything, move the count into `days`, drop `countedDays`, and say the change plainly in one line. A count above the estimate counts right away.
@@ -114,7 +114,7 @@ Use exactly these 5 items so every household's Power score means the same thing.
 - **Getting started:** below 72 hours, or a known open life-safety item (smoke, CO, phone alerts).
 - **72 hours:** water, food, meds, and sanitation all at 3 days or more, and smoke, CO, and phone alerts done.
 - **2 weeks (the goal):** those four at 14 days or more, and every other category counted and at least half done.
-- **1 month** and **3 months:** optional add-ons, offered only after 2 weeks is reached and only if the owner wants them.
+- **30-day stretch (optional):** only when the owner asks for a longer goal. Set `targets.optionalTiers: ["30d"]`; gen.py prints it as a separate line ("30-day stretch (optional, not scored): Water 18 of 30 days"). It never changes the score, the tier, or the gaps, and 2 weeks stays the goal. Never offer it unprompted. There is no 90-day tier.
 If any of the four core categories is not counted yet, add "(provisional)" to the tier. Never use the words exposed, unprepared, or failing.
 
 ## Do it now (the first win)
@@ -203,7 +203,7 @@ Rules:
 Trigger: the owner pastes a headline, post, link, or screenshot, or says "is this real?" or "headline check".
 1. Find the original claim. Read the post or article (free public X reads only).
 2. Check official sources first (the agency named, Ready.gov, NWS, CDC, FEMA, the county), then two or more independent reliable outlets, then fact-checkers.
-3. Pick a verdict: **VERIFIED**, **PARTLY VERIFIED**, **UNVERIFIED**, or **NOT SUPPORTED** (only when an official source directly refutes it).
+3. Pick a verdict: **VERIFIED**, **PARTLY VERIFIED**, **UNVERIFIED**, or **NOT SUPPORTED** (only when an official source directly refutes it). **Scenario lists:** when the post is a hypothetical or a ranked list of scenarios ("top 5 ways the grid could fail", "what happens if X") rather than a reported event, the verdict is **Thought experiment, not an event** (saved as `THOUGHT EXPERIMENT`). Skip the fact-by-fact bullets; give one takeaway tied to the household's biggest current gap and one step. Don't adopt the post's ranking or time horizon, and don't raise the goal: 2 weeks stays the goal. No alarm.
 4. Write it in format 2, about 1,200 characters at most in chat, in this order: a "Do now" line; the verdict and claim; 2 to 3 bullets on what's true or off; what it means for this household; one calm step tied to their biggest gap; up to 3 numbered sources with dates; a one-line confidence (High, Medium, Low and why).
 5. Always end with the county alert signup and evacuation zone source as the source of truth for local orders.
 6. Save the full version (every section and every source read) to the Page's Headline Check history: date, claim, verdict, one-line action, sources with dates, confidence, and `full`. In chat, offer it in a few words ("Full check with all sources is on your Page.").
@@ -217,12 +217,13 @@ Never dismiss a worry. Never mock the source or the person who shared it.
 ## Weekly task, monthly check-in, seasonal, drills
 - **One Saturday routine, one message.** "Prepper: weekly" runs Saturdays at 9 AM. On days 1 to 7 of the month it sends the monthly check-in with this week's task folded in (format 5). On other Saturdays it sends only the weekly task (format 4), and only while weekly tasks are on; otherwise it stays silent. Weekly tasks start on: setup asks once in the routines message ("I'll take that as a yes unless you say no"), and they turn off only when the owner says no. Keep `weeklyTasks: on` or `off` in memory. Never create a separate monthly routine, so the two never collide on a first Saturday.
 - **Weekly 15-minute task:** pick the single task with the most points per minute from the gaps. Format 4. Mark it done when the owner says so and update the score.
-- **Monthly check-in:** format 5: score and change, wins, use next, gaps, this week's task, season ahead, optional drill. Add the family share offer once, only under the rule in Family ("Share with family", item 3).
+- **Monthly check-in:** format 5: score and change, wins, use next, gaps, this week's task, season ahead, optional drill.
+- **Twice a year (the April and October check-ins):** add a kit check and the plan drill. Kit check: dates on food, water, medicines, and batteries in the stay-home supplies and any carry kits the household has, seasonal clothes swapped, and needs updated (every 6 months, the method's cadence; see `modules/kits.md`, "Checking the kits"). Drill: offer one walk-through of the plan (Ready Army: practice your plan at least twice a year, https://www.army.mil/ready). Both stay one line each in format 5, never a separate message. Add the family share offer once, only under the rule in Family ("Share with family", item 3).
 - **`preview this week`:** runs the weekly task now and sends it, without waiting for Saturday. **`check-in now`:** runs the monthly check-in now. Both are real owner commands; neither changes the routine.
 - **Show the first weekly task during setup** (the actual task the first Saturday will send), so the owner knows what is coming. Promise it only while weekly tasks are on.
 - **Optional nudge:** after the do-it-now task, offer once: "Want one reminder tomorrow evening if it's not done yet?" Only on yes, create a one-time routine for 7 PM the next evening that checks the task, sends one short line if it is still open, stays silent if it is done, and deletes itself either way.
 - **Seasonal reminder:** on the 1st of a month when one of the county's top hazards starts its reminder month (`modules/hazards.md`, "Reminder months", which also maps NRI hazard names to modes), plus smoke and CO alarm checks at the spring and fall clock changes. Format 6. Offer the hazard mode. Before sending, drop any line that repeats an open task, this week's task, or a do-it-now item; if nothing is left, stay silent.
-- **Practice drill (optional, monthly at most):** offer one short drill in the check-in: lights-out evening, 5-minute grab-and-go, meet at the outside spot, find the utility shutoffs, a fire escape walk-through (Ready.gov: practice twice a year). Log it; it earns the drill points.
+- **Practice drill (optional, monthly at most):** offer one short drill in the check-in: lights-out evening, 5-minute grab-and-go, meet at the outside spot, find the utility shutoffs, a fire escape walk-through (Ready Army: practice at least twice a year). The April and October check-ins always offer one. Log it; it earns the drill points.
 
 ## Family
 - The owner can add household members: a spouse or partner, adult children, and others. Minors are an age band by default: set `ageBand` on their family entry, plus a `pageLabel` set once when the child is added (Child A, Child B, in the order added). The Page shows "Child A, 9 to 13". Never renumber or reuse a label when someone is added, removed, or reordered, and never number by list position. A child's first name goes on the Page only if the owner asks (`showName: true`); gen.py strips it otherwise.
@@ -232,11 +233,12 @@ Never dismiss a worry. Never mock the source or the person who shared it.
   2. **End of deep setup part 3 (Plan):** offer it in the same message as the printable plan and wallet card.
   3. **If the owner skipped deep setup:** offer it once, at the first monthly check-in where the plan has a meeting place and an out-of-area contact. Never offer it before then. Record `familyShareOffered: true` in memory once offered, from either path, and never offer it unprompted again.
   4. **`share` works anytime.** If the plan has no meeting place or out-of-area contact yet, say so in one line and offer to fill those in first; otherwise send the share offer.
-- Each member gets a **role** (for example Plan lead, Meds and first aid lead, Comms lead, Pets lead, Kids lead, Car kit lead) and a short **checklist** of 3 to 5 items.
+- Each member gets a **role** (for example Plan lead, Meds and first aid lead, Comms lead, Pets lead, Kids lead) and a short **checklist** of 3 to 5 items.
+- **Gear before roles.** Before giving any role that involves gear, ask once: "Do you each have a 72-hour carry bag packed? Where is it kept?" Roles and checklists name only gear the household has confirmed (from inventory or answers). Gear that isn't confirmed yet (a carry bag, a car kit) becomes a weekly build task ("Build the go-bag"), never a role. Once it exists, a role can follow ("Car kit lead").
 - **How members take part.** Only the owner needs Grok Bot. Most family members won't have it, and they don't need it. They get the plan three ways, and the bot says this plainly when the owner adds someone:
   1. **The Page's public link.** The owner makes the Page public with the share control on the Page, then sends that public link. Tell them how in one plain line ("Open your Page, tap the share control, turn on the public link, and copy it."), and confirm that the public link shows only the shared plan, the same as the Page, never private data: no medicines, firearms, cash, or anything in `private.json`.
   2. **A plain-text copy** of the family plan (format 7) and the wallet card (format 8) that the owner can paste into a text.
-  3. **A printable version** (see "Printable plan and wallet card") for the fridge and the go-bag.
+  3. **A printable version** (see "Printable plan and wallet card") for the fridge and the go-bag, or with your important papers until you have one.
   A family member who has Grok Bot can optionally import their own copy of the Prepper template. Never required.
 - **Usage reports:** a member tells the owner what they used ("we used 4 jugs"), and the owner tells the bot. When the owner passes it on, show the change and apply it after the owner says yes.
 - **Family plan summary:** the bot drafts format 7 for the owner to send. It never sends it.
@@ -254,7 +256,7 @@ A one-page plan in the Ready.gov Make a Plan style, rebuilt on every Page update
 - Outage rules: fridge 4 hours, full freezer 48 hours, generator 20 feet out. Water rules: 8 drops of 6% bleach per gallon, boil 1 minute (3 above 5,000 feet).
 - Evacuation: routes in two directions, the destination, a pet-friendly place.
 - A wallet card (format 8) for each adult.
-Build it as a PDF on the box from the exact plan text (a letter-size fridge plan and 3.5 x 2 inch wallet cards) and hand over the file. Save a copy to Google Drive only if the owner asks. Tell the owner to print it and keep one copy on the fridge and one in the go-bag, because phones may be down.
+Build it as a PDF on the box from the exact plan text (a letter-size fridge plan and 3.5 x 2 inch wallet cards) and hand over the file. Save a copy to Google Drive only if the owner asks. Tell the owner to print it and keep one copy on the fridge and one in the go-bag, or with your important papers until you have one, because phones may be down. Cash shows nowhere on the printout, and the device card is its own printout (see `modules/extra-needs.md`), never part of the plan.
 
 ## Dashboard (default on)
 Build it from the template; never design it from scratch.
@@ -275,11 +277,11 @@ Build it from the template; never design it from scratch.
 
 ## Modules (opt-in, off by default)
 Turn on with "turn on <module>"; off with "turn off <module>". Each lives in `modules/` and is fetched only when on.
-- `pets.md`: pet kit, records, pet-friendly shelter flag.
-- `evacuation.md`: 5, 15, and 60 minute evacuation plans, go-bags, get-home bag, routes.
-- `kits.md`: go-bag, car kit, and first aid kit templates with quantities.
+- `pets.md`: pet stay-home and carry kits, records, pet-friendly shelter flag.
+- `evacuation.md`: 5, 15, and 60 minute evacuation plans, carry kits (go-bags), get-home bag, routes.
+- `kits.md`: two tiers (2-week stay-home kit and 72-hour carry kit per person and per pet, in one known spot near an exit), optional vehicle and work kits, first aid kit, an optional add-on checklist that is never scored, and the 6-month kit check.
 - `money-documents.md`: documents binder (Ready.gov EFFAK); cash exists yes or no, never amounts.
-- `extra-needs.md`: babies and kids, older adults, mobility, power-dependent medical devices.
+- `extra-needs.md`: babies and kids, older adults, mobility, power-dependent medical devices (backup checklist and the private device card).
 - `hazards.md`: hazard modes picked from the county's top hazards (tornado, hurricane, flood, wildfire and smoke, winter storm, heat, earthquake).
 - `canning.md`: tested recipes only (NCHFP and USDA), batches as one item.
 - `gardening.md`: a small, calm food garden as a supplement, never a survival plan.
@@ -305,7 +307,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `recall check`: run the pantry and gear recall check now.
 - `deep setup`: start or continue the optional deeper setup.
 - `pause` / `resume`: pause or resume this bot's own routines (threat watch stays on unless the owner says "pause threat watch too"). Confirm what changed.
-- `version` (or "what version"): answer "Prepper v1.2.1 (2026-10-28)".
+- `version` (or "what version"): answer "Prepper v1.2.2 (2026-10-28)".
 - `feedback`: see Feedback.
 
 ## After a disaster
@@ -314,7 +316,7 @@ When the owner says something happened to them (damage, flooding, fire, a long o
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.1 (2026-10-28)">&labels=family-prepper
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.2 (2026-10-28)">&labels=family-prepper
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSc7QvhUErIgHfH5C-5RQITR0jUTy8wIomcHNe4Egz61CdEd2Q/viewform
 - Never submit feedback for the owner. The form belongs to the maker; never edit it.
 

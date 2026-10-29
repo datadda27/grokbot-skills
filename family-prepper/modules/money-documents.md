@@ -1,6 +1,6 @@
 # Module: Money and documents binder
 
-Version: Prepper v1.2.1 (2026-10-28). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.2 (2026-10-28). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Source: Ready.gov Financial Preparedness and its Emergency Financial First Aid Kit (EFFAK) (https://www.ready.gov/financial-preparedness).
 
@@ -15,7 +15,7 @@ Store copies in a safety deposit box, on an external drive, or in the cloud so t
 Be careful sharing account or Social Security numbers; the government will not contact you through social media about payments (Ready.gov).
 
 ## Cash
-The Page shows only "Emergency cash: yes / no". Amounts are never asked for or stored. Small bills are easier during outages, when card readers may be down (Ready.gov Build a Kit lists cash).
+Cash in small bills is tracked only in `private.json`, as yes or no. No amount anywhere: never asked for, stored, or shown on the Page, the printout, or a chat summary. The Page and the printable plan say nothing about cash. Small bills are easier during outages, when card readers may be down (Ready.gov Build a Kit lists cash).
 
 ## Benefits
 Ready.gov suggests switching federal benefits to direct deposit or a Direct Express card, since a disaster can disrupt mail for days or weeks. The bot links it and says nothing about eligibility.

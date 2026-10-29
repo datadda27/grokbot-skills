@@ -1,6 +1,6 @@
 # Country pack: United States
 
-Version: Prepper v1.2.1 (2026-10-28)
+Version: Prepper v1.2.2 (2026-10-28)
 
 Every number the bot quotes to a US household comes from this file, with its link. If a number is not here, the bot looks it up on an official page and cites it, or says UNKNOWN. Another country gets its own file (for example `uk.md`) with the same headings, so the method never changes when a country is added.
 
@@ -111,7 +111,7 @@ Inputs: adults (14 and older), children by age band, pets, hot climate (yes/no).
 
 - Water is not scaled down for children, because Ready.gov says children may need more. Hot climate doubles water.
 - Child calorie numbers are planning estimates inside MyPlate's age ranges. Label them as estimates every time.
-- Targets: 3 days (72 hours), 14 days (2 weeks, the goal), and optional add-ons of 30 days and 90 days.
+- Targets: 3 days (72 hours) and 14 days (2 weeks, the goal). An optional 30-day stretch is shown only when the owner asks, as a separate line that never changes the score. No 90-day tier.
 - Example: 2 adults, kids 7 and 11, one dog, not hot. Water: 4 gal a day, so 12 gal for 3 days and 56 gal for 2 weeks, plus the dog's water. Food: 2,000 + 2,000 + 1,400 + 1,700 = 7,100 kcal a day, so 99,400 kcal for 2 weeks.
 - Food on hand can be counted as calories (from labels) or as person-days of meals, whichever is easier for the household. Never make them weigh or log every can.
 

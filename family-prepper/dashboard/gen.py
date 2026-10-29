@@ -15,7 +15,9 @@ FORBIDDEN = {"medication", "medications", "medicine", "medicines", "dose", "dosa
              "rx", "firearm", "firearms", "gun", "guns", "ammo", "ammunition", "cash", "cashamount", "safe", "safecode",
              "pin", "password", "ssn", "lat", "lon", "latitude", "longitude", "coordinates", "address", "email"}
 KCAL = {"14+": 2000, "9-13": 1700, "4-8": 1400, "1-3": 1000, "0-1": None}  # reference/us.md calculator; infants: use what the family uses now
-TIERS = [("start", "Getting started"), ("72h", "72 hours"), ("2w", "2 weeks"), ("1m", "1 month"), ("3m", "3 months")]
+TIERS = [("start", "Getting started"), ("72h", "72 hours"), ("2w", "2 weeks")]
+UNKNOWN_DAYS = "not counted"
+STRETCH_DAYS = 30  # optional 30-day stretch: shown only when the owner asked for it ("30d" in targets.optionalTiers); never scored, never a tier
 CORE = ["water", "food", "meds", "sanitation"]
 
 
@@ -137,10 +139,6 @@ def compute(d):
         tier = 1
         if core_at(14) and others_ok:
             tier = 2
-            if core_at(30):
-                tier = 3
-                if core_at(90):
-                    tier = 4
     needs = []
     if tier == 0:
         needs += ["%s to 3 days" % cats[k]["label"] for k in CORE if cats.get(k) and (cats[k]["days"] is None or cats[k]["days"] < 3)]
@@ -157,9 +155,10 @@ def compute(d):
                     needs.append("%s to half (%d of %d now)" % (c["label"], c["itemsDone"], c["itemsTotal"]))
             elif c["days"] is None or c["days"] < target / 2:
                 needs.append("%s to %g days" % (c["label"], target / 2))
-    elif tier < 4:
-        n = 30 if tier == 2 else 90
-        needs += ["%s to %d days" % (cats[k]["label"], n) for k in CORE if cats[k]["days"] < n]
+    stretch = None
+    if "30d" in d["targets"].get("optionalTiers", []):
+        stretch = ["%s %s of %d days" % (cats[k]["label"], UNKNOWN_DAYS if cats[k]["days"] is None else "%g" % cats[k]["days"], STRETCH_DAYS)
+                   for k in CORE if cats.get(k)]
 
     hh = d["household"]
     kcal = 2000 * hh["adults"]
@@ -210,6 +209,7 @@ def compute(d):
         "tierLabel": TIERS[tier][1] + (" (provisional)" if core_uncounted else ""),
         "nextTierLabel": TIERS[tier + 1][1] if tier + 1 < len(TIERS) else "",
         "nextTierNeeds": needs,
+        "stretch": stretch,
         "gaps": top, "uncounted": uncounted,
         "taskGain": task_gain,
         "calc": {"people": people, "infants": infants, "kcalPerDay": kcal, "kcalTarget": kcal * target,
@@ -275,7 +275,7 @@ def main(argv):
     if summary:
         c = d["computed"]
         print(json.dumps({k: c[k] for k in ("score", "setupPct", "pointsWaiting", "tierLabel", "nextTierLabel",
-                                             "nextTierNeeds", "gaps", "taskGain")}, indent=1))
+                                             "nextTierNeeds", "stretch", "gaps", "taskGain")}, indent=1))
         return
     t = open(tpl_p, encoding="utf-8").read()
     if MARK not in t:

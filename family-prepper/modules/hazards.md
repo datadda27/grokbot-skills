@@ -1,6 +1,6 @@
 # Module: Hazard modes
 
-Version: Prepper v1.2.1 (2026-10-28). Turned on per hazard from the county's FEMA National Risk Index (NRI) ratings, never from guesses. The bot suggests modes for hazards rated Relatively High or Very High; the owner confirms.
+Version: Prepper v1.2.2 (2026-10-28). Turned on per hazard from the county's FEMA National Risk Index (NRI) ratings, never from guesses. The bot suggests modes for hazards rated Relatively High or Very High; the owner confirms.
 
 Each mode adds a short checklist to the Page, a seasonal reminder, and the "Do now" lines the threat watch uses when that hazard's NWS watch or warning arrives. All steps are from the linked Ready.gov page.
 
@@ -46,7 +46,7 @@ Before:
 - Have a garden hose long enough to reach any area of the home.
 - Set up one room you can close off from outside air, with a portable air cleaner, for smoke days. The dashboard shows Open-Meteo air quality; official AQI is at https://www.airnow.gov/.
 - Know the school and work evacuation plans.
-Do now (warning or evacuation order): leave when told to; take the go-bags and pets; on smoke days stay in the clean-air room and follow official air quality guidance.
+Do now (warning or evacuation order): leave when told to; take the go-bags (if packed) and pets; on smoke days stay in the clean-air room and follow official air quality guidance.
 
 ## Winter storm (https://www.ready.gov/winter-weather)
 Winter storms raise the risk of car accidents, hypothermia, frostbite, carbon monoxide poisoning, and heart attacks from overexertion. Warnings are usually issued 12 to 24 hours ahead; watches 12 to 48 hours ahead.
