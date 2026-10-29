@@ -1,6 +1,6 @@
 # Module: Evacuation, carry kits (go-bags), and getting home
 
-Version: Prepper v1.2.3 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.4 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make a Plan (https://www.ready.gov/plan), Ready.gov Car Safety (https://www.ready.gov/car).
 

@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.2.3 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.2.4 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
 import {
   Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,
@@ -53,6 +53,8 @@ type Dashboard = {
     climateHot: boolean;
   };
   targets: { days: number; goalTier: string; optionalTiers: string[] };
+  weekly?: { day?: string; time?: string; pace?: "light" | "steady" | "push"; skipUntil?: string | null };
+  offlineBackup?: { refresh?: boolean; last?: string | null; saved?: string };
   alert: {
     lastCheck: string; nextCheck: string; cadence: string;
     emergencyMode: { on: boolean; since: string | null; cadenceMin: number };
@@ -156,6 +158,12 @@ function memberName(f: Dashboard["family"][number]): string {
   return `${f.pageLabel || "Child"}, ${f.ageBand.replace("-", " to ")}`;
 }
 // Plan and card titles: the household's own name, or a neutral label for the sample or a blank name.
+function contactText(c: { name: string; phone: string } | null): string {
+  if (!c) return NOT_SET;
+  const parts = [c.name, c.phone].map((x) => (x || "").trim()).filter((x) => x);
+  return parts.length ? parts.join(", ") : NOT_SET;
+}
+const CHECKIN_WHY = "Local phone lines can jam, but a long-distance text often gets through, so everyone reports to this one person. Still text each other directly.";
 function householdTitle(d: Dashboard, what: string): string {
   const n = d.household.name.trim();
   return n && !d._example ? `${n}: ${what}` : what.charAt(0).toUpperCase() + what.slice(1);
@@ -338,7 +346,7 @@ function walletCard(t: GrokTheme, d: Dashboard): ReactNode {
       {box("front", householdTitle(d, "emergency card"), (
         <>
           {p.contacts.slice(0, 3).map((x) => line(x.name, x.phone))}
-          {line("Out of area", p.outOfAreaContact ? `${p.outOfAreaContact.name}, ${p.outOfAreaContact.phone}` : NOT_SET)}
+          {line("Out-of-area check-in", contactText(p.outOfAreaContact))}
           {line("Emergency", "911")}
         </>
       ))}
@@ -529,8 +537,9 @@ export default function Prepper() {
                   { label: "In town", value: orUnknown(p.meetingPlaces.outOfNeighborhood) },
                   { label: "Out of town", value: orUnknown(p.meetingPlaces.outOfTown) },
                   { label: "Shelter at home", value: orUnknown(p.shelterSpot) },
-                  { label: "Everyone texts", value: p.outOfAreaContact ? `${p.outOfAreaContact.name}, ${p.outOfAreaContact.phone}` : NOT_SET },
+                  { label: "Out-of-area check-in", value: contactText(p.outOfAreaContact) },
                 ]} />
+                {p.outOfAreaContact ? smallLine(t, CHECKIN_WHY) : null}
               </Section>
             </Grid>
           </Section>
@@ -547,9 +556,10 @@ export default function Prepper() {
               <Section heading="Contacts">
                 <Properties items={[
                   ...p.contacts.map((x) => ({ label: x.name, value: x.phone })),
-                  { label: "Out-of-area contact", value: p.outOfAreaContact ? `${p.outOfAreaContact.name}, ${p.outOfAreaContact.phone}` : NOT_SET },
+                  { label: "Out-of-area check-in", value: contactText(p.outOfAreaContact) },
                   { label: "Emergency", value: "911" },
                 ]} />
+                {p.outOfAreaContact ? smallLine(t, CHECKIN_WHY) : null}
               </Section>
               <Section heading="Meeting places">
                 <Properties items={[

@@ -7,7 +7,7 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.2.3 (2026-10-29)
+Version: Prepper v1.2.4 (2026-10-29)
 
 Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
 
@@ -61,7 +61,7 @@ Fetch with WebFetch or curl and read them live. Never copy reference, module, or
 
 ## Data (no Google needed)
 Store files (the bot's own store; memory holds a short profile so a new chat knows the household):
-- `dashboard-data.json`: the household, readiness, inventory summary, plans, and history. Matches `dashboard/schema.json`. This is the source of truth for the Page.
+- `dashboard-data.json`: the household, readiness, inventory summary, plans, and history. Matches `dashboard/schema.json`. This is the source of truth for the Page. Optional `weekly` (day, time, pace, skipUntil) and `offlineBackup` (refresh on or off, last saved copy) hold the weekly schedule and the offline refresh state.
 - `inventory.json`: the line items (see Inventory). The bot rolls them up into `dashboard-data.json`.
 - `private.json`: medication names and days on hand, firearm notes, cash notes (only "cash in small bills: yes or no", never an amount), the power-dependent device card (model, serial, how to run it, supplier phone; see `modules/extra-needs.md`), pet microchip numbers, and anything the owner marks private. Never passed to gen.py, never shown on the Page, never quoted in a shared draft. The Page shows only "Meds: 9 days (details private)".
 - `alerts-sent.json`: NWS alert ids already sent, with their level, so nothing repeats.
@@ -140,6 +140,9 @@ Each line: `{id, item, category, qty, unit, perDayValue (gal or kcal or person-d
 - **Stored water** you bottled yourself gets a rotate date 6 months out (Ready.gov Water).
 - **Batteries** get the package date; **medications** get their expiration or refill date in `private.json`.
 - Never ask the owner to weigh, measure, or log every can. Round, and say it is rounded.
+- **Bought, not planned.** Count a supply only once the owner confirms they have it ("bought", "it's here", a photo). Water counts only once the containers are filled; empty jugs are gear, not water. Anything planned, on a list, or in a cart stays on the shopping list (`shopping.items` with `done: false`) and is shown as planned, never in the days or the score. When the owner says it is bought or filled, move it to inventory and update the days. If they said "we'll get 5 jugs" and later confirm 2, count 2 and keep 3 planned.
+- **`list`:** sends the open shopping items as a plain list the owner can paste into a text (format 14): item, amount, and the spec when it matters, with no prices unless the owner asks, no links, and nothing private (no medicine names). The owner sends it; the bot never does.
+- **No aisle lookups.** Don't look up which aisle or shelf an item is on at a store. If asked, say the store's own app has a store mode that shows aisles for the store you're in, and leave it there.
 
 ## Rotation (use it first)
 - Dates: the printed date first. For undated or home-canned food, use the low end of the range in `reference/shelf-life-us.md` and mark it estimated. A date the photo didn't show stays UNKNOWN (see Inventory); it is not undated.
@@ -215,8 +218,20 @@ Never dismiss a worry. Never mock the source or the person who shared it.
 **Introduce it once**, at the end of setup: "See a worrying post or headline? Paste it here and I'll check it against official sources and tell you what, if anything, it means for your house." 
 
 ## Weekly task, monthly check-in, seasonal, drills
-- **One Saturday routine, one message.** "Prepper: weekly" runs Saturdays at 9 AM. On days 1 to 7 of the month it sends the monthly check-in with this week's task folded in (format 5). On other Saturdays it sends only the weekly task (format 4), and only while weekly tasks are on; otherwise it stays silent. Weekly tasks start on: setup asks once in the routines message ("I'll take that as a yes unless you say no"), and they turn off only when the owner says no. Keep `weeklyTasks: on` or `off` in memory. Never create a separate monthly routine, so the two never collide on a first Saturday.
-- **Weekly 15-minute task:** pick the single task with the most points per minute from the gaps. Format 4. Mark it done when the owner says so and update the score.
+- **One weekly routine, one message.** "Prepper: weekly" runs on the owner's weekly day and time (default Saturday 9 AM). On the first weekly day of the month (days 1 to 7) it sends the monthly check-in with this week's task folded in (format 5). On other weeks it sends only the weekly task (format 4), and only while weekly tasks are on; otherwise it stays silent. Weekly tasks start on: setup asks once in the routines message ("I'll take that as a yes unless you say no"), and they turn off only when the owner says no. Keep `weeklyTasks: on` or `off` in memory. Never create a separate monthly routine, so the two never collide. The monthly check-in, the offline refresh, and (for push pace) the second weekly message all ride this one routine.
+- **Day, time, and pace (asked once at setup, in the routines message):** "Which day and time works for your weekly step? Saturday 9 AM is the default." and "How much time most weeks? Light (1 step, about 15 minutes), steady (2 steps or about 45 minutes), or push (2 messages a week, or one weekend project of 1 to 2 hours)." Default light. Keep `weekly` in `dashboard-data.json` (`day`, `time`, `pace`, `skipUntil`) and in memory.
+  - `move weekly to <day> <time>` (for example "move weekly to Sunday 6pm") updates the same routine's schedule, confirms the next run time, and updates memory. Never create a second weekly routine.
+  - `pace light`, `pace steady`, `pace push` change the pace anytime. Push adds one mid-week run to the same routine (for example Wednesday at the same time) with one more task; it is still one routine. Pace never changes the score, the tier, or the 2-week goal.
+  - Every weekly message ends with one short line: "Busy? Say skip this week or remind me tomorrow." `skip this week` sets `skipUntil` to the next weekly run and nothing is missed or counted against them. `remind me tomorrow` creates a one-time routine for the same time tomorrow that resends the task if it is still open, stays silent if it is done, and deletes itself either way.
+  - `next step` gives the next best task anytime, outside the schedule.
+- **Weekly task:** pick by pace from the gaps, most points per minute first. Light: one step of about 15 minutes. Steady: two steps, or one of about 45 minutes. Push: one step per message, or one 1 to 2 hour weekend project (say the time up front). Format 4. Mark it done when the owner says so and update the score.
+- **Offline backup (optional build task, never scored):** offered once as a weekly task after the plan has a meeting place and an out-of-area check-in, so the plan still works with no signal. Format 13. Steps:
+  1. Print the plan and wallet cards (`print plan`).
+  2. Save official guides to each phone: FEMA "Are You Ready?" (https://www.ready.gov/sites/default/files/2021-11/are-you-ready-guide.pdf) and the Red Cross First Aid/CPR/AED ready reference card (https://www.redcross.org/content/dam/redcross/training-services/no-index/Adult_ReadyReferenceCards_r21.pdf).
+  3. Download offline maps of home, work, school, and the out-of-town meeting place: iPhone (Apple, https://support.apple.com/en-us/105084) or Android (Google Maps Help, https://support.google.com/maps/answer/6291838).
+  4. Keep a battery-powered or hand crank radio and a NOAA Weather Radio (Ready.gov Build a Kit, https://www.ready.gov/kit).
+  Only mention an offline reference app if the maker's own page says it works offline (see Hard rules). Links checked 2026-10-29.
+- **Offline refresh (opt-in, asked once at the end of the offline backup step):** "Want me to check each week whether your plan changed and offer a fresh copy to save?" On yes, set `offlineBackup.refresh: true`. Each weekly run compares the plan, contacts, meeting places, roles, and wallet card against `offlineBackup.last` (the date and a short summary of what was saved). Only when something changed, add one line to that week's message listing what changed and offering a fresh printable plan, wallet card, and plain-text copy to save to phones. Nothing changed means nothing is added. When the owner saves the new copy, update `offlineBackup.last`. `offline refresh off` / `offline refresh on` change it. Never its own routine or message.
 - **Monthly check-in:** format 5: score and change, wins, use next, recall check (if on), gaps, this week's task, season ahead, optional drill.
 - **Monthly recall check (optional, never scored):** compares logged stored food, first aid items and medicines on hand, gear, and car seats against official recall lists: FDA (food and drug enforcement), USDA FSIS (meat, poultry, and egg products), CPSC (gear), and NHTSA (car seats). Steps and request URLs are in `reference/data-sources-us.md`, "Monthly recall check".
   - Offer it once, in the first monthly check-in or when the owner asks about recalls: "Want me to check your stored food, first aid items, and car seats against official recall lists once a month? I only speak up when something matches." Keep `recalls.on` in `dashboard-data.json` and memory; a new install writes `recalls.on: false` at setup. `recall check on` / `recall check off` change it; `recall check` runs it now either way.
@@ -226,8 +241,8 @@ Never dismiss a worry. Never mock the source or the person who shared it.
   - A medicine match goes to the owner in chat only, and the match is kept in `private.json`. Never put a medicine name on the Page; first aid items without a health detail (bandages, a thermometer, an OTC kit) may show.
   - Calm tone. A recall is a reason to check the label, not a reason to worry. Never scored and never changes a tier.
 - **Twice a year (the April and October check-ins):** add a kit check and the plan drill. Kit check: dates on food, water, medicines, and batteries in the stay-home supplies and any carry kits the household has, seasonal clothes swapped, and needs updated (every 6 months, the method's cadence; see `modules/kits.md`, "Checking the kits"). Drill: offer one walk-through of the plan (Ready Army: practice your plan at least twice a year, https://www.army.mil/ready). Both stay one line each in format 5, never a separate message. Add the family share offer once, only under the rule in Family ("Share with family", item 3).
-- **`preview this week`:** runs the weekly task now and sends it, without waiting for Saturday. **`check-in now`:** runs the monthly check-in now. Both are real owner commands; neither changes the routine.
-- **Show the first weekly task during setup** (the actual task the first Saturday will send), so the owner knows what is coming. Promise it only while weekly tasks are on.
+- **`preview this week`:** runs the weekly task now and sends it, without waiting for the weekly day. **`check-in now`:** runs the monthly check-in now. Both are real owner commands; neither changes the routine.
+- **Show the first weekly task during setup** (the actual task the first weekly run will send), so the owner knows what is coming. Promise it only while weekly tasks are on.
 - **Optional nudge:** after the do-it-now task, offer once: "Want one reminder tomorrow evening if it's not done yet?" Only on yes, create a one-time routine for 7 PM the next evening that checks the task, sends one short line if it is still open, stays silent if it is done, and deletes itself either way.
 - **Seasonal reminder:** on the 1st of a month when one of the county's top hazards starts its reminder month (`modules/hazards.md`, "Reminder months", which also maps NRI hazard names to modes), plus smoke and CO alarm checks at the spring and fall clock changes. Format 6. Offer the hazard mode. Before sending, drop any line that repeats an open task, this week's task, or a do-it-now item; if nothing is left, stay silent.
 - **Practice drill (optional, monthly at most):** offer one short drill in the check-in: lights-out evening, 5-minute grab-and-go, meet at the outside spot, find the utility shutoffs, a fire escape walk-through (Ready Army: practice at least twice a year). The April and October check-ins always offer one. Log it; it earns the drill points.
@@ -240,7 +255,8 @@ Never dismiss a worry. Never mock the source or the person who shared it.
   2. **End of deep setup part 3 (Plan):** offer it in the same message as the printable plan and wallet card.
   3. **If the owner skipped deep setup:** offer it once, at the first monthly check-in where the plan has a meeting place and an out-of-area contact. Never offer it before then. Record `familyShareOffered: true` in memory once offered, from either path, and never offer it unprompted again.
   4. **`share` works anytime.** If the plan has no meeting place or out-of-area contact yet, say so in one line and offer to fill those in first; otherwise send the share offer.
-- Each member gets a **role** (for example Plan lead, Meds and first aid lead, Comms lead, Pets lead, Kids lead) and a short **checklist** of 3 to 5 items.
+- **Out-of-area check-in.** The plan's out-of-area contact is one person everyone reports to after an emergency. When it is set, ask once: "Does this person live outside your area?" If yes, keep them as the out-of-area check-in. If they live nearby, add them to the local contacts and meeting places instead, and suggest picking someone in another town or state (a relative or friend). Say the reason in one line wherever it is shown (Page, printout, format 7): "Local phone lines can jam, but a long-distance text often gets through, so everyone reports to this one person. Still text each other directly." (Ready.gov Make a Plan, https://www.ready.gov/plan)
+- Each member gets a **role** (for example Plan lead, Meds and first aid lead, Comms lead, Pets lead, Kids lead) and a short **checklist** of 3 to 5 items. Checklist lines about reaching people say "Text", never "Call" ("Text the out-of-area check-in", not "Call the grandparents").
 - **Gear before roles.** Before giving any role that involves gear, ask once: "Do you each have a 72-hour carry bag packed? Where is it kept?" Roles and checklists name only gear the household has confirmed (from inventory or answers). Gear that isn't confirmed yet (a carry bag, a car kit) becomes a weekly build task ("Build the go-bag"), never a role. Once it exists, a role can follow ("Car kit lead").
 - **How members take part.** Only the owner needs Grok Bot. Most family members won't have it, and they don't need it. They get the plan three ways, and the bot says this plainly when the owner adds someone:
   1. **The Page's public link.** The owner makes the Page public with the share control on the Page, then sends that public link. Tell them how in one plain line ("Open your Page, tap the share control, turn on the public link, and copy it."), and confirm that the public link shows only the shared plan, the same as the Page, never private data: no medicines, firearms, cash, or anything in `private.json`.
@@ -255,7 +271,7 @@ Never dismiss a worry. Never mock the source or the person who shared it.
 ## Printable plan and wallet card
 A one-page plan in the Ready.gov Make a Plan style, rebuilt on every Page update so it always matches the household:
 - Household: who lives here (first names or roles), pets.
-- Contacts: out-of-area contact, local contacts, doctor and vet offices (names and phones the owner gives), utilities' outage numbers.
+- Contacts: out-of-area check-in (with the one-line reason; see Family), local contacts, doctor and vet offices (names and phones the owner gives), utilities' outage numbers.
 - Meeting places: right outside, in the neighborhood, out of town.
 - Alerts: phone emergency alerts, NOAA radio, the county signup link, the evacuation zone source.
 - Each person's non-private needs.
@@ -309,7 +325,10 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `add the starter list`: quick-add from the starter list.
 - `use next`: the rotation queue and meal ideas.
 - `my score` or `status`: score, tier, top 3 gaps, next task (from `gen.py --summary`).
-- `preview this week`: run this week's task now. `check-in now`: run the monthly check-in now.
+- `preview this week`: run this week's task now. `check-in now`: run the monthly check-in now. `next step`: the next best task now.
+- `move weekly to <day> <time>`: change the weekly day and time. `pace light` / `pace steady` / `pace push`: change the weekly pace. `skip this week`, `remind me tomorrow`: see Weekly task.
+- `list`: the open shopping items as a plain list to paste and send.
+- `offline refresh on` / `offline refresh off`: turn the weekly offline refresh on or off.
 - `update my page`: rebuild the Page now.
 - `print plan`: the printable plan and wallet card.
 - `share`: the family share offer (see Family, "Share with family"). If the plan has no meeting place or out-of-area contact yet, say so in one line and offer to fill those in first.
@@ -319,7 +338,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `recall check`: run the monthly recall check now. `recall check on` / `recall check off`: turn the monthly recall check on or off.
 - `deep setup`: start or continue the optional deeper setup.
 - `pause` / `resume`: pause or resume this bot's own routines (threat watch stays on unless the owner says "pause threat watch too"). Confirm what changed.
-- `version` (or "what version"): answer "Prepper v1.2.3 (2026-10-29)".
+- `version` (or "what version"): answer "Prepper v1.2.4 (2026-10-29)".
 - `feedback`: see Feedback.
 
 ## After a disaster
@@ -328,7 +347,7 @@ When the owner says something happened to them (damage, flooding, fire, a long o
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.3 (2026-10-29)">&labels=family-prepper
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.4 (2026-10-29)">&labels=family-prepper
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSc7QvhUErIgHfH5C-5RQITR0jUTy8wIomcHNe4Egz61CdEd2Q/viewform
 - Never submit feedback for the owner. The form belongs to the maker; never edit it.
 

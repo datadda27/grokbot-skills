@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.3 (2026-10-29)
+Version: Prepper v1.2.4 (2026-10-29)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 
@@ -71,16 +71,21 @@ Your county alert signup and evacuation zone page are the source of truth for lo
 ```
 Levels: **ACT NOW** (an official warning for your area), **PREPARE** (an official watch or advisory, or a utility or water notice), **FYI** (goes in the next check-in, not sent alone). No alert from social posts alone. 8 lines or fewer.
 
-## 4. Weekly 15-minute task (optional routine)
+## 4. Weekly task (optional routine, on the owner's weekly day; light pace shown)
 ```
 **This week · 15 minutes** · Rotate the pantry
 1. Pull anything dated before Dec 1 to the front.
 2. Plan one meal from it: chili with the 2 cans of beans and the rice.
 3. Reply "done" and I'll update your Page.
 Why: it keeps the 2-week food supply fresh. (+3 readiness when done)
+Busy? Say skip this week or remind me tomorrow.
+```
+Steady pace lists two steps (or one of about 45 minutes); push says the time up front ("Weekend project · about 90 minutes"). If the offline refresh is on and the plan changed since the last saved copy, add one line before the busy line:
+```
+**Offline copy:** your meeting place and Child A's role changed since you saved the plan on Oct 3. Want a fresh printable plan, wallet card, and text copy to save to your phones?
 ```
 
-## 5. Monthly check-in (Saturday of days 1 to 7, with this week's task folded in)
+## 5. Monthly check-in (first weekly day of the month, days 1 to 7, with this week's task folded in)
 ```
 **Monthly check-in · November**
 **Readiness** 62 (up 9) · Tier: 72 hours · Next: 2 weeks
@@ -92,7 +97,7 @@ Why: it keeps the 2-week food supply fresh. (+3 readiness when done)
 **Season ahead:** winter. Test the furnace CO alarm, and add a blanket and scraper to the car.
 **Drill (optional):** a 10-minute lights-out evening. Want to try it?
 ```
-One message. The weekly task is never sent separately on the same Saturday.
+One message. The weekly task is never sent separately on the same day.
 The recall check line appears only when the owner turned the monthly recall check on. A match replaces it with one line per match, for example:
 ```
 **Recall check:** your canned black beans match an FDA recall (Example Brand, 15 oz, possible underprocessing). Check the lot code on yours before using it. https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts
@@ -117,7 +122,7 @@ Want the winter mode on until March?
 ```
 **Our family emergency plan** (from <owner first name>)
 - Meet outside: the big oak by the mailbox. Meet away from home: the public library.
-- Out-of-area contact: <name>, <phone>. Text, don't call; texts get through better.
+- Out-of-area check-in: <name>, <phone>. Local phone lines can jam, but a long-distance text often gets through, so everyone reports to this one person. Still text each other directly.
 - Alerts: phone emergency alerts on, and the county signup: <link>
 - Your job: <role>. Your checklist: <3 items>
 - Our page: <public Page link> (no medicines, cash, or firearms details on it)
@@ -169,3 +174,22 @@ Send only if `firstWatchSent` is not recorded. Whenever it is shown, record `fir
 Quick one: the smoke alarm test and phone alerts are still open. 5 minutes, +9. Reply "done" when they are.
 ```
 
+## 13. Offline backup (optional weekly task, never scored)
+```
+**This week · 15 minutes** · Offline backup
+1. Print the plan and wallet cards (say "print plan").
+2. Save these to each phone: FEMA "Are You Ready?" https://www.ready.gov/sites/default/files/2021-11/are-you-ready-guide.pdf and the Red Cross first aid card https://www.redcross.org/content/dam/redcross/training-services/no-index/Adult_ReadyReferenceCards_r21.pdf
+3. Download offline maps of home, work, school, and the out-of-town meeting place. iPhone: https://support.apple.com/en-us/105084 Android: https://support.google.com/maps/answer/6291838
+4. Check you have a battery or hand crank radio. (Ready.gov Build a Kit)
+Why: the plan still works with no signal. Not scored.
+Want me to check each week and offer a fresh copy when the plan changes?
+```
+
+## 14. Shopping list to paste (`list`; the owner sends it, the bot never does)
+```
+Prepper list (Oct 29)
+- Water jugs, 3 more (food-grade, 5 to 7 gallons, with a spigot)
+- AA batteries, 1 pack
+- Canned soup, 6
+```
+Open shopping items only, plain text, no links, no prices unless asked, nothing private. Then: "Here's a list you can paste and send. I don't message anyone."

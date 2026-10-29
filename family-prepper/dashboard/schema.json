@@ -1529,6 +1529,53 @@
         "note"
       ],
       "additionalProperties": false
+    },
+    "weekly": {
+      "type": "object",
+      "description": "Optional (v1.2.4), never scored: the weekly routine's day, time, and pace. Default Saturday 9 AM, light.",
+      "properties": {
+        "day": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "pace": {
+          "enum": [
+            "light",
+            "steady",
+            "push"
+          ]
+        },
+        "skipUntil": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "offlineBackup": {
+      "type": "object",
+      "description": "Optional (v1.2.4), never scored: the opt-in weekly offline refresh and the last saved offline copy.",
+      "properties": {
+        "refresh": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "saved": {
+          "type": "string",
+          "description": "Short summary of the plan as saved (meeting places, check-in, roles, wallet card), used to spot changes."
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

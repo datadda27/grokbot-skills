@@ -1,5 +1,9 @@
 # Changelog
 
+## Prepper v1.2.4 (2026-10-29)
+
+- Flexible weekly day, time, and pace (skip this week, remind me tomorrow, next step); optional offline backup task with an opt-in weekly offline refresh; "Everyone texts" renamed to "Out-of-area check-in" with its reason and the trailing comma fixed; supplies count only once bought, plus a `list` command for a pasteable shopping list.
+
 ## Portal Tracker v2.1.4 (2026-10-29)
 
 - Nothing new, no digest: a scheduled digest run with nothing new since the last digest sends nothing and only updates the dashboard's checked time. New heartbeat on / heartbeat off commands (heartbeat sends a one-line "checked, nothing new" note; off is the default). Answers the owner is waiting on are never skipped. Idea from The Page bot, written in our own words.
