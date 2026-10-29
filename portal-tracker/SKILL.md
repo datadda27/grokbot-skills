@@ -7,7 +7,7 @@ description: >-
 ---
 # Recruiting & Portal Tracker method
 
-Version: Portal Tracker v2.1.3 (2026-10-29)
+Version: Portal Tracker v2.1.4 (2026-10-29)
 
 Bump this version line (and add a changelog line) whenever this method changes.
 
@@ -88,6 +88,15 @@ The owner picks a digest mode in setup: **auto** (default), **always daily**, or
 - No filler. If the mode says send but there is no news, send nothing.
 - Routines: a main daily routine at the owner's roundup time decides each run whether to send. A midday and a late routine stay silent unless the day calls for them (portal window, signing days, or a late game that ended after the main digest). On signing days the morning update comes from the big-move alert's morning run. Default times, all local and all changeable by the owner: midday update around 12 PM, late update 9:30 PM (before the default 10 PM to 7 AM quiet hours; if quiet hours start earlier, 30 minutes before they start), big-move alert runs at 9 AM, 1 PM and 5 PM, skipping any run inside quiet hours. The setup skill lists the routines.
 - A run that does not send still updates the dashboard data when something changed. The next digest covers everything since the last digest that was sent.
+
+Nothing new, no digest (the default, called quiet digest):
+- Before sending any scheduled digest, compare against the last digest that was sent and the seen-items log. "Something new" means at least one of: a new commit, decommit or flip, a new offer, a visit (set, taken or changed), a portal entry or portal commitment for the team or a tracked target, a standout high school game, a changed key date, a poll move, or staff-post, thread, article or X news worth reporting.
+- If none of that turned up, do not send a digest message. No "nothing new today" note, no recap of old items.
+- Instead, quietly update the dashboard if the owner has one: set asOf and asOfLabel to the time of this check (for example asOfLabel "Oct 29, 7:00 AM CT, checked, nothing new"), set digest.note to "Checked Oct 29, 7:00 AM CT. Nothing new since the last digest.", and regenerate the Page in place. Do not change lastSent. The next digest that does go out still covers everything since the last one that was sent.
+- Heartbeat (opt-in): if the owner turned on heartbeat, a scheduled main digest run with nothing new sends one short line instead of skipping, for example "Checked at 7:00 AM CT. Nothing new since your last digest." Midday and late runs stay silent either way. Save heartbeat: true or false in memory (default false).
+- Never skip an answer the owner is waiting on. If the owner asked a question that a run was meant to answer (for example "let me know when he announces"), send that answer even when nothing else is new.
+- Big-move alerts are not digests and are not affected. They only fire on a big move anyway.
+- Board threads are still picked and read automatically (see Forum thread summary). Threads with nothing worth reporting do not count as news.
 
 ## Digest
 - Look at everything since the last digest that was sent.
@@ -228,13 +237,14 @@ Daily, for each picked board:
 - **resume:** resume the bot's own routines and say when the next run is.
 - **feedback:** start the feedback flow below.
 - **digest auto**, **digest daily**, **digest weekly:** switch the digest mode (see Digest timing), confirm it, and say when the next digest is.
+- **heartbeat on**, **heartbeat off:** heartbeat on sends a one-line "checked, nothing new" note on main digest runs that find nothing new; heartbeat off (the default, quiet digest) sends nothing on those runs and only updates the dashboard's checked time. "daily heartbeat" means heartbeat on and "quiet digest" means heartbeat off. These do not change the digest mode. Confirm the change.
 - **pick threads**, **auto threads:** pick threads turns on one optional thread card after each digest so the owner can choose; auto threads (the default) goes back to the bot picking and reading the best threads on its own. Confirm the change.
-- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1.3 (2026-10-29)".
+- **version** (or "what version"): answer with this method's version line, currently "Portal Tracker v2.1.4 (2026-10-29)".
 
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1.3 (2026-10-29)"), added automatically.
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus bot version>&labels=portal-tracker . Build the title and body from what the owner said. The body always ends with the method's version line (for example "Portal Tracker v2.1.4 (2026-10-29)"), added automatically.
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSfOK3zhOYxKsAvNsFA9NJM4wTKCfTC02ggoLiiq4pOzaF11jw/viewform
 - Never submit feedback for the owner. They open the link and send it themselves.
 - The feedback form belongs to the maker. Never try to edit it.
@@ -250,4 +260,5 @@ Plain words, short lines, fan-friendly. No hype, no scare copy. Lead with the ne
 - 2026-10-26 (v2.1.1): Every number field in the schema and template now accepts null and renders UNKNOWN (fixes the 3 TS2322 errors a stranger test hit on lastCycle rank247, inTP and outTP). Flip watch uses Defend / Target everywhere. Removed the leftover conference assumption from gen.py; teamStatus.conference is generic. Ratings are stored as published with service and scale ({service, value, scale}); gen.py still accepts the older shape. Top on X keeps at least 3 confirmed-source posts out of 5 when any exist. 247Sports and ESPN values are UNKNOWN when their pages block automated reads; never estimated. Ranks show NR when a source lists the player as unranked and UNKNOWN when there is no source or value; NA is gone from the page. gen.py maps the legacy teamStatus.big12 key to teamStatus.conference so older data keeps its standing.
 - 2026-10-26 (v2.1.2): Template captions take service names from the data (new serviceNames field), never hard-coded; a missing name shows "Source: UNKNOWN" or is left out. The rank chart hides a service's line with fewer than 2 points and hides the whole chart when no service has 2. An empty CFP value shows UNKNOWN; "Not out yet" needs the new sourced notReleased flag. gen.py no longer invents a conference label for the legacy big12 mapping (the page says "Conference standing"). Transfers with a null or missing source show "No source". Each digest run checks the AP and Coaches polls (and the CFP rankings once out) from a free source; a read poll that leaves the team out stores "NR" and shows "Unranked" (UNKNOWN only when no poll source could be read), and each poll stores its poll date and source link, shown on the Overview and Team tabs. Setup reads and confirms the device time zone, the terms warning says "may ban", and the routines have default times (big-move alert 9 AM, 1 PM, 5 PM; late update 9:30 PM).
 - 2026-10-29 (v2.1.3): Board threads are now picked and read automatically. The bot no longer asks the owner which threads to read. Each run it reads the top 3 to 5 threads per board (8 max across boards), ranked by staff posts, team news, reply activity, then recency, and reports what each says with a link. Ranking tunes quietly from the owner's comments and saved picks. Added the pick threads and auto threads commands; asking is only allowed after pick threads.
+- 2026-10-29 (v2.1.4): Nothing new, no digest. A scheduled digest run that finds nothing new since the last digest sent (no new commits, decommits, offers, visits, portal entries or commitments, standout games, date or poll changes, or thread, article or X news worth reporting) sends nothing and only updates the dashboard's checked time (asOf, asOfLabel, digest.note; lastSent unchanged). Added the heartbeat on and heartbeat off commands (heartbeat sends one "checked, nothing new" line; off is the default quiet digest). An answer the owner is waiting on is never skipped. Big-move alerts, auto thread picking, and all hard rules are unchanged.
 - v1: First version.

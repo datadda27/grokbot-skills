@@ -1,5 +1,9 @@
 # Changelog
 
+## Portal Tracker v2.1.4 (2026-10-29)
+
+- Nothing new, no digest: a scheduled digest run with nothing new since the last digest sends nothing and only updates the dashboard's checked time. New heartbeat on / heartbeat off commands (heartbeat sends a one-line "checked, nothing new" note; off is the default). Answers the owner is waiting on are never skipped. Idea from The Page bot, written in our own words.
+
 ## Portal Tracker v2.1.3 (2026-10-29)
 
 - Board threads are picked and read automatically (top 3 to 5 per board, 8 max per run). No more "which threads would you read" cards. New pick threads / auto threads commands; asking only after pick threads.
