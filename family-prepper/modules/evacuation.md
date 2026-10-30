@@ -1,6 +1,6 @@
 # Module: Evacuation, carry kits (go-bags), and getting home
 
-Version: Prepper v1.2.6 (2026-10-29). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.2.7 (2026-10-30). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make a Plan (https://www.ready.gov/plan), Ready.gov Car Safety (https://www.ready.gov/car).
 
@@ -8,7 +8,7 @@ Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make
 - The source of truth for evacuation zones and orders is the county or state emergency management site. Some counties use Genasys Protect (https://protect.genasys.com/). The bot finds the official page and links it; it never guesses a zone.
 - Pick destinations in different directions (a friend's home in another town, a motel). (Ready.gov)
 - Learn alternate routes; your route may be on foot. (Ready.gov)
-- Keep at least a half tank of gas at all times, a full tank when evacuation seems likely. (Ready.gov)
+- Keep at least a half tank of gas at all times, a full tank when evacuation seems likely. (Ready.gov) For an EV, keep a sensible charge before a forecast event, not 100% every day.
 - Plan one car per family to reduce congestion. (Ready.gov)
 - No car? Plan with family, friends, or the local emergency management office now. (Ready.gov)
 

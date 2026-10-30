@@ -1,6 +1,6 @@
 # Shelf-life table (US)
 
-Version: Prepper v1.2.6 (2026-10-29)
+Version: Prepper v1.2.7 (2026-10-30)
 
 Bundled because the live USDA FoodKeeper app blocks automated reads. Use the printed date on the package first. Use this table only when a package has no date, for home-canned food, or to set a rotate date. Two kinds of missing date: a date not read from a photo stays UNKNOWN (ask for a closer photo; never use this table for it); an undated package (no printed date at all) uses the low end of its range below and is marked estimated. Source for every food row: USDA FSIS, Shelf-Stable Food Safety, last updated Oct 24, 2024 (https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/shelf-stable-food).
 

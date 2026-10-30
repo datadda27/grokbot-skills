@@ -1,6 +1,6 @@
 # Country pack: United States
 
-Version: Prepper v1.2.6 (2026-10-29)
+Version: Prepper v1.2.7 (2026-10-30)
 
 Every number the bot quotes to a US household comes from this file, with its link. If a number is not here, the bot looks it up on an official page and cites it, or says UNKNOWN. Another country gets its own file (for example `uk.md`) with the same headings, so the method never changes when a country is added.
 
@@ -44,7 +44,7 @@ Checked against the live pages on 2026-10-26.
 - Red Cross targets: a 3-day supply for evacuation and a 2-week supply for home. (Red Cross)
 - So the 2-week target is 14 gallons per person, and 28 in a hot climate.
 - Counting bottled water: a case of 24 half-liter (16.9 oz) bottles holds about 3.2 gallons (24 x 16.9 oz = 405.6 oz; a gallon is 128 oz). Count a case as 3 gallons, and a case of 35 bottles as about 4.6. Say the conversion in one short line. If the bottle size is unknown, ask once; if still unknown, use 3 gallons a case and say so.
-- Replace water you bottled yourself every 6 months. Store-bought sealed water stays in its original container in a cool, dark place. (Ready.gov Water)
+- Replace water you bottled yourself every 6 months. Store-bought sealed water stays in its original container in a cool, dark place. (Ready.gov Water) The bot reminds the household when that date is near. The amount follows their level: a few jugs at Basics, the larger store at higher levels. Filling a bathtub is not a storage step. It is only for an official warning (see the method).
 - Sanitize a food-grade container with 1 teaspoon of unscented bleach per quart of water before filling. (Ready.gov Water)
 - Never ration drinking water unless officials say to. Drink what you need today. (Ready.gov Water)
 
@@ -73,7 +73,7 @@ Checked against the live pages on 2026-10-26.
 - Red Cross kit: a 7-day supply of medications plus medical items.
 - Ask your doctor or pharmacist about an emergency supply and how long each medicine is safe at higher temperatures. (Ready.gov Power Outages)
 - If the power is out more than a day, discard refrigerated medicine unless its label says otherwise, and call your doctor or pharmacist. (Ready.gov Power Outages)
-- The bot never gives dosing advice.
+- The bot never gives dosing advice, never names a drug, and never tells anyone to stretch a prescription. The one planning line is a refill plan for essential prescriptions, with the amount a pharmacist or doctor says is appropriate, scaled to the level (a few days, about 2 weeks, or longer only with that OK).
 
 **Smoke and CO alarms**
 - Smoke alarms on every level, including the basement. Replace each unit every 10 years. Practice the fire escape plan twice a year, with two ways out of each room. (Ready.gov Home Fires)
@@ -90,7 +90,7 @@ Checked against the live pages on 2026-10-26.
 - Plan for anyone who uses a power-dependent medical device or refrigerated medicine, with their medical provider. (Ready.gov Power Outages)
 
 **Cars and evacuation**
-- Keep at least a half tank of gas at all times, and a full tank when evacuation seems likely. (Ready.gov Evacuation)
+- Keep at least a half tank of gas at all times, and a full tank when evacuation seems likely. (Ready.gov Evacuation) For an EV, keep a sensible charge before a forecast event, not 100% every day. On a tight budget, top off on the next normal trip.
 - Most public shelters allow only service animals. Find a pet-friendly place ahead of time. (Ready.gov Evacuation)
 - Six inches of moving water can make a car lose control; a foot can float many cars. (Ready.gov Car Safety)
 

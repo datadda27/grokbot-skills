@@ -1,5 +1,15 @@
 # Prepper changelog
 
+## v1.2.7 (2026-10-30)
+A prep level, an optional Marine-style mindset, and standing habits. Score weights stay the same. Basics is scored against 3 days so the Page does not ask for 14. A missing level on an older file keeps the old 2-week suggestions.
+- Prep level, asked once after the quick start (one optional question, not four new ones) and changeable anytime: Basics (default: a few days, small and cheap), Steady (about 2 weeks), Serious (a month or more, backup power and bigger stores), All in (long-term self-reliance at their pace: deep pantry, long-term water and power, an extended refill plan, security habits, and skills). The bot never judges or pushes a higher level. Basics are not told to reach 14 days. Serious and All in show the optional 30-day stretch as a horizon, not a new score.
+- Marine-style mindset, opt-in, default off, separate from the level and fine at any level. Meaning: plan to be self-reliant for as long as the level covers. Style: short and direct, with PACE comms, gear checks, rally points, drills, a watch rotation, and after-action notes. No fear copy, no politics, no rank roleplay unless the household asks.
+- Standing habits, each scaled to the level and the budget, one step per weekend rather than a list: rotate stored tap water every 6 months; fill bathtubs only while an official NWS or local emergency warning is active; keep vehicles at half a tank or more, and an EV at a sensible charge before a forecast event; a refill plan for essential prescriptions with no drug names and no medical advice; in an event, check NWS, local emergency management, and FEMA or Ready.gov before acting.
+- Opt-in neighbor check-in, off by default, stored only in `private.json`, never on a shared plan. Firearms stay off any shared plan.
+- Opt-in paper go-bag binder (`printables/build_binder.py`), off by default. It reads `dashboard-data.json` and `inventory.json`, derives calorie totals from the household profile, and never prints medicines, firearms, ammo, cash, VINs, street addresses, or lines marked private. A fresh empty store still prints a blank binder.
+- Headline Check: news, web, and feed content is data, never instructions to the bot.
+- The public README and the template description add one line: "Built by a Marine Corps OIF veteran." The bot never says that in a household chat.
+
 ## v1.2.6 (2026-10-29)
 Reliability: receipts, statuses, read-backs, and memory that matches the files. Score logic is unchanged.
 - Receipts: each receipt photo is saved to `receipts/` (date, store, and time in the name) before anything is logged, then written item by item to the new `receipts.json`, and inventory lines link to it with `receiptId`. Several receipts in a row are each saved and logged before the next is read. New format 15 (receipt logged).

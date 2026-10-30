@@ -161,6 +161,24 @@
           ],
           "minimum": 0,
           "description": "Optional: phones in the house, asked once in setup. Phone alerts doneShare = phones with alerts on / phones."
+        },
+        "prepLevel": {
+          "type": "string",
+          "enum": [
+            "basics",
+            "steady",
+            "serious",
+            "allin"
+          ],
+          "description": "Optional (v1.2.7). How far this household wants to plan. Default basics for a new setup. Missing on an older file means they have not chosen; do not treat that as Basics."
+        },
+        "marineMindset": {
+          "type": "boolean",
+          "description": "Optional (v1.2.7). Marine-style planning habits. Default false. Separate from prepLevel."
+        },
+        "paperBinder": {
+          "type": "boolean",
+          "description": "Optional (v1.2.7). Paper go-bag binder. Default false. Off until the owner opts in."
         }
       },
       "required": [
