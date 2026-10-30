@@ -5,7 +5,8 @@ Usage: python3 gen.py DATA.json [TEMPLATE.tsx] [OUT.tsx]
 Defaults: dashboard.template.tsx and dashboard.canvas.tsx next to this file (family-plan.template.tsx and family.canvas.tsx
 with --family); $DASH_DATA may stand in for DATA.json.
 Only the data file changes between households. The template holds no household text.
-gen.py computes the readiness score (earned over every applicable point, so answering only raises it),
+gen.py computes the readiness score (earned over every applicable point, so answering only raises it;
+Basics, household.prepLevel "basics", is scored against 3 days so the Page does not ask for 14),
 setup progress, points waiting, tier, top gaps (gains in stated-weight points), the two-week calculator, and days until each
 best-by date, the at-a-glance cards and this week's steps (v1.2.3), drops any item marked private, and refuses private keys (medicine details, firearms, cash amounts)."""
 import json, os, sys, datetime
@@ -82,7 +83,9 @@ def apply_counting(d):
 
 
 def compute(d):
-    target = d["targets"]["days"]
+    # v1.2.7: Basics is scored and shown against a few days. A missing level keeps targets.days (older files).
+    prep = (d.get("household") or {}).get("prepLevel") or ""
+    target = 3 if prep == "basics" else d["targets"]["days"]
     rows = []  # (label, group, points, earned or None, applicable, have, need)
     cats = {c["id"]: c for c in d["categories"]}
     for c in d["categories"]:
@@ -164,7 +167,7 @@ def compute(d):
         needs += [x["label"] for x in d["lifeSafety"] if x["id"] in ("smoke", "co", "alerts") and x["status"] not in ("done", "na")]
         if not device_ok:
             needs.append("Power-dependent device backup plan")
-    elif tier == 1:
+    elif tier == 1 and prep != "basics":
         needs += ["%s to 14 days" % cats[k]["label"] for k in CORE if cats[k]["days"] < 14]
         for c in others:
             if c["kind"] == "checklist":
@@ -175,7 +178,7 @@ def compute(d):
             elif c["days"] is None or c["days"] < target / 2:
                 needs.append("%s to %g days" % (c["label"], target / 2))
     stretch = None
-    if "30d" in d["targets"].get("optionalTiers", []):
+    if prep in ("serious", "allin") or "30d" in d["targets"].get("optionalTiers", []):
         stretch = ["%s %s of %d days" % (cats[k]["label"], UNKNOWN_DAYS if cats[k]["days"] is None else "%g" % cats[k]["days"], STRETCH_DAYS)
                    for k in CORE if cats.get(k)]
 
@@ -204,7 +207,7 @@ def compute(d):
         if not device_ok:
             next_rows.append(need_row("Power-dependent device backup plan", "Not done yet",
                                       sum(x["points"] - earned_of(x["id"]) for x in d["lifeSafety"] if x["id"] == "device")))
-    elif tier == 1:
+    elif tier == 1 and prep != "basics":
         for k in CORE:
             c = cats[k]
             if c["days"] < 14:
@@ -218,6 +221,12 @@ def compute(d):
                                               c["weight"] * 0.5 - earned_of(c["id"])))
             elif c["days"] is None or c["days"] < target / 2:
                 next_rows.append(need_row(c["label"], "To %g days" % (target / 2), c["weight"] * 0.5 - earned_of(c["id"])))
+    if prep == "basics" and tier >= 1:
+        next_rows.append(need_row("Your level", "Basics. One small, low-cost step at a time. A few days is the horizon.", 0))
+    elif prep == "serious":
+        next_rows.append(need_row("A month or more", "Backup power and bigger stores, one step at a time.", 0))
+    elif prep == "allin":
+        next_rows.append(need_row("Long-term", "Deep pantry, long-term water and power, a refill plan, and skills. One step at a time.", 0))
 
     # At-a-glance cards (v1.2.3). Gains use the same 100/applicable scaling as the score; nothing here changes the score.
     top_id = top[0]["id"] if top else None

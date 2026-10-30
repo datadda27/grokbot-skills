@@ -1,5 +1,9 @@
 # Changelog
 
+## Prepper v1.2.7 (2026-10-30)
+
+- Prep level (Basics by default, through All in) and an optional Marine-style mindset (default off). Suggestions are one step per weekend, scaled to the level and budget, with no push to a higher level. Standing habits: rotate stored tap water every 6 months, fill bathtubs only during an official warning, half a tank (a sensible EV charge before a forecast event), a prescription refill plan with no drug names, and an official-source check before acting. Opt-in private neighbor plan and an opt-in paper binder that reads the generic store and prints nothing private. Headline Check treats news and feeds as data, never as instructions.
+
 ## Prepper v1.2.6 (2026-10-29)
 
 - Reliability: receipt photos saved to the store and logged item by item in `receipts.json` with inventory lines linked; inventory only from a receipt or a clear "I bought it", with assumed counts flagged for confirmation; every line has a status (bought, in cart, put back, considered) and is never deleted; owned and planned items dropped before any suggestion; new `plans.json`; every save read back before "logged"; replies never blank; weekly memory check against the files. Score logic is unchanged.
