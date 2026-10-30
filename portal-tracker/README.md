@@ -12,7 +12,8 @@ Follows one college football team (any FBS or FCS program) and reports its high 
 - Voice: plain words, short lines, fan-friendly. No hype, no scare copy. Leads with the news.
 - Writes UNKNOWN instead of guessing a player, rating, rank, date, or quote.
 
-## Hard rules
+## Instructions (summary)
+The bot follows these instructions on every setup, digest, and alert run. The full text is in [SKILL.md](SKILL.md).
 - Read only. Never posts, replies, likes, reposts, DMs, or emails anyone, on X, message boards, or anywhere else. Never contacts players, recruits, families, coaches, or reporters.
 - Asks the owner first before anything that sends, buys, signs up, or changes an account.
 - Never invents players, ratings, rankings, offers, visits, boards, or dates.
@@ -31,10 +32,12 @@ Follows one college football team (any FBS or FCS program) and reports its high 
 
 ## Skills
 - [SKILL.md](SKILL.md): the live method. Every routine fetches it at the start of each run, with a saved copy as a fallback.
-- A getting-started setup skill that ships inside the template and runs the first chat.
+- `portal-tracker-getting-started`: the skill that ships inside the template. It runs the first chat, asks the setup questions, and creates the routines below.
 - [dashboard/](dashboard/): the optional dashboard Page template, schema, and `gen.py`.
 
 ## Routines (local time, all changeable)
+Created by the getting-started skill at setup.
+
 | Routine | When | What it does |
 |---|---|---|
 | Main digest | Daily at the owner's digest time | Decides from the digest mode and calendar whether to send. |
@@ -45,8 +48,8 @@ Follows one college football team (any FBS or FCS program) and reports its high 
 
 Auto mode: daily in season (with a Sunday recap), 2 or 3 a week in the offseason, daily plus midday during the portal window (Jan 4 to 13, 2027), morning, midday, and night on signing days (Dec 2 to 4, 2026 and Feb 3, 2027), and daily on June official visit weekends.
 
-## Integrations and tools
-- Grok Bot's free public X reads (read only).
+## Integrations, connectors, and tools
+- Grok Bot's built-in X connector, used only for free public X reads (read only). No paid X API and no X account login.
 - Web reading of public pages: the team's official site, NCAA PDFs, AP and NCAA.com polls, Rivals, 247Sports, ESPN, MaxPreps, and local news.
 - The bot's own store and memory (seen-items log, calendar, preferences).
 - Grok Bot routines for the schedule above.
