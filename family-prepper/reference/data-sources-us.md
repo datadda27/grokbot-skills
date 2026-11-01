@@ -1,6 +1,6 @@
 # Data sources and connections (US)
 
-Version: Prepper v1.2.7 (2026-10-30)
+Version: Prepper v1.2.8 (2026-10-31)
 
 All default sources are free and need no key or account. Every request sends a User-Agent header naming the bot, for example `User-Agent: FamilyPrepperBot/1.0 (Grok Bot template)`. Each was checked live from a server on 2026-10-26. Mark a source UNKNOWN for the run if it fails; never guess its contents.
 

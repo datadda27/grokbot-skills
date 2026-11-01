@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.2.5 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.2.8 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
 import {
   Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,
@@ -49,6 +49,9 @@ type Dashboard = {
   household: {
     name: string; place: string; zip: string; county: string; countyFips: string | null; timezone: string;
     adults: number; kids: { ageBand: string }[]; phones?: number | null;
+    prepLevel?: "basics" | "steady" | "serious" | "allin";
+    marineMindset?: boolean;
+    paperBinder?: boolean;
     pets: { kind: string; name: string; waterGalPerDay: number | null; foodDays: number | null }[];
     climateHot: boolean;
   };

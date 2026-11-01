@@ -1,5 +1,8 @@
 # Prepper changelog
 
+## v1.2.8 (2026-10-31)
+v1.2.8: template declares level, Marine-style option and binder fields; header version fixed.
+
 ## v1.2.7 (2026-10-30)
 A prep level, an optional Marine-style mindset, and standing habits. Score weights stay the same. Basics is scored against 3 days so the Page does not ask for 14. A missing level on an older file keeps the old 2-week suggestions.
 - Prep level, asked once after the quick start (one optional question, not four new ones) and changeable anytime: Basics (default: a few days, small and cheap), Steady (about 2 weeks), Serious (a month or more, backup power and bigger stores), All in (long-term self-reliance at their pace: deep pantry, long-term water and power, an extended refill plan, security habits, and skills). The bot never judges or pushes a higher level. Basics are not told to reach 14 days. Serious and All in show the optional 30-day stretch as a horizon, not a new score.
