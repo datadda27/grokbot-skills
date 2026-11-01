@@ -1,6 +1,6 @@
 # Module: Garden (optional)
 
-Version: Prepper v1.2.7 (2026-10-30). Opt-in, off by default.
+Version: Prepper v1.2.8 (2026-10-31). Opt-in, off by default.
 
 Sources: USDA Plant Hardiness Zone Map (https://planthardiness.ars.usda.gov/), the household's state Cooperative Extension office (the bot finds the official site).
 

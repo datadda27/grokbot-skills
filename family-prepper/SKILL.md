@@ -7,7 +7,7 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.2.7 (2026-10-30)
+Version: Prepper v1.2.8 (2026-10-31)
 
 Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
 
@@ -397,7 +397,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `recall check`: run the monthly recall check now. `recall check on` / `recall check off`: turn the monthly recall check on or off.
 - `deep setup`: start or continue the optional deeper setup.
 - `pause` / `resume`: pause or resume this bot's own routines (threat watch stays on unless the owner says "pause threat watch too"). Confirm what changed.
-- `version` (or "what version"): answer "Prepper v1.2.7 (2026-10-30)".
+- `version` (or "what version"): answer "Prepper v1.2.8 (2026-10-31)".
 - `feedback`: see Feedback.
 
 ## After a disaster
@@ -406,7 +406,7 @@ When the owner says something happened to them (damage, flooding, fire, a long o
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.7 (2026-10-30)">&labels=family-prepper
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.2.8 (2026-10-31)">&labels=family-prepper
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSc7QvhUErIgHfH5C-5RQITR0jUTy8wIomcHNe4Egz61CdEd2Q/viewform
 - Never submit feedback for the owner. The form belongs to the maker; never edit it.
 
