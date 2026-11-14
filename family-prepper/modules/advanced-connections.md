@@ -1,6 +1,6 @@
 # Module: Advanced connections (sensors and smart home)
 
-Version: Prepper v1.2.8 (2026-10-31). Opt-in, for owners who already use these services. The core never needs any of this.
+Version: Prepper v1.3.0 (2026-11-14). Opt-in, for owners who already use these services. The core never needs any of this.
 
 ## What it adds
 A sensor or automation can start emergency mode: a water leak sensor, a smoke or CO alarm with an app, or a smart plug on the fridge or sump pump going offline (a home power-loss signal).
@@ -21,4 +21,4 @@ Offer IFTTT only if the owner prefers it or already uses it. Same flow with an I
 - The bot never controls devices (no shutting valves or switching plugs) in v1.0.
 
 ## Todoist (marketplace plugin, id 56809986)
-Optional mirror for the weekly 15-minute task and rotation items, the same as iOS Reminders. Tasks only; no alerts.
+Optional mirror for tasks the owner pulled and rotation items, the same as iOS Reminders. Tasks only; no alerts.

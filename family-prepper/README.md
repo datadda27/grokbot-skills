@@ -4,7 +4,7 @@ Built by a Marine Corps OIF veteran.
 
 Public Grok Bot template: https://x.ai/bot/-XeyX8_sUb_Ca0a6vqDYY
 
-Method version: Prepper v1.2.9 (2026-11-14). The full method is [SKILL.md](SKILL.md), with changes in [CHANGELOG.md](CHANGELOG.md). This page is a short setup manifest; when the two differ, SKILL.md wins.
+Method version: Prepper v1.3.0 (2026-11-14). The full method is [SKILL.md](SKILL.md), with changes in [CHANGELOG.md](CHANGELOG.md). This page is a short setup manifest; when the two differ, SKILL.md wins.
 
 ## What it does (one job)
 Gets one household ready to stay home for two weeks, and keeps it there: water, food, medicine, power, light, heat, sanitation, first aid, communication, and documents, plus a plan everyone knows. Every number cites an official source.
@@ -34,7 +34,7 @@ The bot follows these instructions on every setup, threat watch, weekly, check-i
 3. **Dashboard Page:** built from the template in [dashboard/](dashboard/), with Home, Family plan, and Details views.
 4. **Inventory without homework:** photos of shelves, pantries, or receipts, a starter list, or plain words, each confirmed once before it counts. Only supplies the owner confirms they have count toward the score.
 5. **Threat watch:** official alerts for home and any town the owner adds, sent only when they pass four credibility checks.
-6. **Weekly step:** one task a week at the pace the owner picks, with a monthly check-in folded in.
+6. **Steps when you have time:** Steps are pulled, not pushed. When the owner says what's next or names the time they have, offer the highest-ranked task that fits the time and place, plus one backup. Never schedule work for the owner unless they turn on a weekly nudge. A quiet weekly check and the monthly check-in stay.
 7. **Family plan:** meeting places, an out-of-area check-in, roles, shutoffs, and a "We're OK" line, as a basics-only Family plan Page with one public link the owner shares, a plain-text copy, and a printable plan and wallet card.
 8. **Optional deep setup:** inventory, family roles, the plan, modules, and connections, one part at a time.
 
@@ -52,7 +52,7 @@ Created by the getting-started skill at setup. Optional ones are created only wh
 | Routine | When | What it does |
 |---|---|---|
 | Prepper: threat watch | 7 AM and 4 PM daily by default (changeable) | Checks official alerts for each watched place. Silent unless something official passes the credibility rules. |
-| Prepper: weekly | The owner's day and time (default Saturday 9 AM) | The weekly step. On the first week of the month it also sends the monthly check-in. Push pace adds one mid-week run to the same routine. |
+| Prepper: weekly | The owner's day and time (default Saturday 9 AM) | A quiet maintenance pass: messages only when something is due (stale lines, expired tests, tasks skipped twice). On the first week of the month it sends the monthly check-in. The weekly nudge is opt-in. |
 | Prepper: seasonal reminder | The 1st of each month | Silent unless a top county hazard starts its season, or it is a clock-change month (smoke and CO alarm check). |
 | Prepper: active watch | Hourly, only while an official watch or warning covers a watched place | Rechecks, and deletes itself after 2 clear runs. |
 | Emergency mode | Every 30 minutes (owner picks 30 to 60), only when the owner turns it on | Asks at 24 hours whether to keep going and turns off at 48 hours unless the owner says keep it. |

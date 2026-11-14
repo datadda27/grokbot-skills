@@ -261,6 +261,7 @@ def build(store):
         "<section class='page cover'>"
         "<div class='covertitle'>%s<br>Emergency binder</div>"
         "<div class='coversub'>Run the plan on paper. No power, phone, or internet needed.</div>"
+        "<p><b>This bot is for maintenance. Warnings come from your phone and the weather radio.</b></p>"
         "<table class='kv big'>%s</table>%s"
         "<div class='note'>Keep one copy in the go bag and one with important papers. "
         "Write updates in pen. Private pages (medicines, firearms, cash) are blank on purpose: "
@@ -441,6 +442,8 @@ def _numbers_html():
     rows = [
         ("Emergency (police, fire, ambulance)", "911"),
         ("Poison Control (24/7, national, free)", "1-800-222-1222"),
+        ("Disaster Distress Helpline (call or text, 24/7, national, free)", "1-800-985-5990"),
+        ("Local help and services (national)", "211"),
         ("Local emergency management", ""),
         ("Electric provider (outages)", ""),
         ("Gas provider (get out first if you smell gas)", ""),
@@ -453,7 +456,7 @@ def _numbers_html():
     body = "".join("<tr><td>%s</td><td>%s</td></tr>" % (E(name), E(number) if number else "") for name, number in rows)
     return (
         "<table class='grid'><thead><tr><th>Who</th><th style='width:42%%'>Number</th></tr></thead><tbody>%s</tbody></table>"
-        "<p class='small'>911 and Poison Control are national public lines. Write local numbers from the provider's own site. "
+        "<p class='small'>911, Poison Control, the Disaster Distress Helpline (SAMHSA), and 211 are national public lines. Write local numbers from the provider's own site. "
         "No street address is printed.</p>" % body
     )
 
@@ -643,7 +646,7 @@ def _food_sheet(kcal, kcal_parts, kcal_on, kcal_arr, horizon, onhand, arriving):
         )
     else:
         example = "<p>No calorie total yet. Add adults and child age bands, then reprint. No daily total is assumed.</p>"
-    horizon_line = "<p>Suggested horizon: %s. Buy a little of foods you already eat. One step per weekend.</p>" % (
+    horizon_line = "<p>Suggested horizon: %s. Buy a little of foods you already eat. One step when you have time.</p>" % (
         ("%s days" % horizon) if horizon else "a few days until you choose a level"
     )
     lookup_rows = []
@@ -695,7 +698,7 @@ def _maintenance(marine):
     if marine:
         drill = "A short drill: walk to the rally point, then three lines of notes after. Add a watch rotation only for a long event."
     return (
-        "<p>Do one small step per weekend. This list is the menu, not one day's work. Match the step to your level and budget.</p>"
+        "<p>Do one small step when you have time. This list is the menu, not one day's work. Match the step to your level and budget.</p>"
         "<h2>Weekly</h2>" + checklist([
             "Glance at the official forecast (NWS) for the week ahead.",
             "Vehicles at half a tank or more. Before a forecast event, charge an EV to a sensible level.",

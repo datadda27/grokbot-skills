@@ -25,8 +25,8 @@ problems = []
 for token in BANNED_SOURCE:
     if token in SOURCE:
         problems.append("source still has %r" % token)
-# 911 and 1-800-222-1222 are national public lines, not a household number.
-phones = re.findall(r"\b\d{3}-\d{3}-\d{4}\b", SOURCE.replace("1-800-222-1222", ""))
+# 911, 1-800-222-1222 (Poison Control) and 1-800-985-5990 (SAMHSA Disaster Distress Helpline) are national public lines, not a household number.
+phones = re.findall(r"\b\d{3}-\d{3}-\d{4}\b", SOURCE.replace("1-800-222-1222", "").replace("1-800-985-5990", ""))
 if phones:
     problems.append("source has a personal-looking phone number: %s" % phones)
 
@@ -54,6 +54,8 @@ with tempfile.TemporaryDirectory() as tmp:
             problems.append("empty binder printed %r" % token)
     if "No calorie total yet" not in blank:
         problems.append("empty binder assumed a calorie total")
+    if "This bot is for maintenance. Warnings come from your phone and the weather radio." not in blank:
+        problems.append("empty binder missing the page-one maintenance line")
     if "Fill bathtubs only if an official warning" not in blank:
         problems.append("empty binder missing the bathtub rule")
     if "half a tank" not in blank.lower() and "Half a tank" not in blank:

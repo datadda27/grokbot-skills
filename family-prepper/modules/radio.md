@@ -1,6 +1,6 @@
 # Module: Family radio track (FRS, GMRS, ham)
 
-Version: Prepper v1.2.8 (2026-10-31). Opt-in add-on, off by default, never scored. The bot offers it only when the owner asks about radios or keeping in touch when phones are down. It never adds radio items to the score, the tiers, or the mainstream flow. Neutral: no brands or models.
+Version: Prepper v1.3.0 (2026-11-14). Opt-in add-on, off by default, never scored. The bot offers it only when the owner asks about radios or keeping in touch when phones are down. It never adds radio items to the score, the tiers, or the mainstream flow. Neutral: no brands or models.
 
 Phones and texts stay the main plan. The out-of-area check-in and the "We're OK" text (SKILL.md, Family) come first; radios are a backup for short range.
 
@@ -19,8 +19,8 @@ Links:
 - HamStudy sessions: https://hamstudy.org/sessions
 - ARRL exam finder: https://www.arrl.org/find-an-amateur-radio-license-exam-session
 
-## Study plan (follows the weekly pace)
-- Light pace: about 8 weeks, one short study session as the weekly step.
+## Study plan (pulled at the owner's pace)
+- Light pace: about 8 weeks of short study sessions, each one a task on the ranked list that the owner pulls with what's next.
 - Steady pace: about 4 weeks.
 - Push pace: the owner sets it. Pace never changes the score.
 - The bot never books an exam; it shares the session finders above.

@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.2.8 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.3.0 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
 import {
   Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,
@@ -28,6 +28,11 @@ type Expiring = {
   item: string; category: string; date: string; label: string; daysLeft: number;
   qty: string; location: string; idea: string; estimated: boolean;
 };
+type Attention = { kind: "untested" | "stale" | "count" | "arriving"; title: string; detail: string };
+type CheckItem = {
+  id?: string; label: string; category?: string; testedOn?: string | null; verifiedOn?: string | null;
+  orderedOn?: string | null; note?: string;
+};
 type Computed = {
   score: number; earned: number; counted: number; applicable: number; coverage: number; setupPct: number;
   pointsWaiting: number; provisional: boolean;
@@ -41,6 +46,7 @@ type Computed = {
   expiring: Expiring[]; budgetPct: number | null; activeLevel: Level | "none";
   nextTierRows: { title: string; detail: string; gain: number }[]; tierProvisional: boolean;
   cards: Card[]; weekSteps: WeekStep[]; historyFirst: { date: string; score: number } | null;
+  attention?: Attention[]; attentionMore?: number;
 };
 type Dashboard = {
   _example?: string;
@@ -56,11 +62,16 @@ type Dashboard = {
     climateHot: boolean;
   };
   targets: { days: number; goalTier: string; optionalTiers: string[] };
-  weekly?: { day?: string; time?: string; pace?: "light" | "steady" | "push"; skipUntil?: string | null };
+  weekly?: { day?: string; time?: string; pace?: "light" | "steady" | "push"; skipUntil?: string | null; nudge?: boolean; idleNudge?: boolean };
   offlineBackup?: { refresh?: boolean; last?: string | null; saved?: string };
   alert: {
     lastCheck: string; nextCheck: string; cadence: string;
-    emergencyMode: { on: boolean; since: string | null; cadenceMin: number };
+    emergencyMode: {
+      on: boolean; since: string | null; cadenceMin: number;
+      setBy?: "manual" | "morning" | "afternoon" | null;
+      products?: { place: string; event: string; id: string; ends?: string | null }[];
+      clearAfter?: string | null;
+    };
     active: {
       id: string; event: string; level: Level; headline: string; until: string | null;
       area: string; doNow: string; source: string; url: string;
@@ -78,6 +89,7 @@ type Dashboard = {
   task: {
     title: string; minutes: number; week: string; category: string | null; addsDays: number | null;
     itemIds?: string[]; steps: string[]; why: string; source: string;
+    estMinutes?: number | null; where?: "home" | "away" | "anywhere"; needs?: "buy" | "helper" | "weather" | "none"; canSplit?: boolean;
   };
   shopping: {
     monthlyBudget: number | null; spent: number | null; weekOf: string; pace: string;
@@ -119,6 +131,15 @@ type Dashboard = {
   connections: { id: string; label: string; on: boolean; kind: "default" | "optin"; note: string; addPhrase: string | null }[];
   channels?: { id: string; label: string; status: "on" | "available" | "later"; levels: Level[]; note: string }[];
   history: { date: string; score: number; coverage: number }[];
+  taskList?: {
+    id: string; title: string; estMinutes?: number | null; where?: "home" | "away" | "anywhere";
+    needs?: "buy" | "helper" | "weather" | "none"; canSplit?: boolean; steps?: string[]; why?: string;
+    itemIds?: string[]; category?: string | null; addsDays?: number | null; skips?: number;
+    lastSkipped?: string | null; askedAfterSkips?: boolean;
+  }[];
+  checks?: { untested?: CheckItem[]; stale?: CheckItem[]; countNeeded?: CheckItem[]; arriving?: CheckItem[] };
+  changeLog?: { date: string; what: string; old: string | number | null; new: string | number | null; reason: string }[];
+  methodSha256?: string;
   sources: Link[];
   computed: Computed;
 };
@@ -447,6 +468,13 @@ export default function Prepper() {
   const headlineFull: Row[] = d.headlineChecks.filter((h) => h.full).map((h) => ({ title: `${h.date}: ${h.headline}`, detail: h.full }));
   const shopCaption = `A little each week.${d.shopping.monthlyBudget !== null && d.shopping.spent !== null
     ? ` ${money(d.shopping.spent)} of the ${money(d.shopping.monthlyBudget)} monthly budget used.` : ""} Status as of ${d.asOfLabel}.`;
+  const ATTENTION_LABEL: Record<Attention["kind"], string> = {
+    untested: "Not tested", stale: "Not checked lately", count: "Count needed", arriving: "Did it arrive?",
+  };
+  const attentionRows: Row[] = (c.attention ?? []).map((a) => ({ title: a.title, detail: a.detail, meta: ATTENTION_LABEL[a.kind] }));
+  const changeRows: Row[] = (d.changeLog ?? []).slice(-10).reverse().map((e) => ({
+    title: e.what, detail: `${e.old ?? "none"} to ${e.new ?? "none"}. ${e.reason}.`, meta: e.date,
+  }));
   const toc: TableOfContentsItem[] = [
     { label: "All supplies", id: "all-supplies" },
     { label: "Plan steps", id: "plan-steps" },
@@ -455,6 +483,7 @@ export default function Prepper() {
     { label: "Outage and water", id: "outage-water" },
     { label: "Shopping", id: "shopping" },
     ...(d.history.length >= 2 ? [{ label: "Progress", id: "progress" }] : []),
+    ...(changeRows.length ? [{ label: "Count changes", id: "count-changes" }] : []),
     { label: "Headline checks", id: "headlines" },
     { label: "Connections", id: "connections" },
     { label: "Sources", id: "sources" },
@@ -478,10 +507,19 @@ export default function Prepper() {
             <Callout tone="warning" lead={`${prepare[0].event}: prepare`}>{`${prepare[0].doNow} Phone alerts and a NOAA Weather Radio are the real-time layer.`}</Callout>
           ) : null}
           {d.alert.emergencyMode.on ? (
-            <Callout tone="info" lead="Emergency mode on">{`Since ${orUnknown(d.alert.emergencyMode.since, "today")}. Checking every ${d.alert.emergencyMode.cadenceMin} minutes.`}</Callout>
+            <Callout tone="info" lead="Emergency mode on">{d.alert.emergencyMode.setBy && d.alert.emergencyMode.setBy !== "manual"
+              ? `Since ${orUnknown(d.alert.emergencyMode.since, "today")}, for ${(d.alert.emergencyMode.products ?? []).map((x) => `${x.event} (${x.place})`).join(", ") || "an official product"}. Checked at the scheduled passes; turns off after ${orUnknown(d.alert.emergencyMode.clearAfter, "the products end")}. Phone alerts and the weather radio are faster.`
+              : `Since ${orUnknown(d.alert.emergencyMode.since, "today")}. Checking every ${d.alert.emergencyMode.cadenceMin} minutes.`}</Callout>
           ) : null}
           {matches.length ? (
             <Callout tone="warning" lead="Recall match">{`${plural(matches.length, "logged item")} ${matches.length === 1 ? "matches" : "match"} an official recall. Details has the item and the official link.`}</Callout>
+          ) : null}
+
+          {attentionRows.length ? (
+            <Section heading="Check these" id="check-these"
+              caption={`Untested gear and things not checked in a while come before the score.${c.attentionMore ? ` And ${c.attentionMore} more in chat.` : ""}`}>
+              <Rows rows={attentionRows} />
+            </Section>
           ) : null}
 
           <Section heading="Readiness" id="readiness" caption={`${d.household.place}, ${d.household.county}.`}>
@@ -716,6 +754,12 @@ export default function Prepper() {
           {d.history.length >= 2 ? (
             <Section heading="Progress" id="progress">
               <LineChart points={d.history.map((h) => ({ label: h.date, value: h.score }))} ceiling={100} floor={0} labels={["Readiness score"]} legend={false} />
+            </Section>
+          ) : null}
+
+          {changeRows.length ? (
+            <Section heading="Count changes" id="count-changes" caption="A physical count always wins. Each change keeps the old and new number, the date, and why.">
+              <Rows rows={changeRows} />
             </Section>
           ) : null}
 

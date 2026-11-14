@@ -1,6 +1,6 @@
 {
   "_example": "Everything on this page is made up for a fictional household (Example Household, Anytown, USA). Setup replaces every value; no real household details ship with the template.",
-  "version": "1.2.8",
+  "version": "1.3.0",
   "asOf": "2026-10-26",
   "asOfLabel": "Oct 26, 2026, 4:00 PM CT",
   "page": {
@@ -55,7 +55,10 @@
     "emergencyMode": {
       "on": false,
       "since": null,
-      "cadenceMin": 30
+      "cadenceMin": 30,
+      "setBy": null,
+      "products": [],
+      "clearAfter": null
     },
     "active": [],
     "fyi": [
@@ -837,7 +840,7 @@
       "label": "Reminders",
       "on": true,
       "kind": "optin",
-      "note": "Rotation dates and the weekly task.",
+      "note": "Rotation dates and tasks you pull.",
       "addPhrase": null
     },
     {
@@ -946,6 +949,77 @@
       "date": "Oct 26",
       "score": 60,
       "coverage": 0.93
+    }
+  ],
+  "taskList": [
+    {
+      "id": "t1",
+      "title": "Fill 4 clean jugs from the tap and date them",
+      "estMinutes": 15,
+      "where": "home",
+      "needs": "none",
+      "canSplit": false,
+      "category": "water",
+      "addsDays": 1,
+      "skips": 0
+    },
+    {
+      "id": "t2",
+      "title": "Add a first aid kit refill to the shopping list",
+      "estMinutes": 5,
+      "where": "anywhere",
+      "needs": "buy",
+      "canSplit": false,
+      "category": null,
+      "addsDays": null,
+      "skips": 0
+    },
+    {
+      "id": "t3",
+      "title": "Walk the family to the outside meeting spot",
+      "estMinutes": 20,
+      "where": "home",
+      "needs": "helper",
+      "canSplit": false,
+      "itemIds": [
+        "drill"
+      ],
+      "skips": 1
+    }
+  ],
+  "checks": {
+    "untested": [
+      {
+        "id": "g12",
+        "label": "Power bank",
+        "category": "power",
+        "testedOn": null
+      },
+      {
+        "id": "g20",
+        "label": "Family radios",
+        "category": "comms",
+        "testedOn": "2026-06-01"
+      }
+    ],
+    "stale": [
+      {
+        "id": "f07",
+        "label": "Canned soup x6",
+        "category": "food",
+        "verifiedOn": "2026-03-02"
+      }
+    ],
+    "countNeeded": [],
+    "arriving": []
+  },
+  "changeLog": [
+    {
+      "date": "2026-10-20",
+      "what": "Canned beans",
+      "old": 8,
+      "new": 6,
+      "reason": "counted"
     }
   ],
   "sources": [
