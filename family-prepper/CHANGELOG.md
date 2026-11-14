@@ -1,5 +1,10 @@
 # Prepper changelog
 
+## v1.2.9 (2026-11-14)
+A failed source is never quiet. Score logic is unchanged.
+- Hard rule: a check is complete only when every source answered and the store is mounted. Otherwise the bot says "check incomplete: <source> failed" and never says quiet, clear, or all clear for that run.
+- Threat watch: quiet days stay silent only after a complete check; a failed source sends one line and is recorded in `alert.lastCheck`. The first-run line is sent only after a complete check.
+
 ## v1.2.8 (2026-10-31)
 v1.2.8: template declares level, Marine-style option and binder fields; header version fixed.
 
