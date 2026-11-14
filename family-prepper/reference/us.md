@@ -1,10 +1,10 @@
 # Country pack: United States
 
-Version: Prepper v1.2.8 (2026-10-31)
+Version: Prepper v1.3.0 (2026-11-14)
 
 Every number the bot quotes to a US household comes from this file, with its link. If a number is not here, the bot looks it up on an official page and cites it, or says UNKNOWN. Another country gets its own file (for example `uk.md`) with the same headings, so the method never changes when a country is added.
 
-Checked against the live pages on 2026-10-26.
+Checked against the live pages on 2026-10-26; rows added in v1.3.0 checked 2026-11-14.
 
 ## Official sources (the only ones the bot leans on)
 | Topic | Source | Link |
@@ -28,6 +28,18 @@ Checked against the live pages on 2026-10-26.
 | Pets | Ready.gov Pets | https://www.ready.gov/pets |
 | Car kit | Ready.gov Car Safety | https://www.ready.gov/car |
 | Winter | Ready.gov Winter Weather | https://www.ready.gov/winter-weather |
+| Frozen pipes | American Red Cross | https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/winter-storm/frozen-pipes.html |
+| Heating and space heaters | U.S. Fire Administration | https://www.usfa.fema.gov/prevention/home-fires/prevent-fires/heating/ |
+| Radiation emergencies | Ready.gov Radiation | https://www.ready.gov/radiation |
+| Chemical releases, shelter in place | Ready.gov Chemical | https://www.ready.gov/chemical |
+| Disaster Distress Helpline | SAMHSA | https://www.samhsa.gov/find-help/helplines/disaster-distress-helpline |
+| Local help line | 211 (United Way) | https://www.211.org/ |
+| Shelter finder and first aid apps | American Red Cross | https://www.redcross.org/get-help/how-to-prepare-for-emergencies/mobile-apps.html |
+| Bleeding control training | American College of Surgeons Stop the Bleed | https://www.stopthebleed.org/ |
+| Phone emergency info (iPhone) | Apple Support | https://support.apple.com/en-us/105072 |
+| Phone emergency info (Android) | Android Help | https://support.google.com/android/answer/9319337 |
+| Phone emergency info (Pixel) | Pixel Phone Help | https://support.google.com/pixelphone/answer/7055029 |
+| Wildfire alerts app (optional) | Watch Duty (nonprofit) | https://www.watchduty.org/ |
 | Heat | Ready.gov Extreme Heat | https://www.ready.gov/heat |
 | Documents and money | Ready.gov Financial Preparedness (EFFAK) | https://www.ready.gov/financial-preparedness |
 | Calorie planning figure | FDA | https://www.fda.gov/food/nutrition-facts-label/calories-nutrition-facts-label |
@@ -47,6 +59,7 @@ Checked against the live pages on 2026-10-26.
 - Replace water you bottled yourself every 6 months. Store-bought sealed water stays in its original container in a cool, dark place. (Ready.gov Water) The bot reminds the household when that date is near. The amount follows their level: a few jugs at Basics, the larger store at higher levels. Filling a bathtub is not a storage step. It is only for an official warning (see the method).
 - Sanitize a food-grade container with 1 teaspoon of unscented bleach per quart of water before filling. (Ready.gov Water)
 - Never ration drinking water unless officials say to. Drink what you need today. (Ready.gov Water)
+- Distillation, a last resort when stored water runs out: fill a pot halfway, tie a cup to the lid handle so it hangs right side up when the lid is upside down (not touching the water), and boil for 20 minutes; the water that drips into the cup is distilled. It removes microbes that resist boiling and bleach, plus heavy metals, salts, and most other chemicals. (Ready.gov Water)
 
 **Making water safe** (EPA)
 - Boil: a rolling boil for at least 1 minute. Above 5,000 feet, boil for 3 minutes.

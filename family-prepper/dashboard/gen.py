@@ -8,7 +8,8 @@ Only the data file changes between households. The template holds no household t
 gen.py computes the readiness score (earned over every applicable point, so answering only raises it;
 Basics, household.prepLevel "basics", is scored against 3 days so the Page does not ask for 14),
 setup progress, points waiting, tier, top gaps (gains in stated-weight points), the two-week calculator, and days until each
-best-by date, the at-a-glance cards and this week's steps (v1.2.3), drops any item marked private, and refuses private keys (medicine details, firearms, cash amounts)."""
+best-by date, the at-a-glance cards and this week's steps (v1.2.3), the Check these list from `checks` and the food split note (v1.3.0, display only;
+scoring is v1 and unchanged), drops any item marked private, and refuses private keys (medicine details, firearms, cash amounts)."""
 import json, os, sys, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +23,11 @@ TIERS = [("start", "Getting started"), ("72h", "72 hours"), ("2w", "2 weeks")]
 UNKNOWN_DAYS = "not counted"
 STRETCH_DAYS = 30  # optional 30-day stretch: shown only when the owner asked for it ("30d" in targets.optionalTiers); never scored, never a tier
 CORE = ["water", "food", "meds", "sanitation"]
+# v1.3.0 display windows (Check these). They never change the score.
+TESTED_EXPIRY_DAYS = {"power": 365, "comms": 90, "firstaid": 182}  # the medical device uses the maker's interval (bot lists it)
+STALE_AFTER_DAYS = 182
+ARRIVING_DAYS = 14
+ATTENTION_MAX = 5
 
 
 def fail(msg, code=2):
@@ -66,13 +72,18 @@ def r1(x):
 def apply_counting(d):
     """An inventory batch in progress never lowers the score. `days` holds the owner's estimate (or the finished
     count); `countedDays` holds the running count. The scored value is the higher of the two until the owner says
-    counting is complete, then the bot moves the count into `days` and drops `countedDays`."""
+    counting is complete, then the bot moves the count into `days` and drops `countedDays`.
+    v1.3.0: a physical count always wins. With `countScope: "full"` (every spot counted) the count replaces the
+    estimate even when it is lower; a partial count keeps the estimate for the spots not counted yet."""
     for c in d["categories"]:
         cd = c.get("countedDays")
         if c["kind"] != "days" or cd is None:
             continue
         est = c["days"]
-        if est is None:
+        if c.get("countScope") == "full":
+            c["days"] = cd
+            c["countNote"] = "counted %g days (full count%s)" % (r1(cd), "" if est is None else ", estimate was ~%g" % est)
+        elif est is None:
             c["days"] = cd
             c["countNote"] = "counted so far %g days" % r1(cd)
         elif cd >= est:
@@ -80,6 +91,52 @@ def apply_counting(d):
             c["countNote"] = "counted %g days (estimate was ~%g)" % (r1(cd), est)
         else:
             c["countNote"] = "counted so far %g of ~%g days" % (r1(cd), est)
+
+
+def attention(d, asof):
+    """v1.3.0 Check these: untested, then stale, then count needed, then orders past 14 days. Display only."""
+    ch = d.get("checks") or {}
+    tw = dict(TESTED_EXPIRY_DAYS, **(d["targets"].get("testedExpiryDays") or {}))
+    stale_days = d["targets"].get("staleAfterDays") or STALE_AFTER_DAYS
+
+    def age(v):
+        return (asof - datetime.date.fromisoformat(v)).days if v else None
+
+    out = []
+    for x in ch.get("untested") or []:
+        a, lim = age(x.get("testedOn")), tw.get(x.get("category"))
+        if a is None:
+            out.append({"kind": "untested", "title": x["label"], "detail": "Owned, not tested yet."})
+        elif lim is None or a > lim:
+            out.append({"kind": "untested", "title": x["label"], "detail": "Last tested %s. Time for a test." % x["testedOn"]})
+    for x in ch.get("stale") or []:
+        a = age(x.get("verifiedOn"))
+        if a is None or a > stale_days:
+            out.append({"kind": "stale", "title": x["label"],
+                        "detail": "Not checked since %s. Still there?" % x["verifiedOn"] if x.get("verifiedOn") else "Never checked. Still there?"})
+    for x in ch.get("countNeeded") or []:
+        out.append({"kind": "count", "title": x["label"], "detail": x.get("note") or "Count needed before it counts twice."})
+    for x in ch.get("arriving") or []:
+        a = age(x.get("orderedOn"))
+        if a is None or a > ARRIVING_DAYS:
+            out.append({"kind": "arriving", "title": x["label"], "detail": "Ordered %s. Did it arrive?" % x["orderedOn"] if x.get("orderedOn") else "Did it arrive?"})
+    return out[:ATTENTION_MAX], max(len(out) - ATTENTION_MAX, 0)
+
+
+def food_split_note(c):
+    """v1.3.0: no-cook and cook days with the fuel check, shown on the Food card. Not scored until scoring v2."""
+    if c.get("noCookDays") is None and c.get("cookDays") is None:
+        return ""
+    f = c.get("fuel") or {}
+    if f.get("source") == "utility":
+        fuel = "cooking uses utility gas, usable only while it flows"
+    elif f.get("cylinders") is not None and f.get("hoursPerCylinder") and f.get("cookHoursPerDay"):
+        fuel = "fuel covers about %g cook days" % r1(f["cylinders"] * f["hoursPerCylinder"] / f["cookHoursPerDay"])
+    else:
+        fuel = "fuel check not done yet"
+    return "No-cook %s days, cook %s days; %s. " % (
+        "?" if c.get("noCookDays") is None else "%g" % c["noCookDays"],
+        "?" if c.get("cookDays") is None else "%g" % c["cookDays"], fuel)
 
 
 def compute(d):
@@ -245,7 +302,7 @@ def compute(d):
 
     def note_of(c):
         cn = c.get("countNote")
-        return ((cn[0].upper() + cn[1:] + ". ") if cn else "") + (c.get("note") or "")
+        return ((cn[0].upper() + cn[1:] + ". ") if cn else "") + food_split_note(c) + (c.get("note") or "")
 
     cards = []
     for k, title in (("water", "Water"), ("food", "Food")):
@@ -331,6 +388,7 @@ def compute(d):
         task_gain = pts(c["weight"] * (min((have + t["addsDays"]) / target, 1) - min(have / target, 1)))
 
     asof = datetime.date.fromisoformat(d["asOf"])
+    att, att_more = attention(d, asof)
     exp = []
     for e in d["expiring"]:
         if e.get("private"):
@@ -382,6 +440,7 @@ def compute(d):
                  "waterPerDay": water_day, "waterTarget": water_day * target,
                  "petWaterPerDay": r1(pet_water), "petsUnknown": pet_unknown, "hot": hh["climateHot"]},
         "expiring": exp,
+        "attention": att, "attentionMore": att_more,
         "budgetPct": None if budget_pct is None else round(budget_pct, 2),
         "activeLevel": ("ACT NOW" if any(a["level"] == "ACT NOW" for a in d["alert"]["active"]) else
                         "PREPARE" if any(a["level"] == "PREPARE" for a in d["alert"]["active"]) else "none"),

@@ -1,5 +1,27 @@
 # Prepper changelog
 
+## v1.3.0 (2026-11-14)
+Emergency mode as a flag, a seasonal script-first afternoon pass, tested and freshness tracking, count changes, tasks on demand, and nine guide-hunt additions. Score weights and scoring logic are unchanged (scoring v1). The one scoring-adjacent change: a full physical count now replaces a higher estimate.
+- Includes v1.2.9 (a failed source is never quiet).
+- Emergency mode is a flag in `alert.emergencyMode` (setBy, products, clearAfter), set by the morning pass or the seasonal afternoon pass on a home warning, home watch, or SPC Day 1 Enhanced or higher, or a warning or Enhanced or higher where an adult is that day. It clears 12 hours after the last product ends. The automatic hourly "active watch" routine is gone; manual `emergency mode on` still creates one on request.
+- Threat watch runs every morning. A 4 PM afternoon pass runs only in storm months (default March to June and November to February, plus June to November when the hurricane mode is on) and is script first: new `tools/quick_check.py` ends the run silently when nothing is active and every source answered. New SPC Day 1 outlook row in `reference/data-sources-us.md`.
+- Optional away days: with `schedule.json`, the morning pass adds one readiness line on rotation start and end days and planned away nights, and watches the away place that day.
+- Alerts that ask the family to act carry a ready-to-forward family text. One storm-day message on a home-county winter storm watch or warning.
+- A physical count always wins, with a `changeLog` (old, new, date, reason) shown on the Page; a partial count changes only the lines it covers. `countScope: "full"` in gen.py.
+- Freshness: `verifiedOn` on inventory lines, a question for orders past 14 days, stale lines on the Page, and a weekly question about the 3 oldest. Tested versus owned: `testedOn` with default windows (power 365, comms 90, first aid 182 days, device per maker). Both are shown and asked about now; their score effects wait for scoring v2.
+- Food records no-cook and cook days with the fuel check, shown on the Food card; scored as before until scoring v2.
+- The Page opens with a Check these list (`computed.attention`), and Details lists recent count changes.
+- Printed plan and binder page one: "This bot is for maintenance. Warnings come from your phone and the weather radio."
+- The saved method copy carries `methodSha256` and is used only when the live fetch fails; scripts are always fetched live. The monthly check-in adds an owner export step. The written plan names who covers each role when an adult is away or commuting. A drill is never a tier requirement.
+- Tasks on demand (item 18): steps are pulled, not pushed. `what's next`, `I have N minutes` (bundles 2 or 3 tasks at 45 minutes or more), `quick win`, and `skip` work any day, from a ranked `taskList` whose tasks carry `estMinutes`, `where`, `needs`, and `canSplit`. Away days offer only anywhere or away tasks; `buy` means add it to the shopping list. "Prepper: weekly" becomes a quiet maintenance pass that messages only when something is due. A weekly nudge and a 14-day no-step nudge are opt-in and off by default. The monthly check-in stays.
+- Guide-hunt additions: radiation and chemical shelter in place (Ready.gov), Stop the Bleed as an optional skills day and unscored kit, distillation next to the never-ration line, the Disaster Distress Helpline and 211, the Red Cross Emergency app shelter finder and First Aid app quizzes, frozen-pipe steps (Red Cross), space heater safety (USFA), opt-in phone emergency info for iPhone and Android, and the free Watch Duty app for red flag areas.
+- New test `dashboard/test_scoring_v1.py`; `printables/test_binder.py` allows the national helpline and checks the page-one line.
+
+## v1.2.9 (2026-11-14)
+A failed source is never quiet. Score logic is unchanged.
+- Hard rule: a check is complete only when every source answered and the store is mounted. Otherwise the bot says "check incomplete: <source> failed" and never says quiet, clear, or all clear for that run.
+- Threat watch: quiet days stay silent only after a complete check; a failed source sends one line and is recorded in `alert.lastCheck`. The first-run line is sent only after a complete check.
+
 ## v1.2.8 (2026-10-31)
 v1.2.8: template declares level, Marine-style option and binder fields; header version fixed.
 

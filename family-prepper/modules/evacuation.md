@@ -1,6 +1,6 @@
 # Module: Evacuation, carry kits (go-bags), and getting home
 
-Version: Prepper v1.2.8 (2026-10-31). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.3.0 (2026-11-14). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make a Plan (https://www.ready.gov/plan), Ready.gov Car Safety (https://www.ready.gov/car).
 
@@ -11,6 +11,7 @@ Sources: Ready.gov Evacuation (https://www.ready.gov/evacuation), Ready.gov Make
 - Keep at least a half tank of gas at all times, a full tank when evacuation seems likely. (Ready.gov) For an EV, keep a sensible charge before a forecast event, not 100% every day.
 - Plan one car per family to reduce congestion. (Ready.gov)
 - No car? Plan with family, friends, or the local emergency management office now. (Ready.gov)
+- Shelters: the free American Red Cross Emergency app shows NWS alerts and open Red Cross shelters near you, next to the FEMA app (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/mobile-apps.html).
 
 ## Three plans by time (the bot fills them in with the household)
 Structure is the bot's; the steps come from Ready.gov Evacuation.
@@ -25,7 +26,7 @@ Each plan prints on the printable plan with the household's own spots ("go-bags:
 
 ## Go-bag: the 72-hour carry kit (see `kits.md`, tier 2, for the full template)
 One per person and one per pet, small enough to carry, kept together in one known spot near an exit that everyone can name. (DoD Emergency Preparedness Guidance: a smaller kit you can easily transport if you need to evacuate, https://download.militaryonesource.mil/12038/MOS/ResourceGuides/DoD-Emergency-Preparedness-Guidance.pdf; Ready Marine Corps: make sure every member of the family knows where the kit is, https://www.ready.marines.mil/Build-a-Kit/Emergency-Kits/)
-Before naming a person responsible for it, ask once: "Do you each have a 72-hour carry bag packed? Where is it kept?" If not, building it is a weekly task, not a role. (Ready.gov Evacuation)
+Before naming a person responsible for it, ask once: "Do you each have a 72-hour carry bag packed? Where is it kept?" If not, building it is a task on the ranked list, not a role. (Ready.gov Evacuation)
 
 ## Get-home bag (optional)
 For anyone who works or studies more than a walk from home: a small bag at work or in the car with water, snacks, comfortable shoes, a flashlight, a phone charger, a printed map and the wallet card, a rain layer, and any daily medicine (details private). The bot asks how far and how they'd get home if roads were closed, and saves the answer on the plan.

@@ -29,7 +29,7 @@ One Page with three views on a switch at the top. Titles use `household.name` ("
 - Readiness: the ring out of 100 with a gray arc for points waiting on a yes or no, a legend, "Up from N on date" (from `history`), and the tier pill (Getting started, or "72 hours reached", marked provisional while points are waiting).
 - Next goal card: the tier track (72 hours, then 2 weeks), what each item still needs with +N points (`computed.nextTierRows`), and one line with the alert check times and setup progress.
 - Alert boxes only when needed: red for an active ACT NOW, a warning for PREPARE, a note for emergency mode, and a warning when the recall check found a match.
-- This week: the weekly task plus up to 2 quick free steps (`computed.weekSteps`, from `minutes` and `free` on life safety and plan items).
+- This week: the top task on the ranked list plus up to 2 quick free steps (`computed.weekSteps`, from `minutes` and `free` on life safety and plan items).
 - At a glance: water, food, light and power, first aid, go-bags, and the plan (`computed.cards`), each with a big number, a meter (3-day tick on water and food), and a status pill: Biggest gap, On target, Almost there, Building, or Not counted yet. Go-bags (`goBags`) say Not scored and never change the score.
 - Life safety: Done pills, +N on open items. The power-dependent medical device row is yes or no only.
 - If the power goes out or we get separated: the eat-first list (`outageUseFirst`) with the fridge 4 hours and freezer 48 hours line, and Where we meet.

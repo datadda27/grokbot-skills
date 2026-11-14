@@ -1,6 +1,6 @@
 # Module: After a disaster
 
-Version: Prepper v1.2.8 (2026-10-31). Always on; used when a federal declaration (OpenFEMA) covers the county or the owner says something happened.
+Version: Prepper v1.3.0 (2026-11-14). Always on; used when a federal declaration (OpenFEMA) covers the county or the owner says something happened.
 
 Source: Ready.gov Recovering from Disaster (https://www.ready.gov/recovering-disaster).
 
@@ -10,7 +10,8 @@ Source: Ready.gov Recovering from Disaster (https://www.ready.gov/recovering-dis
 3. Insurance: if you have it and have damage, file a claim with your insurer.
 4. Uninsured damage: contact the local emergency management agency and tell local officials what you need.
 5. Federal help when the county is declared: apply at https://www.disasterassistance.gov/ or the FEMA App. Application questions: FEMA Helpline 1-800-621-3362 or AskIA@fema.dhs.gov.
-6. Immediate needs (food, shelter): local officials and voluntary organizations are usually best.
+6. Immediate needs (food, shelter): local officials and voluntary organizations are usually best. 211 connects to local help. Open shelters: the American Red Cross Emergency app.
+6a. Stress and grief are normal after a disaster. The Disaster Distress Helpline is free, 24/7: call or text 1-800-985-5990 (SAMHSA, https://www.samhsa.gov/find-help/helplines/disaster-distress-helpline).
 7. Lost documents: FEMA's Replacing Vital Documents page.
 8. Beware scams; the government will not contact you on social media about money (Ready.gov Financial Preparedness).
 

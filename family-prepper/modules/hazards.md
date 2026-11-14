@@ -1,6 +1,6 @@
 # Module: Hazard modes
 
-Version: Prepper v1.2.8 (2026-10-31). Turned on per hazard from the county's FEMA National Risk Index (NRI) ratings, never from guesses. The bot suggests modes for hazards rated Relatively High or Very High; the owner confirms.
+Version: Prepper v1.3.0 (2026-11-14). Turned on per hazard from the county's FEMA National Risk Index (NRI) ratings, never from guesses. The bot suggests modes for hazards rated Relatively High or Very High; the owner confirms.
 
 Each mode adds a short checklist to the Page, a seasonal reminder, and the "Do now" lines the threat watch uses when that hazard's NWS watch or warning arrives. All steps are from the linked Ready.gov page.
 
@@ -46,12 +46,21 @@ Before:
 - Have a garden hose long enough to reach any area of the home.
 - Set up one room you can close off from outside air, with a portable air cleaner, for smoke days. The dashboard shows Open-Meteo air quality; official AQI is at https://www.airnow.gov/.
 - Know the school and work evacuation plans.
+- Optional, in areas that get NWS Red Flag Warnings: the free Watch Duty app (https://www.watchduty.org/), a nonprofit app for wildfire alerts, evacuation zones, and air quality on one map. Name only the free version. NWS and local emergency alerts stay the primary source; the bot never builds its own fire map.
 Do now (warning or evacuation order): leave when told to; take the go-bags (if packed) and pets; on smoke days stay in the clean-air room and follow official air quality guidance.
+
+## Radiation or chemical release (always available, not a hazard mode)
+Used when an official alert names a radiation or chemical release, never from a headline alone.
+- Radiation (Ready.gov, https://www.ready.gov/radiation): get inside, stay inside, and stay tuned to official instructions. The most protective spot is a basement or the center of a large building; stay there unless officials say it is safe to leave or there is an immediate danger such as fire.
+- Chemical release (Ready.gov, https://www.ready.gov/chemical): if told to stay indoors, bring pets inside, go to an interior room, close and lock outside doors and windows, close vents and fireplace dampers, and turn off air conditioning and ventilation. Do not go outside until officials say it is safe.
+Do now (official alert): the steps above, with phone alerts and the weather radio for updates.
 
 ## Winter storm (https://www.ready.gov/winter-weather)
 Winter storms raise the risk of car accidents, hypothermia, frostbite, carbon monoxide poisoning, and heart attacks from overexertion. Warnings are usually issued 12 to 24 hours ahead; watches 12 to 48 hours ahead.
 Before:
-- Insulation, caulking, and weather stripping; learn how to keep pipes from freezing.
+- Insulation, caulking, and weather stripping.
+- Pipes (American Red Cross, https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/winter-storm/frozen-pipes.html): drain and shut off outdoor hose lines; on hard-freeze nights open the cabinets under sinks and let a cold tap drip; keep the thermostat the same day and night, at 55°F or higher if you are away. To thaw a pipe, use a hair dryer or a heating pad, never an open flame. When the household has not done it yet, the November 1 winter reminder puts this at the top of the task list as an offer.
+- Space heaters and fireplaces (U.S. Fire Administration, https://www.usfa.fema.gov/prevention/home-fires/prevent-fires/heating/): keep anything that can burn at least 3 feet from heat sources, turn space heaters off when you leave the room or go to sleep, and have the chimney or wood stove checked once a year. The same rules apply in any power outage.
 - Smoke and CO alarms with battery backups.
 - Supplies for several days at home without power, including each person's medicine and pet needs; extra batteries for radios and flashlights.
 - Car winter kit (see `kits.md`).

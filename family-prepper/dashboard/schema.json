@@ -218,6 +218,34 @@
           },
           "minItems": 0,
           "maxItems": 1
+        },
+        "testedExpiryDays": {
+          "type": "object",
+          "description": "v1.3.0, optional: test windows in days. Defaults power 365, comms 90, firstaid 182; the medical device uses the maker's interval.",
+          "properties": {
+            "power": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "comms": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "firstaid": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "device": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "staleAfterDays": {
+          "type": "integer",
+          "minimum": 30,
+          "description": "v1.3.0, optional: an inventory line unverified this long is stale on the Page. Default 182."
         }
       },
       "required": [
@@ -255,6 +283,52 @@
               "type": "integer",
               "minimum": 30,
               "maximum": 60
+            },
+            "setBy": {
+              "enum": [
+                "manual",
+                "morning",
+                "afternoon",
+                null
+              ],
+              "description": "v1.3.0: what turned emergency mode on."
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "place": {
+                    "type": "string"
+                  },
+                  "event": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "ends": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "place",
+                  "event",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "description": "v1.3.0: the products that set the flag."
+            },
+            "clearAfter": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "v1.3.0: latest product end plus 12 hours. The first complete pass after it turns the flag off."
             }
           },
           "required": [
@@ -473,7 +547,65 @@
               "null"
             ],
             "minimum": 0,
-            "description": "Optional, days categories only: the running count from an inventory batch that is not finished. gen.py scores the higher of days and countedDays and shows 'counted so far X of ~Y days'. When the owner says counting is complete (or confirms once when asked), move the count into days and remove this field."
+            "description": "Optional, days categories only: the running count from an inventory batch that has not covered every spot. gen.py scores the higher of days and countedDays and shows 'counted so far X of ~Y days', unless countScope is 'full', when the count wins even if lower. After a full count, move the count into days, remove this field and countScope, and log it in changeLog."
+          },
+          "countScope": {
+            "enum": [
+              "partial",
+              "full"
+            ],
+            "description": "v1.3.0, optional: 'full' means every spot was counted, so countedDays replaces days (a physical count always wins)."
+          },
+          "noCookDays": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "v1.3.0, optional, food only: days of food safe to eat without heat. Shown, not scored until scoring v2."
+          },
+          "cookDays": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "v1.3.0, optional, food only: days of food that needs heat."
+          },
+          "fuel": {
+            "type": "object",
+            "description": "v1.3.0, optional, food only: the fuel check. Fuel days = cylinders x hoursPerCylinder / cookHoursPerDay. source 'utility' means a utility gas range, usable only while gas flows.",
+            "properties": {
+              "source": {
+                "enum": [
+                  "cylinders",
+                  "utility",
+                  "other"
+                ]
+              },
+              "cylinders": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "hoursPerCylinder": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "cookHoursPerDay": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
           }
         },
         "required": [
@@ -671,6 +803,35 @@
             "type": "string"
           },
           "description": "Optional. Life safety or plan item ids this task completes (for example [\"smoke\", \"alerts\"]). gen.py counts their points as the task's gain."
+        },
+        "estMinutes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "v1.3.0, optional: estimated minutes."
+        },
+        "where": {
+          "enum": [
+            "home",
+            "away",
+            "anywhere"
+          ],
+          "description": "v1.3.0, optional: where the task can be done."
+        },
+        "needs": {
+          "enum": [
+            "buy",
+            "helper",
+            "weather",
+            "none"
+          ],
+          "description": "v1.3.0, optional: buy means add to the shopping list, never buy."
+        },
+        "canSplit": {
+          "type": "boolean",
+          "description": "v1.3.0, optional: a part can be done alone."
         }
       },
       "required": [
@@ -1593,7 +1754,7 @@
     },
     "weekly": {
       "type": "object",
-      "description": "Optional (v1.2.4), never scored: the weekly routine's day, time, and pace. Default Saturday 9 AM, light.",
+      "description": "Optional (v1.2.4; v1.3.0 adds nudge and idleNudge), never scored: the weekly maintenance pass day and time (default Saturday 9 AM), the default task size (pace), the opt-in weekly nudge (default off) and the opt-in no-step nudge (default off).",
       "properties": {
         "day": {
           "type": "string"
@@ -1613,6 +1774,14 @@
             "string",
             "null"
           ]
+        },
+        "nudge": {
+          "type": "boolean",
+          "description": "v1.3.0: the weekly pass adds the top task. Default false."
+        },
+        "idleNudge": {
+          "type": "boolean",
+          "description": "v1.3.0: one line when no task was done in 14 days. Default false."
         }
       },
       "additionalProperties": false
@@ -1637,6 +1806,329 @@
         }
       },
       "additionalProperties": false
+    },
+    "checks": {
+      "type": "object",
+      "description": "v1.3.0, optional: written by the bot from inventory.json. gen.py turns it into computed.attention (the Check these list). Display only; never changes the score.",
+      "properties": {
+        "untested": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "testedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "verifiedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "orderedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "stale": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "testedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "verifiedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "orderedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "countNeeded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "testedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "verifiedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "orderedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arriving": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "testedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "verifiedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "orderedOn": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "changeLog": {
+      "type": "array",
+      "description": "v1.3.0, optional: one entry per quantity change from a count or use. The Page shows the latest.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "what": {
+            "type": "string"
+          },
+          "old": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "new": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "what",
+          "old",
+          "new",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "methodSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "v1.3.0, optional: sha256 of the saved method copy, compared with the live SKILL.md each run."
+    },
+    "taskList": {
+      "type": "array",
+      "description": "v1.3.0, optional: the ranked open tasks, highest first. Pulled with what's next or I have N minutes. Never scored directly; task gains come from itemIds or category and addsDays.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "estMinutes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "v1.3.0, optional: estimated minutes."
+          },
+          "where": {
+            "enum": [
+              "home",
+              "away",
+              "anywhere"
+            ],
+            "description": "v1.3.0, optional: where the task can be done."
+          },
+          "needs": {
+            "enum": [
+              "buy",
+              "helper",
+              "weather",
+              "none"
+            ],
+            "description": "v1.3.0, optional: buy means add to the shopping list, never buy."
+          },
+          "canSplit": {
+            "type": "boolean",
+            "description": "v1.3.0, optional: a part can be done alone."
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "why": {
+            "type": "string"
+          },
+          "itemIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "addsDays": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "skips": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lastSkipped": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "askedAfterSkips": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "additionalProperties": false
+      }
     }
   }
 }

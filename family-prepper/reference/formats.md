@@ -1,6 +1,6 @@
 # Message formats
 
-Version: Prepper v1.2.8 (2026-10-31)
+Version: Prepper v1.3.0 (2026-11-14)
 
 Every message is short, calm, and scannable on a phone. Bold labels, one idea per line, no walls of text. No emojis, no ALL CAPS except the verdict word, no countdowns, no exclamation points about danger. Every number has its source. UNKNOWN beats a guess.
 
@@ -70,24 +70,35 @@ Your county alert signup and evacuation zone page are the source of truth for lo
 - Source: National Weather Service <link>
 - Your phone alerts and NOAA radio are faster than me. Trust them first.
 - Before you act, check NWS, local emergency management, and FEMA or Ready.gov.
+
+Family text, ready to forward: Tornado Warning for Example County until 4:45 PM. Go to the safe room now. Phone alerts and the weather radio have updates.
 ```
+When a source fails, the alert or the quiet pass becomes one line: `check incomplete: NWS alerts failed. Phone alerts and the weather radio still cover you.` Never "quiet" or "all clear" after a failed source.
 Levels: **ACT NOW** (an official warning for your area), **PREPARE** (an official watch or advisory, or a utility or water notice), **FYI** (goes in the next check-in, not sent alone). No alert from social posts alone. Keep it short. A bathtub line is allowed only on ACT NOW, and only when the warning can cut water off: "Official warning: you can fill the bathtubs after stored water." Never on a watch or a quiet day.
 
-## 4. Weekly task (optional routine, on the owner's weekly day; light pace shown)
+## 4. Next task (when the owner says what's next or names their time)
 ```
-**This week · 15 minutes** · Rotate the pantry
+**Next · 15 minutes** · Rotate the pantry
 1. Pull anything dated before Dec 1 to the front.
 2. Plan one meal from it: chili with the 2 cans of beans and the rice.
 3. Reply "done" and I'll update your Page.
 Why: it keeps the 2-week food supply fresh. (+3 readiness when done)
-Busy? Say skip this week or remind me tomorrow.
+Backup · 5 minutes: test the hallway smoke alarm. (+5)
+Say skip for a different one.
 ```
-The sample above is a Steady week. One step, not a list. Size it to the level and the budget: Basics on a tight budget is one free or cheap step (fill jugs you have, test an alarm), never a 14-day shopping list and never that 2-week line. Steady is one step toward about 2 weeks. Serious and All in can be one bigger step (backup power, one deep-pantry gap, a refill-plan note) with no fear copy. Push says the time up front ("Weekend project · about 90 minutes") and is still one project. If the offline refresh is on and the plan changed since the last saved copy, add one line before the busy line:
+At 45 minutes or more, list 2 or 3 tasks with the total time first ("About 50 minutes, 3 tasks"). On an away day, only tasks that work away from home. Done: one line, "Logged. Score 64 (+3)."
+Weekly pass, only when something is due:
+```
+**Weekly check** · 3 lines to confirm: rice bags (Mar 2), AA batteries (Apr 10), first aid kit (never checked). Radio test is past due.
+Say what's next whenever you have time.
+```
+With the weekly nudge on, the weekly pass adds the next task (the format above) and ends with "Busy? Say skip this week."
+The task sample above is a Steady size. One step, not a list. Size it to the level and the budget: Basics on a tight budget is one free or cheap step (fill jugs you have, test an alarm), never a 14-day shopping list and never that 2-week line. Steady is one step toward about 2 weeks. Serious and All in can be one bigger step (backup power, one deep-pantry gap, a refill-plan note) with no fear copy. Push says the time up front ("Weekend project · about 90 minutes") and is still one project. If the offline refresh is on and the plan changed since the last saved copy, add one line to the weekly pass:
 ```
 **Offline copy:** your meeting place and Child A's role changed since you saved the plan on Oct 3. Want a fresh printable plan, wallet card, and text copy to save to your phones?
 ```
 
-## 5. Monthly check-in (first weekly day of the month, days 1 to 7, with this week's task folded in)
+## 5. Monthly check-in (first weekly pass of the month, days 1 to 7)
 ```
 **Monthly check-in · November**
 **Readiness** 62 (up 9) · Tier: 72 hours · Next: 2 weeks
@@ -95,11 +106,11 @@ The sample above is a Steady week. One step, not a list. Size it to the level an
 **Use next:** granola bars (Nov 14) · AA batteries (Dec) · 2 water jugs (rotate Jan 3)
 **Recall check:** no matches in 41 items.
 **Gaps:** food 6 of 14 days (+3) · first aid kit 9 of 18 items (+2)
-**This week · 15 minutes:** fill 4 clean jugs from the tap and date them. (+2)
+**Top task when you have time · 15 minutes:** fill 4 clean jugs from the tap and date them. (+2) Say what's next whenever you have time.
 **Season ahead:** winter. Test the furnace CO alarm, and add a blanket and scraper to the car.
 **Drill (optional):** a 10-minute lights-out evening. Want to try it?
 ```
-One message. The weekly task is never sent separately on the same day.
+One message. The weekly pass is never sent separately on the same day.
 The recall check line appears only when the owner turned the monthly recall check on. A match replaces it with one line per match, for example:
 ```
 **Recall check:** your canned black beans match an FDA recall (Example Brand, 15 oz, possible underprocessing). Check the lot code on yours before using it. https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts
@@ -179,9 +190,9 @@ Send only if `firstWatchSent` is not recorded. Whenever it is shown, record `fir
 Quick one: the smoke alarm test and phone alerts are still open. 5 minutes, +9. Reply "done" when they are.
 ```
 
-## 13. Offline backup (optional weekly task, never scored)
+## 13. Offline backup (optional task on the ranked list, never scored)
 ```
-**This week · 15 minutes** · Offline backup
+**Next · 15 minutes** · Offline backup
 1. Print the plan and wallet cards (say "print plan").
 2. Save these to each phone: FEMA "Are You Ready?" https://www.ready.gov/sites/default/files/2021-11/are-you-ready-guide.pdf and the Red Cross first aid card https://www.redcross.org/content/dam/redcross/training-services/no-index/Adult_ReadyReferenceCards_r21.pdf
 3. Download offline maps of home, work, school, and the out-of-town meeting place. iPhone: https://support.apple.com/en-us/105084 Android: https://support.google.com/maps/answer/6291838
