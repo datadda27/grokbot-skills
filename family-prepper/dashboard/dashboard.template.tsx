@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.3.0 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.3.1 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
 import {
   Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,
@@ -21,14 +21,16 @@ type WeekStep = { title: string; minutes: number | null; gain: number; detail: s
 type Category = {
   id: string; label: string; kind: "days" | "checklist"; days: number | null;
   itemsDone: number | null; itemsTotal: number | null; weight: number; note: string; source: string;
-  countedDays?: number | null; countNote?: string;
+  countedDays?: number | null; countNote?: string; countScope?: "partial" | "full";
+  noCookDays?: number | null; cookDays?: number | null;
+  fuel?: { source?: "cylinders" | "utility" | "other"; cylinders?: number | null; hoursPerCylinder?: number | null; cookHoursPerDay?: number | null };
 };
 type Gap = { label: string; group: string; have: string; need: string; gain: number; id: string; waiting: boolean };
 type Expiring = {
   item: string; category: string; date: string; label: string; daysLeft: number;
   qty: string; location: string; idea: string; estimated: boolean;
 };
-type Attention = { kind: "untested" | "stale" | "count" | "arriving"; title: string; detail: string };
+type Attention = { kind: "expired" | "stale" | "count" | "arriving" | "skipped" | "untested"; title: string; detail: string };
 type CheckItem = {
   id?: string; label: string; category?: string; testedOn?: string | null; verifiedOn?: string | null;
   orderedOn?: string | null; note?: string;
@@ -61,7 +63,10 @@ type Dashboard = {
     pets: { kind: string; name: string; waterGalPerDay: number | null; foodDays: number | null }[];
     climateHot: boolean;
   };
-  targets: { days: number; goalTier: string; optionalTiers: string[] };
+  targets: {
+    days: number; goalTier: string; optionalTiers: string[];
+    testedExpiryDays?: { power?: number; comms?: number; firstaid?: number; device?: number }; staleAfterDays?: number;
+  };
   weekly?: { day?: string; time?: string; pace?: "light" | "steady" | "push"; skipUntil?: string | null; nudge?: boolean; idleNudge?: boolean };
   offlineBackup?: { refresh?: boolean; last?: string | null; saved?: string };
   alert: {
@@ -469,9 +474,11 @@ export default function Prepper() {
   const shopCaption = `A little each week.${d.shopping.monthlyBudget !== null && d.shopping.spent !== null
     ? ` ${money(d.shopping.spent)} of the ${money(d.shopping.monthlyBudget)} monthly budget used.` : ""} Status as of ${d.asOfLabel}.`;
   const ATTENTION_LABEL: Record<Attention["kind"], string> = {
-    untested: "Not tested", stale: "Not checked lately", count: "Count needed", arriving: "Did it arrive?",
+    expired: "Test is due", stale: "Not checked lately", count: "Count needed", arriving: "Did it arrive?",
+    skipped: "Skipped twice", untested: "Not tested yet",
   };
   const attentionRows: Row[] = (c.attention ?? []).map((a) => ({ title: a.title, detail: a.detail, meta: ATTENTION_LABEL[a.kind] }));
+  if (c.attentionMore) attentionRows.push({ title: `+${c.attentionMore} more`, detail: "Say check these in chat to see the rest.", meta: "More" });
   const changeRows: Row[] = (d.changeLog ?? []).slice(-10).reverse().map((e) => ({
     title: e.what, detail: `${e.old ?? "none"} to ${e.new ?? "none"}. ${e.reason}.`, meta: e.date,
   }));
@@ -517,7 +524,7 @@ export default function Prepper() {
 
           {attentionRows.length ? (
             <Section heading="Check these" id="check-these"
-              caption={`Untested gear and things not checked in a while come before the score.${c.attentionMore ? ` And ${c.attentionMore} more in chat.` : ""}`}>
+              caption={`Due checks come before the score: tests due, lines not checked lately, orders, skipped tasks, then gear not tested yet.${c.attentionMore ? ` Showing ${attentionRows.length - 1}, +${c.attentionMore} more.` : ""}`}>
               <Rows rows={attentionRows} />
             </Section>
           ) : null}

@@ -1,6 +1,6 @@
 # Module: Firearms safety storage (neutral)
 
-Version: Prepper v1.3.0 (2026-11-14). Opt-in, off by default. The bot never asks whether the household owns firearms. The module turns on only if the owner asks for it.
+Version: Prepper v1.3.1 (2026-11-14). Opt-in, off by default. The bot never asks whether the household owns firearms. The module turns on only if the owner asks for it.
 
 Source: American Academy of Pediatrics, HealthyChildren.org, Guns in the Home: How to Keep Kids Safe (https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Handguns-in-the-Home.aspx).
 

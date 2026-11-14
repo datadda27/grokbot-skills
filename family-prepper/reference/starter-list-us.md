@@ -1,6 +1,6 @@
 # Two-week starter list (US)
 
-Version: Prepper v1.3.0 (2026-11-14)
+Version: Prepper v1.3.1 (2026-11-14)
 
 A preloaded list for quick-add. The owner says "add the starter list" or ticks lines from it, and the bot scales it to the household with the calculator in `us.md`, then to the prep level. Basics sees about 3 days (roughly a quarter of the 14-day amounts), one small buy, not this whole table. Steady uses the 14-day amounts, still one step at a time. Serious and All in may look further (a month, then a deep pantry of foods they already eat), still one step, never a dump of the table. Water and the kit items come from Ready.gov and the Red Cross. Food amounts are planning examples, not official figures; say so when you show them, and swap in foods the family already eats.
 

@@ -7,7 +7,7 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.3.0 (2026-11-14)
+Version: Prepper v1.3.1 (2026-11-14)
 
 Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
 
@@ -374,7 +374,7 @@ Build it from the template; never design it from scratch.
   7. When the owner asks ("update my page").
   Never rebuild mid-conversation for each small answer. A quiet threat watch, a Headline Check, or a single inventory edit updates the data only; the next milestone picks it up.
 - **Layout (dashboard v2).** One Page with three views on a switch at the top:
-  - **Home:** first a short Check these list (untested gear, stale lines, items marked count needed, orders past 14 days; gen.py builds it as `computed.attention`, up to 5 with "and N more"), then the readiness ring with a gray arc for points waiting on a yes or no, "Up from N on date", the tier pill, and a Next goal card (tier track, what each item needs, +N points, alert check and setup line); This week (the top task on the ranked list plus up to 2 quick free steps); At a glance (water, food, light and power, first aid, go-bags, plan, each with a status pill: Biggest gap, On target, Almost there, Building, Not counted yet; go-bags say Not scored); Life safety (Done pills, +N on open items; the medical device row is yes or no only); If the power goes out or we get separated (eat-first list with the fridge 4 hours and freezer 48 hours line, and Where we meet).
+  - **Home:** first a short Check these list (one combined list in this order: tests due, stale or unverified lines and lines marked count needed, orders past 14 days, tasks skipped twice, then gear never tested; gen.py builds it as `computed.attention`, up to 8 rows plus a "+N more" row, so nothing is hidden), then the readiness ring with a gray arc for points waiting on a yes or no, "Up from N on date", the tier pill, and a Next goal card (tier track, what each item needs, +N points, alert check and setup line); This week (the top task on the ranked list plus up to 2 quick free steps); At a glance (water, food, light and power, first aid, go-bags, plan, each with a status pill: Biggest gap, On target, Almost there, Building, Not counted yet; go-bags say Not scored); Life safety (Done pills, +N on open items; the medical device row is yes or no only); If the power goes out or we get separated (eat-first list with the fridge 4 hours and freezer 48 hours line, and Where we meet).
   - **Family plan:** contacts and meeting places, If we have to leave (5, 15, 60 minutes), shutoffs and alerts, who does what (children by label and age band), and the wallet card with a dashed cut line.
   - **Details:** a table of contents, all supplies (dashed meters mean not counted yet; the optional 30-day stretch shows only here), plan steps, Use it first (with the recall check), your area, outage and water, shopping, progress, headline checks and connections (both collapsed), and sources. Details also lists recent count changes from `changeLog` (date, what, old, new, reason).
   - Optional data that feeds it: `minutes` and `free` on life safety and plan items (for This week), `goBags` (`packed`, `needed`, `spot`, `note`; never scored), and `recalls.on` / `recalls.nextCheck`. Leave any of them out and the Page still builds.
@@ -407,6 +407,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `use next`: the rotation queue and meal ideas.
 - `my score` or `status`: score, tier, top 3 gaps, next task (from `gen.py --summary`).
 - `what's next`, `next step`, `preview this week`, `I have N minutes`, `quick win`, `skip`: tasks on demand (see Tasks on demand). `check-in now`: run the monthly check-in now.
+- `check these`: list every open Check these item in the same order as the Page, not only the first 8.
 - `move weekly to <day> <time>`: change the weekly pass day and time. `weekly nudge on` / `weekly nudge off`, `idle nudge on` / `idle nudge off`, `pace light` / `pace steady` / `pace push`, `skip this week`: see Tasks on demand.
 - `list`: the open shopping items as a plain list to paste and send.
 - `offline refresh on` / `offline refresh off`: turn the weekly offline refresh on or off.
@@ -420,7 +421,7 @@ During setup, suggest hazard modes for the county's top 3 National Risk Index ha
 - `recall check`: run the monthly recall check now. `recall check on` / `recall check off`: turn the monthly recall check on or off.
 - `deep setup`: start or continue the optional deeper setup.
 - `pause` / `resume`: pause or resume this bot's own routines (threat watch stays on unless the owner says "pause threat watch too"). Confirm what changed.
-- `version` (or "what version"): answer "Prepper v1.3.0 (2026-11-14)".
+- `version` (or "what version"): answer "Prepper v1.3.1 (2026-11-14)".
 - `feedback`: see Feedback.
 
 ## After a disaster
@@ -429,7 +430,7 @@ When the owner says something happened to them (damage, flooding, fire, a long o
 ## Feedback
 When the owner types "feedback" or says something like "I have an idea" or "this is broken":
 - Ask: "Got a GitHub account?"
-- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.3.0 (2026-11-14)">&labels=family-prepper
+- If yes, give a prefilled new-issue link: https://github.com/datadda27/grokbot-skills/issues/new?title=<url-encoded short title>&body=<url-encoded note plus "Prepper v1.3.1 (2026-11-14)">&labels=family-prepper
 - If no, give the feedback form link: https://docs.google.com/forms/d/e/1FAIpQLSc7QvhUErIgHfH5C-5RQITR0jUTy8wIomcHNe4Egz61CdEd2Q/viewform
 - Never submit feedback for the owner. The form belongs to the maker; never edit it.
 

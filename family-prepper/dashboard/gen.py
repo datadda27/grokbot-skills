@@ -27,7 +27,7 @@ CORE = ["water", "food", "meds", "sanitation"]
 TESTED_EXPIRY_DAYS = {"power": 365, "comms": 90, "firstaid": 182}  # the medical device uses the maker's interval (bot lists it)
 STALE_AFTER_DAYS = 182
 ARRIVING_DAYS = 14
-ATTENTION_MAX = 5
+ATTENTION_MAX = 8  # v1.3.1: Check these shows up to 8 rows, then "+N more"
 
 
 def fail(msg, code=2):
@@ -94,7 +94,9 @@ def apply_counting(d):
 
 
 def attention(d, asof):
-    """v1.3.0 Check these: untested, then stale, then count needed, then orders past 14 days. Display only."""
+    """Check these (v1.3.1). One combined list in priority order: expired tests, stale or unverified lines (and lines
+    marked count needed), orders past 14 days, tasks skipped twice, then gear never tested. Up to ATTENTION_MAX rows;
+    the rest is a count shown as "+N more", so nothing is hidden silently. Display only; never changes the score."""
     ch = d.get("checks") or {}
     tw = dict(TESTED_EXPIRY_DAYS, **(d["targets"].get("testedExpiryDays") or {}))
     stale_days = d["targets"].get("staleAfterDays") or STALE_AFTER_DAYS
@@ -102,24 +104,28 @@ def attention(d, asof):
     def age(v):
         return (asof - datetime.date.fromisoformat(v)).days if v else None
 
-    out = []
+    expired, stale, arriving, skipped, untested = [], [], [], [], []
     for x in ch.get("untested") or []:
         a, lim = age(x.get("testedOn")), tw.get(x.get("category"))
         if a is None:
-            out.append({"kind": "untested", "title": x["label"], "detail": "Owned, not tested yet."})
+            untested.append({"kind": "untested", "title": x["label"], "detail": "Owned, not tested yet."})
         elif lim is None or a > lim:
-            out.append({"kind": "untested", "title": x["label"], "detail": "Last tested %s. Time for a test." % x["testedOn"]})
+            expired.append({"kind": "expired", "title": x["label"], "detail": "Last tested %s. Time for a test." % x["testedOn"]})
     for x in ch.get("stale") or []:
         a = age(x.get("verifiedOn"))
         if a is None or a > stale_days:
-            out.append({"kind": "stale", "title": x["label"],
-                        "detail": "Not checked since %s. Still there?" % x["verifiedOn"] if x.get("verifiedOn") else "Never checked. Still there?"})
+            stale.append({"kind": "stale", "title": x["label"],
+                          "detail": "Not checked since %s. Still there?" % x["verifiedOn"] if x.get("verifiedOn") else "Never checked. Still there?"})
     for x in ch.get("countNeeded") or []:
-        out.append({"kind": "count", "title": x["label"], "detail": x.get("note") or "Count needed before it counts twice."})
+        stale.append({"kind": "count", "title": x["label"], "detail": x.get("note") or "Count needed before it counts twice."})
     for x in ch.get("arriving") or []:
         a = age(x.get("orderedOn"))
         if a is None or a > ARRIVING_DAYS:
-            out.append({"kind": "arriving", "title": x["label"], "detail": "Ordered %s. Did it arrive?" % x["orderedOn"] if x.get("orderedOn") else "Did it arrive?"})
+            arriving.append({"kind": "arriving", "title": x["label"], "detail": "Ordered %s. Did it arrive?" % x["orderedOn"] if x.get("orderedOn") else "Did it arrive?"})
+    for t in d.get("taskList") or []:
+        if (t.get("skips") or 0) >= 2 and not t.get("askedAfterSkips"):
+            skipped.append({"kind": "skipped", "title": t["title"], "detail": "Skipped %d times. Keep it, change it, or drop it?" % t["skips"]})
+    out = expired + stale + arriving + skipped + untested
     return out[:ATTENTION_MAX], max(len(out) - ATTENTION_MAX, 0)
 
 

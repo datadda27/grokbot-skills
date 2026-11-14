@@ -1,5 +1,11 @@
 # Prepper changelog
 
+## v1.3.1 (2026-11-14)
+Dashboard fixes. Score weights and scoring are unchanged (scoring v1).
+- `dashboard.template.tsx` declares every v1.3.0 field the schema allows: `targets.testedExpiryDays` and `staleAfterDays`, and on categories `countScope`, `noCookDays`, `cookDays`, and `fuel`. A fresh Page build with those fields set no longer fails the type check.
+- Check these is one combined list in priority order: tests due, stale or unverified lines and lines marked count needed, orders past 14 days, tasks skipped twice (from `taskList`), then gear never tested. Up to 8 rows, then a "+N more" row; `check these` in chat lists the rest. Before, untested gear came first and the 5-row cap could hide every other due item.
+- New `dashboard/test_full_fixture.py`: builds a data file from the sample with every optional schema field filled in, and a second with every nullable field set to null, then runs gen.py and a strict TypeScript check on both Pages (stub for `grok/canvas` in `dashboard/tests/`). It also checks the Check these order and the "+N more" count.
+
 ## v1.3.0 (2026-11-14)
 Emergency mode as a flag, a seasonal script-first afternoon pass, tested and freshness tracking, count changes, tasks on demand, and nine guide-hunt additions. Score weights and scoring logic are unchanged (scoring v1). The one scoring-adjacent change: a full physical count now replaces a higher estimate.
 - Includes v1.2.9 (a failed source is never quiet).

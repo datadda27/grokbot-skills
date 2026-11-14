@@ -1,6 +1,6 @@
 # Module: Vehicle add-on (car kit, fuel, EV)
 
-Version: Prepper v1.3.0 (2026-11-14). Opt-in add-on, off by default, never scored. The bot offers it once, only after both kit tiers are started (the stay-home kit and the 72-hour carry kit). It is never part of the mainstream flow, the tiers, or the score. Neutral: no brands pushed. Model details come only from the maker's owner's manual; the bot links the manual and says UNKNOWN otherwise.
+Version: Prepper v1.3.1 (2026-11-14). Opt-in add-on, off by default, never scored. The bot offers it once, only after both kit tiers are started (the stay-home kit and the 72-hour carry kit). It is never part of the mainstream flow, the tiers, or the score. Neutral: no brands pushed. Model details come only from the maker's owner's manual; the bot links the manual and says UNKNOWN otherwise.
 
 ## Vehicle kit
 - A small kit that lives in the car: water, snacks, a flashlight, first aid, a phone charger, a blanket, and seasonal items (an ice scraper and warm layers in winter, extra water in summer). Ready.gov car safety: https://www.ready.gov/car
