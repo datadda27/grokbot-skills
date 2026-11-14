@@ -1,6 +1,6 @@
 # Module: Money and documents binder
 
-Version: Prepper v1.3.0 (2026-11-14). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.3.1 (2026-11-14). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Source: Ready.gov Financial Preparedness and its Emergency Financial First Aid Kit (EFFAK) (https://www.ready.gov/financial-preparedness).
 

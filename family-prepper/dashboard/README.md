@@ -13,9 +13,10 @@ The household's Page. The bot fills one data file; the template and gen.py never
 python3 gen.py dashboard-data.json                      # writes dashboard.canvas.tsx
 python3 gen.py dashboard-data.json dashboard.template.tsx out.canvas.tsx
 python3 gen.py --summary dashboard-data.json              # score, setup %, tier, top 3 gaps, task gain as JSON; no Page
-```
 python3 gen.py --family dashboard-data.json               # the basics-only Family plan Page: family.canvas.tsx (v1.2.5)
 python3 test_family_page.py                                # checks the sample Family plan Page has no supplies, score, cash, medicines, firearms, or devices
+python3 test_scoring_v1.py                                 # checks the v1 score is unchanged and display fields never move it
+python3 test_full_fixture.py                               # builds the Page with every optional field filled, and with every nullable field null, and type-checks both (needs Node.js)
 ```
 Exit codes: 0 ok, 2 usage or missing file, 3 bad data (invalid JSON, a private field, a schema error, or a missing template marker). Install `jsonschema` for full validation; without it gen.py still checks the private fields and required sections.
 
