@@ -1,6 +1,6 @@
 # Module: Kit templates (two tiers, location kits, first aid, add-ons)
 
-Version: Prepper v1.3.1 (2026-11-14). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.3.2 (2026-11-18). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Each kit is a checklist on the Page with done / missing / not checked. Amounts scale to the household. Roles and the printable plan name only kits the household has confirmed it has; a kit that doesn't exist yet is a weekly build task ("Build the 72-hour carry kit for one person"), never a role.
 
@@ -54,7 +54,7 @@ Source: Ready.gov Build a Kit (https://www.ready.gov/kit), American Red Cross 3-
 Source: American Red Cross (https://www.redcross.org/get-help/how-to-prepare-for-emergencies/anatomy-of-a-first-aid-kit.html). The full 18-line list with amounts is in `reference/us.md`. One at home and one in each car. Check expiration dates. Ask a doctor before giving anyone aspirin. The bot adds personal items the household names (for example an extra inhaler) to `private.json`, never the Page.
 
 ## Bleeding control (optional, never scored)
-A Stop the Bleed course (https://www.stopthebleed.org/) teaches pressure, packing, and tourniquet use. Offer it as a skills day for an adult, never as a purchase push. A bleeding control kit is optional, sits with the first aid kit, and never touches the score, the tier, or the gaps. It goes with the course, not instead of it.
+A Stop the Bleed course (https://www.stopthebleed.org/) teaches pressure, packing, and tourniquet use. Offer it as a skills day for an adult, never as a purchase push. A bleeding control kit is optional, sits with the first aid kit, and never touches the score, the tier, or the gaps. It goes with the course, not instead of it. Hands-only CPR (Red Cross) is its own skill task in the method (Tasks on demand, "Level steps"), also never scored.
 
 ## Optional add-on checklist (never scored)
 Items commonly listed in Ready.gov, Ready Marine Corps, and Ready Army kit lists. Offer it as a plain checklist after both tiers are started. It never touches the score, the tier, or the gaps, and the bot doesn't nag about it.

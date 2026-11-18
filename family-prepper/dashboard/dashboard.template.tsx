@@ -1,4 +1,4 @@
-// Prepper dashboard template v1.3.1 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
+// Prepper dashboard template v1.3.2 (dashboard v2: Home, Family plan, Details). gen.py replaces the DATA line; this file holds no household text.
 import {
   Callout, Checklist, Grid, LineChart, LinkCards, Page, Properties, Rows, Section, Segmented,
   Status, Steps, Table, TableOfContents, Text, useGrokTheme, useState,

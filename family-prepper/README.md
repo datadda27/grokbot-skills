@@ -4,7 +4,7 @@ Built by a Marine Corps OIF veteran.
 
 Public Grok Bot template: https://x.ai/bot/-XeyX8_sUb_Ca0a6vqDYY
 
-Method version: Prepper v1.3.1 (2026-11-14). The full method is [SKILL.md](SKILL.md), with changes in [CHANGELOG.md](CHANGELOG.md). This page is a short setup manifest; when the two differ, SKILL.md wins.
+Method version: Prepper v1.3.2 (2026-11-18). The full method is [SKILL.md](SKILL.md), with changes in [CHANGELOG.md](CHANGELOG.md). This page is a short setup manifest; when the two differ, SKILL.md wins.
 
 ## What it does (one job)
 Gets one household ready to stay home for two weeks, and keeps it there: water, food, medicine, power, light, heat, sanitation, first aid, communication, and documents, plus a plan everyone knows. Every number cites an official source.

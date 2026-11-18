@@ -1,6 +1,6 @@
 # Module: Advanced connections (sensors and smart home)
 
-Version: Prepper v1.3.1 (2026-11-14). Opt-in, for owners who already use these services. The core never needs any of this.
+Version: Prepper v1.3.2 (2026-11-18). Opt-in, for owners who already use these services. The core never needs any of this.
 
 ## What it adds
 A sensor or automation can start emergency mode: a water leak sensor, a smoke or CO alarm with an app, or a smart plug on the fridge or sump pump going offline (a home power-loss signal).

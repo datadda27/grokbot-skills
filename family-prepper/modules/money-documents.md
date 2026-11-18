@@ -1,6 +1,6 @@
 # Module: Money and documents binder
 
-Version: Prepper v1.3.1 (2026-11-14). Opt-in module, off by default. Loaded only when the owner turns it on.
+Version: Prepper v1.3.2 (2026-11-18). Opt-in module, off by default. Loaded only when the owner turns it on.
 
 Source: Ready.gov Financial Preparedness and its Emergency Financial First Aid Kit (EFFAK) (https://www.ready.gov/financial-preparedness).
 
@@ -23,4 +23,5 @@ Ready.gov suggests switching federal benefits to direct deposit or a Direct Expr
 ## Insurance checks (once a year, in the check-in)
 - Flood: homeowner's policies do not cover flooding, and a new NFIP policy usually takes 30 days to start. (Ready.gov Floods, https://www.floodsmart.gov/)
 - Earthquake: a standard homeowner's policy does not cover earthquake damage. (Ready.gov Earthquakes)
+- Home inventory: photos or video of each room, with serial numbers and receipts for the expensive items, a copy kept away from the house, updated once a year (NAIC, Ready.gov). It is the `home-inventory` level step in the method (Tasks on demand, "Level steps"). The bot records only that it is done and the date, never the contents.
 The bot never recommends a policy or insurer. Questions go to an insurance agent.

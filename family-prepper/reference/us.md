@@ -1,10 +1,10 @@
 # Country pack: United States
 
-Version: Prepper v1.3.1 (2026-11-14)
+Version: Prepper v1.3.2 (2026-11-18)
 
 Every number the bot quotes to a US household comes from this file, with its link. If a number is not here, the bot looks it up on an official page and cites it, or says UNKNOWN. Another country gets its own file (for example `uk.md`) with the same headings, so the method never changes when a country is added.
 
-Checked against the live pages on 2026-10-26; rows added in v1.3.0 checked 2026-11-14.
+Checked against the live pages on 2026-10-26; rows added in v1.3.0 checked 2026-11-14; rows added in v1.3.2 checked 2026-11-18.
 
 ## Official sources (the only ones the bot leans on)
 | Topic | Source | Link |
@@ -40,6 +40,12 @@ Checked against the live pages on 2026-10-26; rows added in v1.3.0 checked 2026-
 | Phone emergency info (Android) | Android Help | https://support.google.com/android/answer/9319337 |
 | Phone emergency info (Pixel) | Pixel Phone Help | https://support.google.com/pixelphone/answer/7055029 |
 | Wildfire alerts app (optional) | Watch Duty (nonprofit) | https://www.watchduty.org/ |
+| Hidden water at home | CDC | https://www.cdc.gov/water-emergency/about/how-to-find-clean-water-in-an-emergency.html |
+| Home inventory for insurance | NAIC | https://content.naic.org/article/what-you-need-know-when-filing-homeowners-claim |
+| Document and insure your property | Ready.gov | https://www.ready.gov/sites/default/files/2020-03/ready_document-and-insure-your-property.pdf |
+| Hands-only CPR | American Red Cross | https://www.redcross.org/take-a-class/cpr/performing-cpr/hands-only-cpr |
+| CPR alerts app (optional, where adopted) | PulsePoint Respond (nonprofit) | https://www.pulsepoint.org/pulsepoint-respond |
+| Community Emergency Response Team (CERT) | FEMA | https://www.ready.gov/cert |
 | Heat | Ready.gov Extreme Heat | https://www.ready.gov/heat |
 | Documents and money | Ready.gov Financial Preparedness (EFFAK) | https://www.ready.gov/financial-preparedness |
 | Calorie planning figure | FDA | https://www.fda.gov/food/nutrition-facts-label/calories-nutrition-facts-label |
@@ -60,6 +66,13 @@ Checked against the live pages on 2026-10-26; rows added in v1.3.0 checked 2026-
 - Sanitize a food-grade container with 1 teaspoon of unscented bleach per quart of water before filling. (Ready.gov Water)
 - Never ration drinking water unless officials say to. Drink what you need today. (Ready.gov Water)
 - Distillation, a last resort when stored water runs out: fill a pot halfway, tie a cup to the lid handle so it hangs right side up when the lid is upside down (not touching the water), and boil for 20 minutes; the water that drips into the cup is distilled. It removes microbes that resist boiling and bleach, plus heavy metals, salts, and most other chemicals. (Ready.gov Water)
+- Hidden water at home, when stored water runs out and there is no bottled, boiled, or treated water (CDC):
+  - The tap water heater tank: the one that feeds the faucets and showerheads, not a heating tank that feeds radiators in an older home.
+  - Melted ice cubes made from water that was not contaminated.
+  - The toilet tank, never the bowl, and only if the water is clear and no toilet cleaner has been used in it (for example a tablet that colors the water).
+  - Liquid from canned fruit and vegetables.
+  - Pool and spa water is for washing and cleaning only, never for drinking.
+- Water with fuel or toxic chemicals in it can't be made safe by boiling, bleach, or any treatment. Do not drink it or bathe in it. (CDC)
 
 **Making water safe** (EPA)
 - Boil: a rolling boil for at least 1 minute. Above 5,000 feet, boil for 3 minutes.

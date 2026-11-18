@@ -1,5 +1,13 @@
 # Prepper changelog
 
+## v1.3.2 (2026-11-18)
+Four guide-hunt additions as level steps. Score weights and scoring are unchanged (scoring v1); none of the new tasks is scored.
+- Hidden water at home (Basics and up, CDC): the water heater tank that feeds the faucets (not a radiator heating tank), melted ice made from clean water, and the toilet tank (never the bowl, only with no cleaner in it); water with fuel or toxic chemicals can't be made safe by boiling or bleach. New block in the water section of `reference/us.md`, one line in the water rotation habit, the printed plan's water rules, and a 10-minute `hidden-water` task.
+- Home inventory for insurance (Steady and up, NAIC and Ready.gov): room by room photos or video, serial numbers and receipts for the expensive items, a copy kept away from the house, a yearly update, and the free NAIC Home Inventory app as an option. The bot tracks only that it is done and the date, never the contents. New `home-inventory` task; one line in `modules/money-documents.md`.
+- Hands-only CPR (Steady and up, Red Cross): one skill task (`hands-only-cpr`) with the Red Cross steps (call 911, push hard and fast in the center of the chest), and the optional PulsePoint Respond app, which works only where the local fire or EMS agency uses it. One pointer in `modules/kits.md`.
+- CERT training (Serious, All in, or the Marine-style "No one is coming" option, FEMA): the free online IS-317 Introduction to CERT as the next step after the neighbor plan (`cert-intro`), with a link to local CERT Basic Training.
+- The four tasks are optional build tasks on the ranked `taskList` (Tasks on demand, "Level steps"), with `estMinutes`, `where`, `needs`, and `canSplit`, and `category` and `addsDays` null. No schema change. Six new source rows in `reference/us.md`.
+
 ## v1.3.1 (2026-11-14)
 Dashboard fixes. Score weights and scoring are unchanged (scoring v1).
 - `dashboard.template.tsx` declares every v1.3.0 field the schema allows: `targets.testedExpiryDays` and `staleAfterDays`, and on categories `countScope`, `noCookDays`, `cookDays`, and `fuel`. A fresh Page build with those fields set no longer fails the type check.
