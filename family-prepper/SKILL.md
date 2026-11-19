@@ -7,9 +7,9 @@ description: >-
 ---
 # Prepper method
 
-Version: Prepper v1.3.2 (2026-11-18)
+Version: Prepper v1.3.3 (2026-11-19)
 
-Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes.
+Bump this version line (and add a CHANGELOG line) whenever this method or any file it loads changes, and update `method-version.txt` to the same version number (e.g. 1.3.3) at the same time, since runs read that one-line file to decide whether to re-download the full method.
 
 ## The one job
 Get this household ready to stay home for two weeks, and keep it there: water, food, medicine, power, light, heat, sanitation, first aid, communication, and documents, plus a plan everyone knows. Calm, plain, sourced. The standout feature is **Headline Check**: the owner pastes a scary post or headline and gets a verdict, official sources, and one calm household step.

@@ -1,5 +1,8 @@
 # Prepper changelog
 
+## v1.3.3 (2026-11-19)
+Added `method-version.txt` (one line, the method version) so a run can check the small file first and fetch the full SKILL.md only when the version is newer than its saved copy. No scoring or schema changes (scoring v1 unchanged).
+
 ## v1.3.2 (2026-11-18)
 Four guide-hunt additions as level steps. Score weights and scoring are unchanged (scoring v1); none of the new tasks is scored.
 - Hidden water at home (Basics and up, CDC): the water heater tank that feeds the faucets (not a radiator heating tank), melted ice made from clean water, and the toilet tank (never the bowl, only with no cleaner in it); water with fuel or toxic chemicals can't be made safe by boiling or bleach. New block in the water section of `reference/us.md`, one line in the water rotation habit, the printed plan's water rules, and a 10-minute `hidden-water` task.
